@@ -1,11 +1,20 @@
 #lang racket
 
 (provide (contract-out
-          [gf256-aton (-> exact-integer? exact-integer?)]
+          [get-gf256-hash (-> pair?)]
           ))
 
-(define (gf256-aton a)
-  (let ([val (expt 2 a)])
-    (if (>= val 256)
-        (bitwise-xor val 285)
-        val)))
+(define (get-gf256-hash)
+  (let ([aton_map (make-hash)]
+        [ntoa_map (make-hash)])
+    (let loop ([a 0]
+               [last_n (/ 1 2)])
+      (when (< a 255)
+            (let ([n (* last_n 2)])
+              (when (> n 255)
+                    (set! n (bitwise-xor n 285)))
+
+              (hash-set! aton_map a n)
+              (hash-set! ntoa_map n a)
+              (loop (add1 a) n))))
+    (cons aton_map ntoa_map)))
