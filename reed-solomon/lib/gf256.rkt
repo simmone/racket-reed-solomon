@@ -2,6 +2,7 @@
 
 (provide (contract-out
           [get-gf256-hash (-> pair?)]
+          [log-multiply (-> exact-integer? exact-integer? exact-integer?)]
           ))
 
 (define (get-gf256-hash)
@@ -18,3 +19,11 @@
               (hash-set! ntoa_map n a)
               (loop (add1 a) n))))
     (cons aton_map ntoa_map)))
+
+
+(define (log-multiply a1 a2)
+  (let* ([result (get-gf256-hash)]
+         [aton_map (car result)])
+    (if (>= (+ a1 a2) 255)
+        (hash-ref aton_map (modulo (+ a1 a2) 255))
+        (hash-ref aton_map (+ a1 a2)))))
