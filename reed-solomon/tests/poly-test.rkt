@@ -7,6 +7,17 @@
 (define test-poly
   (test-suite 
    "test-poly"
+   
+   (test-case
+    "test-string->poly"
+    
+    (check-equal? (string->poly "a0x1+a0x0") '( (0 . 1) (0 . 0) ))
+    (check-equal? (string->poly "a0x1-a0x0") '( (0 . 1) (0 . 0) ))
+    (check-equal? (string->poly "a1-x1") '( (1 . 0) (0 . 1) ))
+    (check-equal? (string->poly "a1-a2") '( (1 . 0) (2 . 0) ))
+    (check-equal? (string->poly "a1x7") '( (1 . 7) ))
+    
+    )
 
    (test-case
     "test-poly-multiply"
