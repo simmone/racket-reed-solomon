@@ -33,7 +33,7 @@
    (test-case
     "test-poly-multiply"
     
-    (check-equal? (poly-multiply "a0x1+a0x0" "a0x1+a1x0") "a0x1+a0x2+a1x0+a1x1")
+    (check-equal? (poly-multiply "a0x1+a0x0" "a0x1+a1x0") "a0x2+a1x1+a0x1+a1x0")
 
     )
 

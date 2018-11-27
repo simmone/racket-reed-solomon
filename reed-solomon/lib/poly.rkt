@@ -7,7 +7,18 @@
           ))
 
 (define (poly-multiply poly1 poly2)
-  "")
+  (let ([poly2_list (string->poly poly2)])
+    (let loop ([poly1_list (string->poly poly1)]
+               [result_poly '()])
+      (if (not (null? poly1_list))
+          (loop
+           (cdr poly1_list)
+           `(,@result_poly
+             ,@(map
+               (lambda (poly)
+                 (cons (+ (caar poly1_list) (car poly)) (+ (cdar poly1_list) (cdr poly))))
+               poly2_list)))
+          (poly->string result_poly)))))
 
 (define (string->poly poly_str)
   (let loop ([loop_list (regexp-split #rx"\\+|\\-" poly_str)]
