@@ -35,6 +35,13 @@
     
     (check-equal? (poly-multiply "a0x1+a0x0" "a0x1+a1x0") "a0x2+a1x1+a0x1+a1x0")
 
+    (check-equal? (poly-multiply "a0x1+a0x0" "x2") "a0x3+a0x2")
+
+    (check-equal? (poly-multiply "a1" "x2") "a1x2")
+
+    (check-equal? (poly-multiply "a3x4+a1x2" "a2x3+a0x1") "a5x7+a3x5+a3x5+a1x3")
+
+    (check-equal? (poly-multiply "a170x1" "a164x1") "a79x2")
     )
 
    ))

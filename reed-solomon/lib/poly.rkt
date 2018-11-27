@@ -10,13 +10,16 @@
   (let ([poly2_list (string->poly poly2)])
     (let loop ([poly1_list (string->poly poly1)]
                [result_poly '()])
+      (printf "~a,~a, ~a\n" poly1_list poly2_list result_poly)
       (if (not (null? poly1_list))
           (loop
            (cdr poly1_list)
            `(,@result_poly
              ,@(map
                (lambda (poly)
-                 (cons (+ (caar poly1_list) (car poly)) (+ (cdar poly1_list) (cdr poly))))
+                 (cons 
+                  (modulo (+ (caar poly1_list) (car poly)) 255)
+                  (+ (cdar poly1_list) (cdr poly))))
                poly2_list)))
           (poly->string result_poly)))))
 
@@ -37,22 +40,26 @@
                    [(char=? (car chars_list) #\a)
                     (char-loop (cdr chars_list) 'a pair_list)]
                    [(char-numeric? (car chars_list))
-                    (char-loop (cdr chars_list) 'x (cons (car chars_list) pair_list))]
+                    (let* ([items (regexp-match #rx"^([0-9]+).*" (list->string chars_list))]
+                           [num (second items)])
+                      (char-loop (take-right chars_list (string-length num)) 'x (cons num pair_list)))]
                    [(char=? (car chars_list) #\x)
-                    (char-loop (cdr chars_list) 'x (cons #\0 pair_list))])]
+                    (char-loop (cdr chars_list) 'x (cons "0" pair_list))])]
                  [(eq? cursor 'x)
                   (cond 
                    [(char=? (car chars_list) #\x)
                     (char-loop (cdr chars_list) 'x pair_list)]
                    [(char-numeric? (car chars_list))
-                    (char-loop null 'x (cons (car chars_list) pair_list))])])
+                    (let* ([items (regexp-match #rx"^([0-9]+).*" (list->string chars_list))]
+                           [num (second items)])
+                      (char-loop null 'x (cons num pair_list)))])])
                 (cond
                  [(null? pair_list)
                   '(0 . 0)]
                  [(= (length pair_list) 1)
-                  (cons (string->number (string (first pair_list))) 0)]
+                  (cons (string->number (first pair_list)) 0)]
                  [else
-                  (cons (string->number (string (second pair_list)))  (string->number (string (first pair_list))))])))
+                  (cons (string->number (second pair_list))  (string->number (first pair_list)))])))
           result_list))
         (reverse result_list))))
 
