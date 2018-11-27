@@ -46,4 +46,22 @@
         (reverse result_list))))
 
 (define (poly->string poly_list)
-  "")
+  (let ([sorted_list
+         (map
+          (lambda (poly)
+            (format "a~ax~a" (car poly) (cdr poly)))
+          (sort
+           poly_list
+           (lambda (poly1 poly2)
+             (if (not (= (cdr poly1) (cdr poly2)))
+                 (> (cdr poly1) (cdr poly2))
+                 (>= (car poly1) (car poly2))))))])
+    
+    (foldr
+     (lambda (poly1 poly2)
+       (if (null? poly2)
+           poly1
+           (string-append poly1 "+" poly2)))
+     null
+     sorted_list)))
+
