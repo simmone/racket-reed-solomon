@@ -16,6 +16,12 @@
     (check-equal? (string->poly "a1-x1") '( (1 . 0) (0 . 1) ))
     (check-equal? (string->poly "a1-a2") '( (1 . 0) (2 . 0) ))
     (check-equal? (string->poly "a1x7") '( (1 . 7) ))
+    (check-equal? (string->poly "a") '( (1 . 0) ))
+    (check-equal? (string->poly "x") '( (0 . 1) ))
+    (check-equal? (string->poly "") '( (0 . 0) ))
+    (check-equal? (string->poly "a2") '( (2 . 0) ))
+    (check-equal? (string->poly "x2") '( (0 . 2) ))
+    (check-equal? (string->poly "ax") '( (1 . 1) ))
     
     )
    
@@ -39,9 +45,13 @@
 
     (check-equal? (poly-multiply "a1" "x2") "a1x2")
 
+    (check-equal? (poly-multiply "a" "x") "a1x1")
+
     (check-equal? (poly-multiply "a3x4+a1x2" "a2x3+a0x1") "a5x7+a3x5+a3x5+a1x3")
 
     (check-equal? (poly-multiply "a170x1" "a164x1") "a79x2")
+    
+    (check-equal? (poly-multiply "x+a0" "x+a1") "a0x2+a1x1+a0x1+a1x0")
     )
 
    ))

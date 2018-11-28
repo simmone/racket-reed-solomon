@@ -10,7 +10,6 @@
   (let ([poly2_list (string->poly poly2)])
     (let loop ([poly1_list (string->poly poly1)]
                [result_poly '()])
-      (printf "~a,~a, ~a\n" poly1_list poly2_list result_poly)
       (if (not (null? poly1_list))
           (loop
            (cdr poly1_list)
@@ -38,26 +37,44 @@
                  [(eq? cursor 'a)
                   (cond
                    [(char=? (car chars_list) #\a)
-                    (char-loop (cdr chars_list) 'a pair_list)]
+                    (char-loop (cdr chars_list) 'ap pair_list)]
+                   [(char=? (car chars_list) #\x)
+                    (char-loop (cdr chars_list) 'xp (cons "0" pair_list))]
+                   [else
+                    (char-loop (cdr chars_list) 'a pair_list)])]
+                 [(eq? cursor 'ap)
+                  (cond
                    [(char-numeric? (car chars_list))
                     (let* ([items (regexp-match #rx"^([0-9]+).*" (list->string chars_list))]
                            [num (second items)])
-                      (char-loop (take-right chars_list (string-length num)) 'x (cons num pair_list)))]
+                      (char-loop (list-tail chars_list (string-length num)) 'x (cons num pair_list)))]
                    [(char=? (car chars_list) #\x)
-                    (char-loop (cdr chars_list) 'x (cons "0" pair_list))])]
+                    (char-loop (cdr chars_list) 'xp (cons "1" pair_list))]
+                   [else
+                    (char-loop (cdr chars_list) 'ap pair_list)])]
                  [(eq? cursor 'x)
                   (cond 
                    [(char=? (car chars_list) #\x)
-                    (char-loop (cdr chars_list) 'x pair_list)]
+                    (char-loop (cdr chars_list) 'xp pair_list)]
+                   [else
+                    (char-loop (cdr chars_list) 'x pair_list)])]
+                 [(eq? cursor 'xp)
+                  (cond
                    [(char-numeric? (car chars_list))
                     (let* ([items (regexp-match #rx"^([0-9]+).*" (list->string chars_list))]
                            [num (second items)])
-                      (char-loop null 'x (cons num pair_list)))])])
+                      (char-loop null 'x (cons num pair_list)))]
+                   [else
+                    (char-loop (cdr chars_list) 'xp pair_list)])])
                 (cond
                  [(null? pair_list)
-                  '(0 . 0)]
+                  (if (eq? cursor 'ap)
+                      '(1 . 0)
+                      '(0 . 0))]
                  [(= (length pair_list) 1)
-                  (cons (string->number (first pair_list)) 0)]
+                  (if (eq? cursor 'xp)
+                      (cons (string->number (first pair_list)) 1)
+                      (cons (string->number (first pair_list)) 0))]
                  [else
                   (cons (string->number (second pair_list))  (string->number (first pair_list)))])))
           result_list))
