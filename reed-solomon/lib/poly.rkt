@@ -4,7 +4,11 @@
           [poly-multiply (-> string? string? string?)]
           [string->poly (-> string? (listof pair?))]
           [poly->string (-> (listof pair?) string?)]
+          [poly-a->n (-> string? string?)]
           ))
+
+(define (poly-a->n poly_str)
+  "")
 
 (define (poly-multiply poly1 poly2)
   (let ([poly2_list (string->poly poly2)])

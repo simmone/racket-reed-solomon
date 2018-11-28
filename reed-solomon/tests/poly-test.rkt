@@ -54,6 +54,16 @@
     (check-equal? (poly-multiply "x+a0" "x+a1") "a0x2+a1x1+a0x1+a1x0")
     )
 
+   (test-case
+    "test-poly-a->n"
+    
+    (check-equal? (poly-a->n "a0x1+a0x0") "x1+x0")
+
+    (check-equal? (poly-a->n "x1+a3x0") "x1+8x0")
+
+    (check-equal? (poly-a->n "a25x1+a8x0") "3x1+29x0")
+    )
+
    ))
 
 (run-tests test-poly)
