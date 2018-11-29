@@ -7,7 +7,38 @@
 (define test-poly
   (test-suite 
    "test-poly"
-   
+
+   (test-case
+    "test-get-gf256-hash"
+    
+    (let* ([result (get-gf256-hash)]
+           [aton_map (car result)]
+           [ntoa_map (cdr result)])
+
+    (check-equal? (hash-ref aton_map 0) 1)
+    (check-equal? (hash-ref aton_map 1) 2)
+    (check-equal? (hash-ref aton_map 2) 4)
+    (check-equal? (hash-ref aton_map 7) 128)
+    (check-equal? (hash-ref aton_map 8) 29)
+    (check-equal? (hash-ref aton_map 9) 58)
+    (check-equal? (hash-ref aton_map 69) 47)
+    (check-equal? (hash-ref aton_map 79) 240)
+    (check-equal? (hash-ref aton_map 204) 221)
+    (check-equal? (hash-ref aton_map 254) 142)
+
+    (check-equal? (hash-ref ntoa_map 1) 0)
+    (check-equal? (hash-ref ntoa_map 2) 1)
+    (check-equal? (hash-ref ntoa_map 4) 2)
+    (check-equal? (hash-ref ntoa_map 129) 112)
+    (check-equal? (hash-ref ntoa_map 29) 8)
+    (check-equal? (hash-ref ntoa_map 58) 9)
+    (check-equal? (hash-ref ntoa_map 47) 69)
+    (check-equal? (hash-ref ntoa_map 240) 79)
+    (check-equal? (hash-ref ntoa_map 221) 204)
+    (check-equal? (hash-ref ntoa_map 142) 254)
+
+    ))
+
    (test-case
     "test-string->poly"
     
@@ -22,6 +53,8 @@
     (check-equal? (string->poly "a2") '( (2 . 0) ))
     (check-equal? (string->poly "x2") '( (0 . 2) ))
     (check-equal? (string->poly "ax") '( (1 . 1) ))
+    (check-equal? (string->poly "1x2") '( (1 . 2) ))
+    (check-equal? (string->poly "1") '( (1 . 0) ))
     
     )
    
@@ -57,13 +90,36 @@
    (test-case
     "test-poly-a->n"
     
-    (check-equal? (poly-a->n "a0x1+a0x0") "x1+x0")
+    (check-equal? (poly-a->n "a0x1+a0x0") "1x1+1x0")
 
-    (check-equal? (poly-a->n "x1+a3x0") "x1+8x0")
+    (check-equal? (poly-a->n "x1+a3x0") "1x1+8x0")
 
     (check-equal? (poly-a->n "a25x1+a8x0") "3x1+29x0")
-    )
 
+    (check-equal? (poly-a->n "a0x2+a0x1+a1x1+a1x0") "1x2+2x1+1x1+2x0")
+
+    (check-equal? (poly-a->n "a0x3+a25x2+a1x1+a2x2+a27x1+a3x0") "1x3+4x2+3x2+12x1+2x1+8x0")
+    )
+   
+   (test-case
+    "test-combine-a"
+    
+    (check-equal? (combine-a "3x1+2x1+8x0") "a1x1+a8x0")
+    (check-equal? (combine-a "3x2+2x1+0x1+8x0+5x0") "a3x2+a2x1+a13x0")
+
+    (check-equal? (combine-a "1x2+2x1+1x1+2x0") "a1x2+a3x1+a2x0")
+
+    (check-equal? (combine-a "1x3+4x2+3x2+12x1+2x1+8x0") "a1x3+a7x2+a14x1+a8x0")
+    )
+   
+   (test-case
+    "test-poly-n->a"
+    
+    (check-equal? (poly-n->a "a1x2+a3x1+a2x0") "a0x2+a25x1+a1x0")
+
+    (check-equal? (poly-n->a "a1x3+a7x2+a14x1+a8x0") "a0x3+a198x2+a199x1+a3x0")
+    )
+   
    ))
 
 (run-tests test-poly)

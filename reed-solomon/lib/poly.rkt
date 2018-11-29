@@ -1,14 +1,60 @@
 #lang racket
 
 (provide (contract-out
+          [get-gf256-hash (-> pair?)]
           [poly-multiply (-> string? string? string?)]
           [string->poly (-> string? (listof pair?))]
           [poly->string (-> (listof pair?) string?)]
           [poly-a->n (-> string? string?)]
+          [combine-a (-> string? string?)]
+          [poly-n->a (-> string? string?)]
           ))
 
+(define (get-gf256-hash)
+  (let ([aton_map (make-hash)]
+        [ntoa_map (make-hash)])
+    (let loop ([a 0]
+               [last_n (/ 1 2)])
+      (when (< a 255)
+            (let ([n (* last_n 2)])
+              (when (> n 255)
+                    (set! n (bitwise-xor n 285)))
+
+              (hash-set! aton_map a n)
+              (hash-set! ntoa_map n a)
+              (loop (add1 a) n))))
+    (cons aton_map ntoa_map)))
+
 (define (poly-a->n poly_str)
-  "")
+  (let* ([result (get-gf256-hash)]
+         [aton_map (car result)])
+    (regexp-replace* #rx"a"
+                     (poly->string
+                      (map
+                       (lambda (pair)
+                         (cons (hash-ref aton_map (car pair)) (cdr pair)))
+                       (string->poly poly_str)))
+                     "")))
+
+(define (combine-a poly_str)
+  (let ([xa_map (make-hash)])
+    (for-each
+     (lambda (pair)
+       (if (not (hash-has-key? xa_map (cdr pair)))
+           (hash-set! xa_map (cdr pair) (car pair))
+           (hash-set! xa_map (cdr pair) (bitwise-xor (car pair) (hash-ref xa_map (cdr pair))))))
+     (string->poly poly_str))
+    
+    (poly->string (map (lambda (pair) (cons (cdr pair) (car pair))) (hash->list xa_map)))))
+
+(define (poly-n->a poly_str)
+  (let* ([result (get-gf256-hash)]
+         [ntoa_map (cdr result)])
+    (poly->string
+     (map
+      (lambda (pair)
+        (cons (hash-ref ntoa_map (car pair)) (cdr pair)))
+      (string->poly poly_str)))))
 
 (define (poly-multiply poly1 poly2)
   (let ([poly2_list (string->poly poly2)])
@@ -44,6 +90,10 @@
                     (char-loop (cdr chars_list) 'ap pair_list)]
                    [(char=? (car chars_list) #\x)
                     (char-loop (cdr chars_list) 'xp (cons "0" pair_list))]
+                   [(char-numeric? (car chars_list))
+                    (let* ([items (regexp-match #rx"^([0-9]+).*" (list->string chars_list))]
+                           [num (second items)])
+                      (char-loop (list-tail chars_list (string-length num)) 'x (cons num pair_list)))]
                    [else
                     (char-loop (cdr chars_list) 'a pair_list)])]
                  [(eq? cursor 'ap)
