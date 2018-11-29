@@ -6,7 +6,7 @@
           [string->poly (-> string? (listof pair?))]
           [poly->string (-> (listof pair?) string?)]
           [poly-a->n (-> string? string?)]
-          [combine-a (-> string? string?)]
+          [poly-combine-a (-> string? string?)]
           [poly-n->a (-> string? string?)]
           ))
 
@@ -36,7 +36,7 @@
                        (string->poly poly_str)))
                      "")))
 
-(define (combine-a poly_str)
+(define (poly-combine-a poly_str)
   (let ([xa_map (make-hash)])
     (for-each
      (lambda (pair)
