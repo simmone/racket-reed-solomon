@@ -120,6 +120,12 @@
     (check-equal? (poly-n->a "a1x3+a7x2+a14x1+a8x0") "a0x3+a198x2+a199x1+a3x0")
     )
    
+   (test-case
+    "test-message->poly"
+    
+    (check-equal? (message->poly "hello world") "")
+    )
+   
    ))
 
 (run-tests test-poly)
