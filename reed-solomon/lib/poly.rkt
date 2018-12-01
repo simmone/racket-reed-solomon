@@ -5,6 +5,7 @@
           [poly-multiply (-> string? string? string?)]
           [string->poly (-> string? (listof pair?))]
           [poly->string (-> (listof pair?) string?)]
+          [poly-n->string (-> (listof pair?) string?)]
           [poly-a->n (-> string? string?)]
           [poly-combine-a (-> string? string?)]
           [poly-n->a (-> string? string?)]
@@ -154,6 +155,9 @@
            (string-append poly1 "+" poly2)))
      null
      sorted_list)))
+
+(define (poly-n->string poly_list)
+  (regexp-replace* #rx"a" (poly->string poly_list) ""))
 
 (define (message->poly msg)
   (let ([char_list (string->list msg)])
