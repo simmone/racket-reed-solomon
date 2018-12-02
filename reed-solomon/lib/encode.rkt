@@ -21,7 +21,7 @@
     
     (let loop ([loop_generator_a aligned_generator_a]
                [loop_message_n aligned_message_n])
-      (if (not (string=? loop_message_n ""))
+      (if (not (string=? loop_generator_a ""))
           (let ([step1_get_first_a #f]
                 [step2_multiply_a #f]
                 [step3_to_n #f]
@@ -46,7 +46,7 @@
             
             (printf "to_n: ~a\n" step3_to_n)
             
-            (set! step4_xor (poly-n-xor (poly-a->n step2_multiply_a) loop_message_n))
+            (set! step4_xor (poly-n-xor loop_message_n (poly-a->n step2_multiply_a)))
             
             (printf "xor: ~a\n" step4_xor)
             
