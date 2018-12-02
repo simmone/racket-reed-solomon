@@ -9,7 +9,6 @@
           [poly-a->n (-> string? string?)]
           [poly-combine-a (-> string? string?)]
           [poly-n->a (-> string? string?)]
-          [message->poly (-> string? string?)]
           ))
 
 (define (get-gf256-hash)
@@ -158,15 +157,3 @@
 
 (define (poly-n->string poly_list)
   (regexp-replace* #rx"a" (poly->string poly_list) ""))
-
-(define (message->poly msg)
-  (let ([char_list (string->list msg)])
-    (with-output-to-string
-      (lambda ()
-        (let loop ([loop_list char_list]
-                   [count (sub1 (length char_list))])
-          (when (not (null? loop_list))
-                (if (= count 0)
-                    (printf "~ax0" (char->integer (car loop_list)))
-                    (printf "~ax~a+" (char->integer (car loop_list)) count))
-                (loop (cdr loop_list) (sub1 count))))))))

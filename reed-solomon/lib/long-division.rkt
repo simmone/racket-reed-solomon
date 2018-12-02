@@ -6,7 +6,8 @@
           [message->poly (-> string? string?)]
           [prepare-message (-> string? natural? string?)]
           [prepare-generator (-> string? natural? string?)]
-          [poly-xor (-> string? string? string?)]
+          [poly-n-xor (-> string? string? string?)]
+          [poly-cdr (-> string? string?)]
           ))
 
 (define (message->poly msg)
@@ -32,7 +33,7 @@
     (poly-multiply
      generator (format "x~a" (- count first_x)))))
 
-(define (poly-xor long_poly short_poly)
+(define (poly-n-xor long_poly short_poly)
   (poly-n->string
    (let loop ([long_list (string->poly long_poly)]
               [short_list (string->poly short_poly)]
@@ -42,3 +43,7 @@
              (loop (cdr long_list) null (cons (cons (bitwise-xor (caar long_list) 0) (cdar long_list)) result_list))
              (loop (cdr long_list) (cdr short_list) (cons (cons (bitwise-xor (caar long_list) (caar short_list)) (cdar long_list)) result_list)))
          (reverse result_list)))))
+
+(define (poly-cdr poly)
+  (poly->string
+   (cdr (string->poly poly))))
