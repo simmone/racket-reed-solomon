@@ -3,10 +3,10 @@
 (require "poly.rkt")
 
 (provide (contract-out
-          [generate-poly (-> exact-integer? string?)]
+          [generator-poly (-> exact-integer? string?)]
           ))
 
-(define (generate-poly count)
+(define (generator-poly count)
   (let loop ([loop_count 2]
              [loop_poly "a0x1+a0x0"])
     (if (<= loop_count count)

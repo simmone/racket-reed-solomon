@@ -53,13 +53,6 @@
                    "32x25+2x24+101x23+10x22+97x21+197x20+15x19+47x18+134x17+74x16+5x15")
                   "0x25+89x24+110x23+114x22+176x21+183x20+211x19+98x18+197x17+10x16+233x15+17x14+236x13+17x12+236x11+17x10")
     )
-   
-   (test-case
-    "test-poly-cdr"
-    
-    (check-equal? (poly-cdr "x1+x5+x6") "a0x6+a0x5")
-    )
-   
    ))
 
 (run-tests test-long-division)

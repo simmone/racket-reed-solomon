@@ -2,24 +2,25 @@
 
 (require rackunit/text-ui)
 
-(require rackunit "../lib/generate-poly.rkt")
+(require rackunit "../lib/generator-poly.rkt")
 
-(define test-generate-poly
+(define test-generator-poly
   (test-suite 
-   "test-generate-poly"
+   "test-generator-poly"
    
    (test-case
-    "test-generate-poly-basic"
+    "test-generator-poly-basic"
 
-    (check-equal? (generate-poly 2) "a0x2+a25x1+a1x0")
-    (check-equal? (generate-poly 3) "a0x3+a198x2+a199x1+a3x0")
-    (check-equal? (generate-poly 4) "a0x4+a75x3+a249x2+a78x1+a6x0")
-    (check-equal? (generate-poly 5) "a0x5+a113x4+a164x3+a166x2+a119x1+a10x0")
-    (check-equal? (generate-poly 6) "a0x6+a166x5+a0x4+a134x3+a5x2+a176x1+a15x0")
+    (check-equal? (generator-poly 2) "a0x2+a25x1+a1x0")
+    (check-equal? (generator-poly 3) "a0x3+a198x2+a199x1+a3x0")
+    (check-equal? (generator-poly 4) "a0x4+a75x3+a249x2+a78x1+a6x0")
+    (check-equal? (generator-poly 5) "a0x5+a113x4+a164x3+a166x2+a119x1+a10x0")
+    (check-equal? (generator-poly 6) "a0x6+a166x5+a0x4+a134x3+a5x2+a176x1+a15x0")
+    (check-equal? (generator-poly 10) "a0x10+a251x9+a67x8+a46x7+a61x6+a118x5+a70x4+a64x3+a94x2+a32x1+a45x0")
     )
    
    (test-case
-    "test-generate-poly-by-qr-exist-poly"
+    "test-generator-poly-by-qr-exist-poly"
 
     (let ([qr_ploy_list
            '(
@@ -58,8 +59,8 @@
       
       (let loop ([loop_list qr_ploy_list])
         (when (not (null? loop_list))
-              (check-equal? (generate-poly (caar loop_list)) (cdar loop_list))
+              (check-equal? (generator-poly (caar loop_list)) (cdar loop_list))
               (loop (cdr loop_list))))))
    ))
 
-(run-tests test-generate-poly)
+(run-tests test-generator-poly)

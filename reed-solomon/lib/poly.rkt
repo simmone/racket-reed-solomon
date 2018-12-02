@@ -9,6 +9,8 @@
           [poly-a->n (-> string? string?)]
           [poly-combine-a (-> string? string?)]
           [poly-n->a (-> string? string?)]
+          [poly-cdr (-> string? string?)]
+          [poly-car (-> string? string?)]
           ))
 
 (define (get-gf256-hash)
@@ -136,24 +138,34 @@
         (reverse result_list))))
 
 (define (poly->string poly_list)
-  (let ([sorted_list
-         (map
-          (lambda (poly)
-            (format "a~ax~a" (car poly) (cdr poly)))
-          (sort
-           poly_list
-           (lambda (poly1 poly2)
-             (if (not (= (cdr poly1) (cdr poly2)))
-                 (> (cdr poly1) (cdr poly2))
-                 (>= (car poly1) (car poly2))))))])
-    
-    (foldr
-     (lambda (poly1 poly2)
-       (if (null? poly2)
-           poly1
-           (string-append poly1 "+" poly2)))
-     null
-     sorted_list)))
+  (if (null? poly_list)
+      ""
+      (let ([sorted_list
+             (map
+              (lambda (poly)
+                (format "a~ax~a" (car poly) (cdr poly)))
+              (sort
+               poly_list
+               (lambda (poly1 poly2)
+                 (if (not (= (cdr poly1) (cdr poly2)))
+                     (> (cdr poly1) (cdr poly2))
+                     (>= (car poly1) (car poly2))))))])
+        
+        (foldr
+         (lambda (poly1 poly2)
+           (if (null? poly2)
+               poly1
+               (string-append poly1 "+" poly2)))
+         null
+         sorted_list))))
 
 (define (poly-n->string poly_list)
   (regexp-replace* #rx"a" (poly->string poly_list) ""))
+
+(define (poly-cdr poly)
+  (poly->string
+   (cdr (string->poly poly))))  
+
+(define (poly-car poly)
+  (poly->string
+   (list (car (string->poly poly)))))

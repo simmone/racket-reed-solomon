@@ -67,6 +67,7 @@
     (check-equal? (poly->string '( (1 . 0) (2 . 0) )) "a2x0+a1x0")
     (check-equal? (poly->string '( (1 . 7) )) "a1x7")
     (check-equal? (poly->string '( (1 . 0) (3 . 4) (5 . 2) (2 . 3) (3 . 3) (2 . 0) )) "a3x4+a3x3+a2x3+a5x2+a2x0+a1x0")
+    (check-equal? (poly->string '()) "")
     )
 
    (test-case
@@ -118,6 +119,19 @@
     (check-equal? (poly-n->a "a1x2+a3x1+a2x0") "a0x2+a25x1+a1x0")
 
     (check-equal? (poly-n->a "a1x3+a7x2+a14x1+a8x0") "a0x3+a198x2+a199x1+a3x0")
+    )
+
+   (test-case
+    "test-poly-cdr"
+    
+    (check-equal? (poly-cdr "x1+x5+x6") "a0x6+a0x5")
+    (check-equal? (poly-cdr "x6") "")
+    )
+   
+   (test-case
+    "test-poly-car"
+    
+    (check-equal? (poly-car "x5+x4") "a0x5")
     )
    
    ))
