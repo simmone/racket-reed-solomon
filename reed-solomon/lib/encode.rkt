@@ -14,48 +14,35 @@
          [ntoa_map (cdr gf256_hash)]
          [generator_poly (generator-poly patrity_length)]
          [message_poly (message->poly data)]
-         [message_length (string-length data)]
-         [aligned_message_n (prepare-message message_poly patrity_length)]
-         [aligned_message_x_length (cdar (string->poly (poly-car aligned_message_n)))]
-         [aligned_generator_a (prepare-generator generator_poly aligned_message_x_length)])
+         [message_length (string-length data)])
     
-    (let loop ([loop_generator_a aligned_generator_a]
-               [loop_message_n aligned_message_n])
-      (if (not (string=? loop_generator_a ""))
-          (let ([step1_get_first_a #f]
-                [step2_multiply_a #f]
-                [step3_to_n #f]
-                [step4_xor #f]
-                [step5_discard_first #f])
+    (let loop ([loop_message_n (prepare-message message_poly patrity_length)]
+               [count 1])
+      (if (<= count message_length)
+          (let* ([step1_aligned_message_x_length #f]
+                 [step2_aligned_generator_a  #f]
+                 [step3_get_first_a #f]
+                 [step4_multiply_a #f]
+                 [step5_to_n #f]
+                 [step6_xor #f]
+                 [step7_discard_first #f])
 
-            (printf "start\n")
+            (set! step1_aligned_message_x_length (cdar (string->poly (poly-car loop_message_n))))
+            
+            (set! step2_aligned_generator_a (prepare-generator generator_poly step1_aligned_message_x_length))
+            
+            (set! step3_get_first_a (hash-ref ntoa_map (caar (string->poly loop_message_n))))
+            
+            (set! step4_multiply_a (poly-multiply step2_aligned_generator_a (format "a~a" step3_get_first_a)))
+            
+            (set! step5_to_n (poly-a->n step4_multiply_a))
+            
+            (set! step6_xor (poly-n-xor loop_message_n step5_to_n))
 
-            (printf "generator:~a\n" loop_generator_a)
+            (set! step7_discard_first (poly-cdr step6_xor))
             
-            (printf "message:~a\n" loop_message_n)
-
-            (set! step1_get_first_a (hash-ref ntoa_map (caar (string->poly loop_message_n))))
-            
-            (printf "first_a: ~a\n" step1_get_first_a)
-            
-            (set! step2_multiply_a (poly-multiply loop_generator_a (format "a~a" step1_get_first_a)))
-            
-            (printf "multiply_a: ~a\n" step2_multiply_a)
-            
-            (set! step3_to_n (poly-a->n step2_multiply_a))
-            
-            (printf "to_n: ~a\n" step3_to_n)
-            
-            (set! step4_xor (poly-n-xor loop_message_n (poly-a->n step2_multiply_a)))
-            
-            (printf "xor: ~a\n" step4_xor)
-            
-            (set! step5_discard_first (poly-cdr step4_xor))
-            
-            (printf "end:~a\n" step5_discard_first)
-            
-            (loop (poly-n->a step5_discard_first) (poly-cdr loop_message_n)))
+            (loop step7_discard_first (add1 count)))
           (map
            (lambda (pair)
              (car pair))
-           (string->poly (poly-a->n loop_generator_a)))))))
+           (string->poly loop_message_n))))))

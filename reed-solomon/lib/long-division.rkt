@@ -32,14 +32,18 @@
     (poly-multiply
      generator (format "x~a" (- count first_x)))))
 
-(define (poly-n-xor long_poly short_poly)
+(define (poly-n-xor poly1 poly2)
   (poly-n->string
-   (let loop ([long_list (string->poly long_poly)]
-              [short_list (string->poly short_poly)]
+   (let loop ([poly1_list (string->poly poly1)]
+              [poly2_list (string->poly poly2)]
               [result_list '()])
-     (if (not (null? long_list))
-         (if (null? short_list)
-             (loop (cdr long_list) null (cons (cons (bitwise-xor (caar long_list) 0) (cdar long_list)) result_list))
-             (loop (cdr long_list) (cdr short_list) (cons (cons (bitwise-xor (caar long_list) (caar short_list)) (cdar long_list)) result_list)))
+     (if (or (not (null? poly1_list)) (not (null? poly2_list)))
+         (cond
+          [(null? poly1_list)
+           (loop null (cdr poly2_list) (cons (cons (bitwise-xor 0 (caar poly2_list)) (cdar poly2_list)) result_list))]
+          [(null? poly2_list)
+           (loop (cdr poly1_list) null (cons (cons (bitwise-xor (caar poly1_list) 0) (cdar poly1_list)) result_list))]
+          [else
+           (loop (cdr poly1_list) (cdr poly2_list) (cons (cons (bitwise-xor (caar poly1_list) (caar poly2_list)) (cdar poly1_list)) result_list))])
          (reverse result_list)))))
   
