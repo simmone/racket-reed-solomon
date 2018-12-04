@@ -5,18 +5,18 @@
 (require "long-division.rkt")
 
 (provide (contract-out
-          [encode (-> string? natural? natural? (listof natural?))]
+          [encode (-> string? natural? natural? natural? (listof natural?))]
           ))
 
-(define (encode data patrity_length bit_width)
-  (let* ([gf_hash (get-gf-hash bit_width)]
+(define (encode data patrity_length bit_width primitive_poly)
+  (let* ([gf_hash (get-gf-hash bit_width primitive_poly)]
          [aton_map (car gf_hash)]
          [ntoa_map (cdr gf_hash)]
-         [generator_poly (generator-poly patrity_length)]
+         [generator_poly (generator-poly patrity_length aton_map ntoa_map)]
          [message_poly (message->poly data)]
          [message_length (string-length data)])
     
-    (let loop ([loop_message_n (prepare-message message_poly patrity_length)]
+    (let loop ([loop_message_n (prepare-message message_poly patrity_length aton_map ntoa_map)]
                [count 1])
       (if (<= count message_length)
           (let* ([step1_aligned_message_x_length #f]
@@ -35,7 +35,7 @@
             
             (set! step4_multiply_a (poly-multiply step2_aligned_generator_a (format "a~a" step3_get_first_a)))
             
-            (set! step5_to_n (poly-a->n step4_multiply_a))
+            (set! step5_to_n (poly-a->n step4_multiply_a aton_map))
             
             (set! step6_xor (poly-n-xor loop_message_n step5_to_n))
 

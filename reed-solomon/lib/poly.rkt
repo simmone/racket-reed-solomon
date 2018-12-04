@@ -2,8 +2,8 @@
 
 (provide (contract-out
           [get-gf-hash (-> natural? natural? pair?)]
-          [poly-a->n (-> string? procedure? string?)]
-          [poly-n->a (-> string? procedure? string?)]
+          [poly-a->n (-> string? hash? string?)]
+          [poly-n->a (-> string? hash? string?)]
           [poly-multiply (-> string? string? string?)]
           [string->poly (-> string? (listof pair?))]
           [poly->string (-> (listof pair?) string?)]
@@ -29,25 +29,21 @@
               (loop (add1 a) n))))
     (cons aton_map ntoa_map)))
 
-(define (poly-a->n poly_str gf_func)
-  (let* ([result (gf_func)]
-         [aton_map (car result)])
-    (regexp-replace* #rx"a"
-                     (poly->string
-                      (map
-                       (lambda (pair)
-                         (cons (hash-ref aton_map (car pair)) (cdr pair)))
-                       (string->poly poly_str)))
-                     "")))
+(define (poly-a->n poly_str aton_map)
+  (regexp-replace* #rx"a"
+                   (poly->string
+                    (map
+                     (lambda (pair)
+                       (cons (hash-ref aton_map (car pair)) (cdr pair)))
+                     (string->poly poly_str)))
+                   ""))
 
-(define (poly-n->a poly_str gf_func)
-  (let* ([result (gf_func)]
-         [ntoa_map (cdr result)])
-    (poly->string
-     (map
-      (lambda (pair)
-        (cons (hash-ref ntoa_map (car pair)) (cdr pair)))
-      (string->poly poly_str)))))
+(define (poly-n->a poly_str ntoa_map)
+  (poly->string
+   (map
+    (lambda (pair)
+      (cons (hash-ref ntoa_map (car pair)) (cdr pair)))
+    (string->poly poly_str))))
 
 (define (poly-combine-a poly_str)
   (let ([xa_map (make-hash)])

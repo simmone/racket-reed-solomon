@@ -3,10 +3,10 @@
 (require "poly.rkt")
 
 (provide (contract-out
-          [generator-poly (-> exact-integer? string?)]
+          [generator-poly (-> natural? hash? hash? string?)]
           ))
 
-(define (generator-poly count)
+(define (generator-poly count aton_map ntoa_map)
   (let loop ([loop_count 2]
              [loop_poly "a0x1+a0x0"])
     (if (<= loop_count count)
@@ -15,5 +15,7 @@
          (poly-n->a
           (poly-combine-a
            (poly-a->n
-            (poly-multiply loop_poly (format "a0x1+a~ax0" (sub1 loop_count)))))))
+            (poly-multiply loop_poly (format "a0x1+a~ax0" (sub1 loop_count)))
+            aton_map))
+          ntoa_map))
         loop_poly)))

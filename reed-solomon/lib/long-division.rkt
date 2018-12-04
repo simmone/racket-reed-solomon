@@ -4,7 +4,7 @@
 
 (provide (contract-out
           [message->poly (-> string? string?)]
-          [prepare-message (-> string? natural? string?)]
+          [prepare-message (-> string? natural? hash? hash? string?)]
           [prepare-generator (-> string? natural? string?)]
           [poly-n-xor (-> string? string? string?)]
           ))
@@ -21,11 +21,12 @@
                     (printf "~ax~a+" (char->integer (car loop_list)) count))
                 (loop (cdr loop_list) (sub1 count))))))))
 
-(define (prepare-message msg count)
+(define (prepare-message msg count aton_map ntoa_map)
   (poly-a->n
    (poly-multiply
-    (poly-n->a msg)
-    (format "x~a" count))))
+    (poly-n->a msg ntoa_map)
+    (format "x~a" count))
+   aton_map))
 
 (define (prepare-generator generator count)
   (let ([first_x (cdar (string->poly generator))])

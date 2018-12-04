@@ -64,25 +64,31 @@
 
    (test-case
     "test-poly-a->n"
+
+    (let* ([result (get-gf-hash 8 285)]
+           [aton_map (car result)])
     
-    (check-equal? (poly-a->n "a0x1+a0x0" (get-gf-hash 8 285)) "1x1+1x0")
+      (check-equal? (poly-a->n "a0x1+a0x0" aton_map) "1x1+1x0")
+      
+      (check-equal? (poly-a->n "x1+a3x0" aton_map) "1x1+8x0")
 
-    (check-equal? (poly-a->n "x1+a3x0" (get-gf-hash 8 285)) "1x1+8x0")
+      (check-equal? (poly-a->n "a25x1+a8x0" aton_map) "3x1+29x0")
 
-    (check-equal? (poly-a->n "a25x1+a8x0" (get-gf-hash 8 285)) "3x1+29x0")
+      (check-equal? (poly-a->n "a0x2+a0x1+a1x1+a1x0" aton_map) "1x2+2x1+1x1+2x0")
 
-    (check-equal? (poly-a->n "a0x2+a0x1+a1x1+a1x0" (get-gf-hash 8 285)) "1x2+2x1+1x1+2x0")
-
-    (check-equal? (poly-a->n "a0x3+a25x2+a1x1+a2x2+a27x1+a3x0" (get-gf-hash 8 285)) "1x3+4x2+3x2+12x1+2x1+8x0")
-    )
+      (check-equal? (poly-a->n "a0x3+a25x2+a1x1+a2x2+a27x1+a3x0" aton_map) "1x3+4x2+3x2+12x1+2x1+8x0")
+    ))
 
    (test-case
     "test-poly-n->a"
-    
-    (check-equal? (poly-n->a "a1x2+a3x1+a2x0" (get-gf-hash 8 285)) "a0x2+a25x1+a1x0")
 
-    (check-equal? (poly-n->a "a1x3+a7x2+a14x1+a8x0" (get-gf-hash 8 285)) "a0x3+a198x2+a199x1+a3x0")
-    )
+    (let* ([result (get-gf-hash 8 285)]
+           [ntoa_map (cdr result)])
+    
+      (check-equal? (poly-n->a "a1x2+a3x1+a2x0" ntoa_map) "a0x2+a25x1+a1x0")
+
+      (check-equal? (poly-n->a "a1x3+a7x2+a14x1+a8x0" ntoa_map) "a0x3+a198x2+a199x1+a3x0")
+      ))
 
    (test-case
     "test-string->poly"
