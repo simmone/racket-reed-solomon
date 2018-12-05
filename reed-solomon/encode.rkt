@@ -28,6 +28,8 @@
   (express express?
            (lambda () (write-report-input raw_list patrity_length bit_width primitive_poly_value express_path)))
 
+  (express express? (lambda () (write-report-primitive-poly express_path)))
+
   (let* ([gf_hash (get-gf-hash bit_width primitive_poly_value)]
          [aton_map (car gf_hash)]
          [ntoa_map (cdr gf_hash)]

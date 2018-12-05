@@ -6,10 +6,7 @@
           [write-report-input (-> (listof exact-integer?) natural? natural? natural? path-string? void?)]
           ))
 
-(require racket/runtime-path)
-(define-runtime-path mode_tip "mode_tip")
-
-(define (write-report-input raw_list patrity_length bit_width primitive_poly express_path)
+(define (write-report-input raw_list patrity_length bit_width primitive_poly_value express_path)
   (let* ([scrbl_dir (build-path express_path "input")]
          [scrbl_file (build-path scrbl_dir "input.scrbl")])
 
@@ -21,7 +18,12 @@
         (printf "#lang scribble/base\n\n")
         (printf "@title{Input}\n\n")
         (printf "collect input factors.\n")
-        (printf "@section{Bit Width:@bold{~a}}\n" bit_width)
+        (printf "@section{Patrity Length: @bold{~a}}\n" patrity_length)
+        (printf "@section{Bit Width: @bold{~a}}\n" bit_width)
+        (printf "available bit width is 2 - 32\n")
+        (printf "@section{Primitive Poly Value: @bold{~a}}\n" primitive_poly_value)
+        (printf "encode and decode should use the same primitive poly.\n\n")
+        (printf "@seclink{PrimitivePoly}\n")
         (printf "@section{Raw Data}\n")
         (printf (display-double-list
                  raw_list

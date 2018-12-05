@@ -7,3 +7,5 @@ report the process of creating Reed Solomon patrity.
 @table-of-contents[]
 
 @include-section["input/input.scrbl"]
+
+@include-section["primitive-poly/primitive-poly.scrbl"]
