@@ -8,4 +8,13 @@ report the process of creating Reed Solomon patrity.
 
 @include-section["input/input.scrbl"]
 
+@include-section["galois-fields/galois-fields.scrbl"]
+
+@include-section["generator-poly/generator-poly.scrbl"]
+
+@include-section["message-poly/message-poly.scrbl"]
+
+@include-section["long-divison/long-divison.scrbl"]
+
 @include-section["primitive-poly/primitive-poly.scrbl"]
+

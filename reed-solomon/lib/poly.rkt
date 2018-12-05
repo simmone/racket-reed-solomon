@@ -4,7 +4,7 @@
           [get-gf-hash (-> natural? natural? pair?)]
           [poly-a->n (-> string? hash? string?)]
           [poly-n->a (-> string? hash? string?)]
-          [poly-multiply (-> string? string? string?)]
+          [poly-multiply (-> string? string? natural? string?)]
           [string->poly (-> string? (listof pair?))]
           [poly->string (-> (listof pair?) string?)]
           [poly-n->string (-> (listof pair?) string?)]
@@ -56,7 +56,7 @@
     
     (poly->string (map (lambda (pair) (cons (cdr pair) (car pair))) (hash->list xa_map)))))
 
-(define (poly-multiply poly1 poly2 [m 8])
+(define (poly-multiply poly1 poly2 [#:m 8])
   (let ([poly2_list (string->poly poly2)]
         [2m_1 (sub1 (expt 2 m))])
     (let loop ([poly1_list (string->poly poly1)]
