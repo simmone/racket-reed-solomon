@@ -1,0 +1,9 @@
+#lang scribble/manual
+
+@title{Reed Solomon Encode Report}
+
+report the process of creating Reed Solomon patrity.
+
+@table-of-contents[]
+
+@include-section["input/input.scrbl"]

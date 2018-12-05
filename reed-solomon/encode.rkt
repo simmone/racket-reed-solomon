@@ -1,15 +1,33 @@
 #lang racket
 
-(require "poly.rkt")
-(require "generator-poly.rkt")
-(require "long-division.rkt")
+(require "lib/poly.rkt")
+(require "lib/generator-poly.rkt")
+(require "lib/long-division.rkt")
+
+(require "lib/encode-express/express.rkt")
 
 (provide (contract-out
-          [encode (-> string? natural? natural? (listof natural?))]
+          [encode (->* ((listof exact-integer?) natural?) (#:bit_width natural? #:primitive_poly_value natural? #:express? boolean? #:express_path path-string?) (listof exact-integer?))]
           ))
 
-(define (encode data patrity_length bit_width)
-  (let* ([gf_hash (get-gf-hash bit_width)]
+(define (encode 
+         data_list
+         patrity_length
+         #:bit_width [bit_width 8]
+         #:primitive_poly_value [primitive_poly_value 285]
+         #:express? [express? #f]
+         #:express_path [express_path ".encode.express"])
+
+  (when express?
+        (delete-directory/files #:must-exist? #f express_path)
+        (make-directory* express_path))
+
+  (express express? (lambda () (write-report-header express_path)))
+
+  (express express?
+           (lambda () (write-report-input data_list patrity_length bit_width primitive_poly_value express_path)))
+
+  (let* ([gf_hash (get-gf-hash bit_width primitive_poly)]
          [aton_map (car gf_hash)]
          [ntoa_map (cdr gf_hash)]
          [generator_poly (generator-poly patrity_length)]
