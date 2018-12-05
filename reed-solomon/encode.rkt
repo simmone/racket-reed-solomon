@@ -4,6 +4,7 @@
 (require "lib/generator-poly.rkt")
 (require "lib/long-division.rkt")
 
+(require "lib/lib.rkt")
 (require "lib/encode-express/express.rkt")
 
 (provide (contract-out
@@ -11,7 +12,7 @@
           ))
 
 (define (encode 
-         data_list
+         raw_list
          patrity_length
          #:bit_width [bit_width 8]
          #:primitive_poly_value [primitive_poly_value 285]
@@ -25,14 +26,14 @@
   (express express? (lambda () (write-report-header express_path)))
 
   (express express?
-           (lambda () (write-report-input data_list patrity_length bit_width primitive_poly_value express_path)))
+           (lambda () (write-report-input raw_list patrity_length bit_width primitive_poly_value express_path)))
 
-  (let* ([gf_hash (get-gf-hash bit_width primitive_poly)]
+  (let* ([gf_hash (get-gf-hash bit_width primitive_poly_value)]
          [aton_map (car gf_hash)]
          [ntoa_map (cdr gf_hash)]
          [generator_poly (generator-poly patrity_length aton_map ntoa_map)]
-         [message_poly (message->poly data)]
-         [message_length (string-length data)])
+         [message_poly (message->poly raw_list)]
+         [message_length (length raw_list)])
     
     (let loop ([loop_message_n (prepare-message message_poly patrity_length aton_map ntoa_map)]
                [count 1])

@@ -13,15 +13,10 @@
    (test-case
     "test-message->poly"
 
-    (check-equal? (message->poly "HELLO WORLD")
+    (check-equal? (message->poly '(72 69 76 76 79 32 87 79 82 76 68))
                   "72x10+69x9+76x8+76x7+79x6+32x5+87x4+79x3+82x2+76x1+68x0")
     
-    (check-equal? (message->poly 
-                    (list->string
-                     (map
-                      (lambda (a)
-                        (integer->char a))
-                      (list 32 91 11 120 209 114 220 77 67 64 236 17 236 17 236 17))))
+    (check-equal? (message->poly '(32 91 11 120 209 114 220 77 67 64 236 17 236 17 236 17))
                   "32x15+91x14+11x13+120x12+209x11+114x10+220x9+77x8+67x7+64x6+236x5+17x4+236x3+17x2+236x1+17x0")
     )
    

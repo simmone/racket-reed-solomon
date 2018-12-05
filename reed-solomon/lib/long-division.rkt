@@ -3,23 +3,22 @@
 (require "poly.rkt")
 
 (provide (contract-out
-          [message->poly (-> string? string?)]
+          [message->poly (-> (listof exact-integer?) string?)]
           [prepare-message (-> string? natural? hash? hash? string?)]
           [prepare-generator (-> string? natural? string?)]
           [poly-n-xor (-> string? string? string?)]
           ))
 
-(define (message->poly msg)
-  (let ([char_list (string->list msg)])
-    (with-output-to-string
-      (lambda ()
-        (let loop ([loop_list char_list]
-                   [count (sub1 (length char_list))])
+(define (message->poly raw_list)
+  (with-output-to-string
+    (lambda ()
+      (let loop ([loop_list raw_list]
+                 [count (sub1 (length raw_list))])
           (when (not (null? loop_list))
                 (if (= count 0)
-                    (printf "~ax0" (char->integer (car loop_list)))
-                    (printf "~ax~a+" (char->integer (car loop_list)) count))
-                (loop (cdr loop_list) (sub1 count))))))))
+                    (printf "~ax0" (car loop_list))
+                    (printf "~ax~a+" (car loop_list) count))
+                (loop (cdr loop_list) (sub1 count)))))))
 
 (define (prepare-message msg count aton_map ntoa_map)
   (poly-a->n
