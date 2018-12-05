@@ -2,6 +2,8 @@
 
 (require rackunit/text-ui)
 
+(require "../lib/poly.rkt")
+
 (require rackunit "../lib/long-division.rkt")
 
 (define test-long-division
@@ -26,12 +28,16 @@
    (test-case
     "test-prepare-message"
 
-    (check-equal?
-     (prepare-message
-      "32x15+91x14+11x13+120x12+209x11+114x10+220x9+77x8+67x7+64x6+236x5+17x4+236x3+17x2+236x1+17x0"
-      10)
-     "32x25+91x24+11x23+120x22+209x21+114x20+220x19+77x18+67x17+64x16+236x15+17x14+236x13+17x12+236x11+17x10")
-    )
+    (let* ([result (get-gf-hash 8 285)]
+           [aton_map (car result)]
+           [ntoa_map (cdr result)])
+
+      (check-equal?
+       (prepare-message
+        "32x15+91x14+11x13+120x12+209x11+114x10+220x9+77x8+67x7+64x6+236x5+17x4+236x3+17x2+236x1+17x0"
+        10 aton_map ntoa_map)
+       "32x25+91x24+11x23+120x22+209x21+114x20+220x19+77x18+67x17+64x16+236x15+17x14+236x13+17x12+236x11+17x10")
+      ))
    
    (test-case
     "test-prepare-generator"
