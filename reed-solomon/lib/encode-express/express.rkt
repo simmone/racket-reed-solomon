@@ -7,6 +7,7 @@
 (require "generator-poly/generator-poly.rkt")
 (require "message-poly/message-poly.rkt")
 (require "long-division/long-division.rkt")
+(require "error-code/error-code.rkt")
 
 (provide (contract-out
           [write-report-header (-> path-string? void?)]
@@ -16,5 +17,6 @@
           [write-report-generator-poly (-> string? path-string? void?)]
           [write-report-message-poly (-> string? path-string? void?)]
           [write-report-long-division-start (-> path-string? void?)]
-          [write-report-long-division-prepare-message (-> natural? string? path-string? void?)]
+          [write-report-long-division-detail (-> natural? string? natural? string? natural? string? string? string? string? path-string? void?)]
+          [write-report-error-code (-> natural? (listof exact-integer?) path-string? void?)]
           ))

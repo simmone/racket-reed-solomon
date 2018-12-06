@@ -3,6 +3,7 @@
 (provide (contract-out
           [express (-> boolean? procedure? void?)]
           [display-double-list (->* (list? list?) (natural? natural?) string?)]
+          [display-list (->* (list?) (natural? natural?) string?)]
           ))
 
 (define (express express? proc)
@@ -50,3 +51,27 @@
                               (loop (cdr loop_list) origin_list (add1 print_count) (add1 item_number) #f #f)))))))
           (printf "}")))
       ""))
+
+(define (display-list input_list [col_width 12] [line_count 10])
+  (with-output-to-string
+    (lambda ()
+      (printf "@verbatim{\n")
+      (let loop ([loop_list input_list]
+                 [print_count 0]
+                 [item_number 1]
+                 [line_start? #t]
+                 [origin? #t])
+        (when (not (null? loop_list))
+              (when line_start?
+                    (printf (~a #:min-width 6 #:align 'left #:right-pad-string " " (string-append "[" (number->string item_number) "]"))))
+
+              (if (or (= print_count (sub1 line_count)) (= (length loop_list) 1))
+                  (begin
+                    (printf (~a #:min-width col_width #:align 'left #:right-pad-string " " (format "~a" (car loop_list))))
+                    (printf "\n")
+                    (loop (cdr loop_list) 0 (add1 item_number) #t #f))
+                  (begin
+                    (printf (~a #:min-width col_width #:align 'left #:right-pad-string " " (format "~a" (car loop_list))))
+                    (loop (cdr loop_list) (add1 print_count) (add1 item_number) #f #t)))))
+      (printf "}"))))
+

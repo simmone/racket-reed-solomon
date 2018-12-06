@@ -52,15 +52,9 @@
 
      (express express? (lambda () (write-report-long-division-start express_path)))
      
-     (printf "start division~a\n" message_length)
-
      (let loop ([loop_message_n (prepare-message message_poly patrity_length)]
                 [count 1])
        
-       (printf "~a\n" loop_message_n)
-
-       (express express? (lambda () (write-report-long-division-prepare-message count loop_message_n express_path)))
-
        (if (<= count message_length)
            (let* ([step1_aligned_message_x_length #f]
                   [step2_aligned_generator_a  #f]
@@ -72,30 +66,16 @@
                   [step8_zeros_count #f])
 
              (set! step1_aligned_message_x_length (cdar (string->poly loop_message_n)))
-             
-             (printf "count: ~a\n" count)
-             
+
              (set! step2_aligned_generator_a (prepare-generator generator_poly step1_aligned_message_x_length))
 
-             (printf "aligned_generator: ~a\n" step2_aligned_generator_a)
-             
              (set! step3_get_first_a (hash-ref (*gf_ntoa_map*) (caar (string->poly loop_message_n))))
 
-             (printf "first a: ~a\n" step3_get_first_a)
-             
              (set! step4_multiply_a (poly-multiply step2_aligned_generator_a (format "a~a" step3_get_first_a) ))
 
-             (printf "aligned_generator: ~a\n" step4_multiply_a)
-             
              (set! step5_to_n (poly-a->n step4_multiply_a))
 
-             (printf "generator_n: ~a\n" step5_to_n)
-
-             (printf "message_n: ~a\n" loop_message_n)
-             
              (set! step6_xor_n (poly-n-xor loop_message_n step5_to_n))
-
-             (printf "xor: ~a\n" step6_xor_n)
 
              (set! step7_discard_first_zeros_n 
                    (regexp-replace* #rx"a" 
@@ -106,14 +86,26 @@
                                            loop_list)))
                                     ""))
              
-             (printf "cut first zeros: ~a\n" step7_discard_first_zeros_n)
-             
              (set! step8_zeros_count (- (length (string->poly loop_message_n)) (length (string->poly step7_discard_first_zeros_n))))
 
-             (printf "zero count: ~a\n" step8_zeros_count)
+             (express express? (lambda () 
+                                 (write-report-long-division-detail
+                                  count
+                                  loop_message_n
+                                  step1_aligned_message_x_length
+                                  step2_aligned_generator_a
+                                  step3_get_first_a
+                                  step4_multiply_a
+                                  step5_to_n
+                                  step6_xor_n
+                                  step7_discard_first_zeros_n
+                                  express_path)))
              
              (loop step7_discard_first_zeros_n (+ count step8_zeros_count)))
-           (map
-            (lambda (pair)
-              (car pair))
-            (string->poly loop_message_n)))))))
+           (let ([result
+                  (map
+                   (lambda (pair)
+                     (car pair))
+                   (string->poly loop_message_n))])
+             (express express? (lambda () (write-report-error-code bit_width result express_path)))
+             result))))))

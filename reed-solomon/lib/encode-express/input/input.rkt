@@ -6,7 +6,7 @@
           [write-report-input (-> (listof exact-integer?) natural? natural? natural? path-string? void?)]
           ))
 
-(define (write-report-input raw_list patrity_length bit_width primitive_poly_value express_path)
+(define (write-report-input raw_list error_code_length bit_width primitive_poly_value express_path)
   (let* ([scrbl_dir (build-path express_path "input")]
          [scrbl_file (build-path scrbl_dir "input.scrbl")])
 
@@ -18,7 +18,7 @@
         (printf "#lang scribble/base\n\n")
         (printf "@title{Input}\n\n")
         (printf "collect input factors.\n")
-        (printf "@section{Patrity Length: @bold{~a}}\n" patrity_length)
+        (printf "@section{Error Code Length: @bold{~a}}\n" error_code_length)
         (printf "@section{Bit Width: @bold{~a}}\n" bit_width)
         (printf "available bit width is 2 - 32\n")
         (printf "@section{Primitive Poly Value: @bold{~a}}\n" primitive_poly_value)
@@ -28,6 +28,7 @@
         (printf (display-double-list
                  raw_list
                  (map (lambda (num) (~r #:base 2 #:min-width bit_width #:pad-string "0" num)) raw_list)
-                 (add1 bit_width)))
+                 (add1 bit_width)
+                 5))
         ))))
 
