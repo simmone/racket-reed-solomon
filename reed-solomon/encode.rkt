@@ -52,7 +52,7 @@
 
      (express express? (lambda () (write-report-long-division-start express_path)))
      
-     (printf "start division\n")
+     (printf "start division~a\n" message_length)
 
      (let loop ([loop_message_n (prepare-message message_poly patrity_length)]
                 [count 1])
@@ -68,7 +68,8 @@
                   [step4_multiply_a #f]
                   [step5_to_n #f]
                   [step6_xor_n #f]
-                  [step7_discard_first_zeros_n #f])
+                  [step7_discard_first_zeros_n #f]
+                  [step8_zeros_count #f])
 
              (set! step1_aligned_message_x_length (cdar (string->poly loop_message_n)))
              
@@ -107,7 +108,11 @@
              
              (printf "cut first zeros: ~a\n" step7_discard_first_zeros_n)
              
-             (loop step7_discard_first_zeros_n (add1 count)))
+             (set! step8_zeros_count (- (length (string->poly loop_message_n)) (length (string->poly step7_discard_first_zeros_n))))
+
+             (printf "zero count: ~a\n" step8_zeros_count)
+             
+             (loop step7_discard_first_zeros_n (+ count step8_zeros_count)))
            (map
             (lambda (pair)
               (car pair))
