@@ -21,10 +21,20 @@
                 (loop (cdr loop_list) (sub1 count)))))))
 
 (define (prepare-message msg count)
-  (poly-a->n
-   (poly-multiply
-    (poly-n->a msg)
-    (format "x~a" count))))
+  (let ([multiplied_poly
+         (string->poly
+          (poly-a->n
+           (poly-multiply
+            (poly-n->a msg)
+            (format "x~a" count))))])
+    (regexp-replace* #rx"a" 
+                      (poly->string
+                       (let loop ([loop_count (sub1 count)]
+                                  [result_list '()])
+                         (if (>= loop_count 0)
+                             (loop (sub1 loop_count) (cons (cons 0 loop_count) result_list))
+                             `(,@multiplied_poly ,@result_list))))
+                      "")))
 
 (define (prepare-generator generator count)
   (let ([first_x (cdar (string->poly generator))])

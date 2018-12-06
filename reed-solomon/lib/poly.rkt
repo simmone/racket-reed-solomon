@@ -9,8 +9,6 @@
           [poly->string (-> (listof pair?) string?)]
           [poly-n->string (-> (listof pair?) string?)]
           [poly-combine-a (-> string? string?)]
-          [poly-cdr (-> string? string?)]
-          [poly-car (-> string? string?)]
           [*bit_width* parameter?]
           [*2^m_1* parameter?]
           [*primitive_poly_value* parameter?]
@@ -167,11 +165,3 @@
 
 (define (poly-n->string poly_list)
   (regexp-replace* #rx"a" (poly->string poly_list) ""))
-
-(define (poly-cdr poly)
-  (poly->string
-   (cdr (string->poly poly))))  
-
-(define (poly-car poly)
-  (poly->string
-   (list (car (string->poly poly)))))

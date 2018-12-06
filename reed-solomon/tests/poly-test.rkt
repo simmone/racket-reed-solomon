@@ -155,19 +155,6 @@
 
     (check-equal? (poly-combine-a "1x3+4x2+3x2+12x1+2x1+8x0") "a1x3+a7x2+a14x1+a8x0")
     )
-
-   (test-case
-    "test-poly-cdr"
-    
-    (check-equal? (poly-cdr "x1+x5+x6") "a0x6+a0x5")
-    (check-equal? (poly-cdr "x6") "")
-    )
-   
-   (test-case
-    "test-poly-car"
-    
-    (check-equal? (poly-car "x5+x4") "a0x5")
-    )
    
    ))
 

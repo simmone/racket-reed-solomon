@@ -67,32 +67,47 @@
                   [step3_get_first_a #f]
                   [step4_multiply_a #f]
                   [step5_to_n #f]
-                  [step6_xor #f]
-                  [step7_discard_first #f])
+                  [step6_xor_n #f]
+                  [step7_discard_first_zeros_n #f])
 
-             (set! step1_aligned_message_x_length (cdar (string->poly (poly-car loop_message_n))))
+             (set! step1_aligned_message_x_length (cdar (string->poly loop_message_n)))
+             
+             (printf "count: ~a\n" count)
              
              (set! step2_aligned_generator_a (prepare-generator generator_poly step1_aligned_message_x_length))
 
-             (printf "~a\n" step2_aligned_generator_a)
+             (printf "aligned_generator: ~a\n" step2_aligned_generator_a)
              
              (set! step3_get_first_a (hash-ref (*gf_ntoa_map*) (caar (string->poly loop_message_n))))
 
-             (printf "~a\n" step3_get_first_a)
+             (printf "first a: ~a\n" step3_get_first_a)
              
              (set! step4_multiply_a (poly-multiply step2_aligned_generator_a (format "a~a" step3_get_first_a) ))
 
-             (printf "~a\n" step4_multiply_a)
+             (printf "aligned_generator: ~a\n" step4_multiply_a)
              
              (set! step5_to_n (poly-a->n step4_multiply_a))
 
-             (printf "~a\n" step5_to_n)
-             
-             (set! step6_xor (poly-n-xor loop_message_n step5_to_n))
+             (printf "generator_n: ~a\n" step5_to_n)
 
-             (set! step7_discard_first (poly-cdr step6_xor))
+             (printf "message_n: ~a\n" loop_message_n)
              
-             (loop step7_discard_first (add1 count)))
+             (set! step6_xor_n (poly-n-xor loop_message_n step5_to_n))
+
+             (printf "xor: ~a\n" step6_xor_n)
+
+             (set! step7_discard_first_zeros_n 
+                   (regexp-replace* #rx"a" 
+                                    (poly->string
+                                     (let loop ([loop_list (string->poly step6_xor_n)])
+                                       (if (= (caar loop_list) 0)
+                                           (loop (cdr loop_list))
+                                           loop_list)))
+                                    ""))
+             
+             (printf "cut first zeros: ~a\n" step7_discard_first_zeros_n)
+             
+             (loop step7_discard_first_zeros_n (add1 count)))
            (map
             (lambda (pair)
               (car pair))
