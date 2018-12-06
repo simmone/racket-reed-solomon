@@ -33,63 +33,67 @@
 
   (express express? (lambda () (write-report-primitive-poly express_path)))
 
-  (let* ([gf_hash (get-gf-hash bit_width primitive_poly_value)]
-         [aton_map (car gf_hash)]
-         [ntoa_map (cdr gf_hash)]
-         [generator_poly (generator-poly patrity_length aton_map ntoa_map)]
-         [message_poly (message->poly raw_list)]
-         [message_length (length raw_list)])
+  (parameterize*
+   ([*bit_width* bit_width]
+    [*2^m_1* (sub1 (expt 2 (*bit_width*)))]
+    [*primitive_poly_value* primitive_poly_value]
+    [*gf_aton_map* (get-gf-aton-hash)]
+    [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
 
-    (express express? (lambda () (write-report-galois-fields aton_map express_path)))
+   (let* ([generator_poly (generator-poly patrity_length)]
+          [message_poly (message->poly raw_list)]
+          [message_length (length raw_list)])
 
-    (express express? (lambda () (write-report-generator-poly generator_poly express_path)))
+     (express express? (lambda () (write-report-galois-fields (*gf_aton_map*) (*gf_ntoa_map*) express_path)))
 
-    (express express? (lambda () (write-report-message-poly message_poly express_path)))
+     (express express? (lambda () (write-report-generator-poly generator_poly express_path)))
 
-    (express express? (lambda () (write-report-long-division-start express_path)))
-    
-    (printf "start division\n")
+     (express express? (lambda () (write-report-message-poly message_poly express_path)))
 
-    (let loop ([loop_message_n (prepare-message message_poly patrity_length aton_map ntoa_map)]
-               [count 1])
-      
-      (printf "~a\n" loop_message_n)
+     (express express? (lambda () (write-report-long-division-start express_path)))
+     
+     (printf "start division\n")
 
-      (express express? (lambda () (write-report-long-division-prepare-message count loop_message_n express_path)))
+     (let loop ([loop_message_n (prepare-message message_poly patrity_length)]
+                [count 1])
+       
+       (printf "~a\n" loop_message_n)
 
-      (if (<= count message_length)
-          (let* ([step1_aligned_message_x_length #f]
-                 [step2_aligned_generator_a  #f]
-                 [step3_get_first_a #f]
-                 [step4_multiply_a #f]
-                 [step5_to_n #f]
-                 [step6_xor #f]
-                 [step7_discard_first #f])
+       (express express? (lambda () (write-report-long-division-prepare-message count loop_message_n express_path)))
 
-            (set! step1_aligned_message_x_length (cdar (string->poly (poly-car loop_message_n))))
-            
-            (set! step2_aligned_generator_a (prepare-generator generator_poly step1_aligned_message_x_length))
+       (if (<= count message_length)
+           (let* ([step1_aligned_message_x_length #f]
+                  [step2_aligned_generator_a  #f]
+                  [step3_get_first_a #f]
+                  [step4_multiply_a #f]
+                  [step5_to_n #f]
+                  [step6_xor #f]
+                  [step7_discard_first #f])
 
-            (printf "~a\n" step2_aligned_generator_a)
-            
-            (set! step3_get_first_a (hash-ref ntoa_map (caar (string->poly loop_message_n))))
+             (set! step1_aligned_message_x_length (cdar (string->poly (poly-car loop_message_n))))
+             
+             (set! step2_aligned_generator_a (prepare-generator generator_poly step1_aligned_message_x_length))
 
-            (printf "~a\n" step3_get_first_a)
-            
-            (set! step4_multiply_a (poly-multiply step2_aligned_generator_a (format "a~a" step3_get_first_a) ))
+             (printf "~a\n" step2_aligned_generator_a)
+             
+             (set! step3_get_first_a (hash-ref (*gf_ntoa_map*) (caar (string->poly loop_message_n))))
 
-            (printf "~a\n" step4_multiply_a)
-            
-            (set! step5_to_n (poly-a->n step4_multiply_a aton_map))
+             (printf "~a\n" step3_get_first_a)
+             
+             (set! step4_multiply_a (poly-multiply step2_aligned_generator_a (format "a~a" step3_get_first_a) ))
 
-            (printf "~a\n" step5_to_n)
-            
-            (set! step6_xor (poly-n-xor loop_message_n step5_to_n))
+             (printf "~a\n" step4_multiply_a)
+             
+             (set! step5_to_n (poly-a->n step4_multiply_a))
 
-            (set! step7_discard_first (poly-cdr step6_xor))
-            
-            (loop step7_discard_first (add1 count)))
-          (map
-           (lambda (pair)
-             (car pair))
-           (string->poly loop_message_n))))))
+             (printf "~a\n" step5_to_n)
+             
+             (set! step6_xor (poly-n-xor loop_message_n step5_to_n))
+
+             (set! step7_discard_first (poly-cdr step6_xor))
+             
+             (loop step7_discard_first (add1 count)))
+           (map
+            (lambda (pair)
+              (car pair))
+            (string->poly loop_message_n)))))))

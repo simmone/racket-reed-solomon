@@ -23,26 +23,36 @@
    (test-case
     "test-prepare-message"
 
-    (let* ([result (get-gf-hash 8 285)]
-           [aton_map (car result)]
-           [ntoa_map (cdr result)])
+    (parameterize*
+     ([*bit_width* 8]
+      [*2^m_1* (sub1 (expt 2 (*bit_width*)))]
+      [*primitive_poly_value* 285]
+      [*gf_aton_map* (get-gf-aton-hash)]
+      [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
 
-      (check-equal?
-       (prepare-message
-        "32x15+91x14+11x13+120x12+209x11+114x10+220x9+77x8+67x7+64x6+236x5+17x4+236x3+17x2+236x1+17x0"
-        10 aton_map ntoa_map)
-       "32x25+91x24+11x23+120x22+209x21+114x20+220x19+77x18+67x17+64x16+236x15+17x14+236x13+17x12+236x11+17x10")
-      ))
+     (check-equal?
+      (prepare-message
+       "32x15+91x14+11x13+120x12+209x11+114x10+220x9+77x8+67x7+64x6+236x5+17x4+236x3+17x2+236x1+17x0"
+        10)
+      "32x25+91x24+11x23+120x22+209x21+114x20+220x19+77x18+67x17+64x16+236x15+17x14+236x13+17x12+236x11+17x10")
+     ))
    
    (test-case
     "test-prepare-generator"
+
+    (parameterize*
+     ([*bit_width* 8]
+      [*2^m_1* (sub1 (expt 2 (*bit_width*)))]
+      [*primitive_poly_value* 285]
+      [*gf_aton_map* (get-gf-aton-hash)]
+      [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
     
-    (check-equal?
-     (prepare-generator
-      "x10+a251x9+a67x8+a46x7+a61x6+a118x5+a70x4+a64x3+a94x2+a32x+a45"
-      25)
-     "a0x25+a251x24+a67x23+a46x22+a61x21+a118x20+a70x19+a64x18+a94x17+a32x16+a45x15")
-    )
+     (check-equal?
+      (prepare-generator
+       "x10+a251x9+a67x8+a46x7+a61x6+a118x5+a70x4+a64x3+a94x2+a32x+a45"
+       25)
+      "a0x25+a251x24+a67x23+a46x22+a61x21+a118x20+a70x19+a64x18+a94x17+a32x16+a45x15")
+     ))
    
    (test-case
     "test-poly-n-xor"

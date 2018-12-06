@@ -12,7 +12,7 @@
           [write-report-header (-> path-string? void?)]
           [write-report-input (-> (listof exact-integer?) natural? natural? natural? path-string? void?)]
           [write-report-primitive-poly (-> path-string? void?)]
-          [write-report-galois-fields (-> hash? path-string? void?)]
+          [write-report-galois-fields (-> hash? hash? path-string? void?)]
           [write-report-generator-poly (-> string? path-string? void?)]
           [write-report-message-poly (-> string? path-string? void?)]
           [write-report-long-division-start (-> path-string? void?)]

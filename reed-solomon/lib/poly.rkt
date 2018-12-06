@@ -1,49 +1,74 @@
 #lang racket
 
 (provide (contract-out
-          [get-gf-hash (-> natural? natural? pair?)]
-          [poly-a->n (-> string? hash? string?)]
-          [poly-n->a (-> string? hash? string?)]
-          [poly-multiply (-> string? string? natural? string?)]
+          [get-gf-aton-hash (-> hash?)]
+          [poly-a->n (-> string? string?)]
+          [poly-n->a (-> string? string?)]
+          [poly-multiply (-> string? string? string?)]
           [string->poly (-> string? (listof pair?))]
           [poly->string (-> (listof pair?) string?)]
           [poly-n->string (-> (listof pair?) string?)]
           [poly-combine-a (-> string? string?)]
           [poly-cdr (-> string? string?)]
           [poly-car (-> string? string?)]
+          [*bit_width* parameter?]
+          [*2^m_1* parameter?]
+          [*primitive_poly_value* parameter?]
+          [*gf_aton_map* parameter?]
+          [*gf_ntoa_map* parameter?]
           ))
 
-(define (get-gf-hash m primitive_poly)
-  (let ([aton_map (make-hash)]
-        [ntoa_map (make-hash)]
-        [2m_1 (sub1 (expt 2 m))])
+(define *bit_width* (make-parameter #f))
+(define *2^m_1* (make-parameter #f))
+(define *primitive_poly_value* (make-parameter #f))
+(define *gf_aton_map* (make-parameter #f))
+(define *gf_ntoa_map* (make-parameter #f))
+
+(define (get-gf-aton-hash)
+  (let ([aton_map (make-hash)])
     (let loop ([a 0]
                [last_n (/ 1 2)])
-      (when (< a 2m_1)
+      (when (< a (*2^m_1*))
             (let ([n (* last_n 2)])
-              (when (> n 2m_1)
-                    (set! n (bitwise-xor n primitive_poly)))
+              (when (> n (*2^m_1*))
+                    (set! n (bitwise-xor n (*primitive_poly_value*))))
 
               (hash-set! aton_map a n)
-              (hash-set! ntoa_map n a)
-              (loop (add1 a) n))))
-    (cons aton_map ntoa_map)))
 
-(define (poly-a->n poly_str aton_map)
+              (loop (add1 a) n))))
+    aton_map))
+
+(define (poly-a->n poly_str)
   (regexp-replace* #rx"a"
                    (poly->string
                     (map
                      (lambda (pair)
-                       (cons (hash-ref aton_map (car pair)) (cdr pair)))
+                       (cons (hash-ref (*gf_aton_map*) (car pair)) (cdr pair)))
                      (string->poly poly_str)))
                    ""))
 
-(define (poly-n->a poly_str ntoa_map)
+(define (poly-n->a poly_str)
   (poly->string
    (map
     (lambda (pair)
-      (cons (hash-ref ntoa_map (car pair)) (cdr pair)))
+      (cons (hash-ref (*gf_ntoa_map*) (car pair)) (cdr pair)))
     (string->poly poly_str))))
+
+(define (poly-multiply poly1 poly2)
+  (let ([poly2_list (string->poly poly2)])
+    (let loop ([poly1_list (string->poly poly1)]
+               [result_poly '()])
+      (if (not (null? poly1_list))
+          (loop
+           (cdr poly1_list)
+           `(,@result_poly
+             ,@(map
+               (lambda (poly)
+                 (cons 
+                  (modulo (+ (caar poly1_list) (car poly)) (*2^m_1*))
+                  (+ (cdar poly1_list) (cdr poly))))
+               poly2_list)))
+          (poly->string result_poly)))))
 
 (define (poly-combine-a poly_str)
   (let ([xa_map (make-hash)])
@@ -55,23 +80,6 @@
      (string->poly poly_str))
     
     (poly->string (map (lambda (pair) (cons (cdr pair) (car pair))) (hash->list xa_map)))))
-
-(define (poly-multiply poly1 poly2 [#:m 8])
-  (let ([poly2_list (string->poly poly2)]
-        [2m_1 (sub1 (expt 2 m))])
-    (let loop ([poly1_list (string->poly poly1)]
-               [result_poly '()])
-      (if (not (null? poly1_list))
-          (loop
-           (cdr poly1_list)
-           `(,@result_poly
-             ,@(map
-               (lambda (poly)
-                 (cons 
-                  (modulo (+ (caar poly1_list) (car poly)) 2m_1)
-                  (+ (cdar poly1_list) (cdr poly))))
-               poly2_list)))
-          (poly->string result_poly)))))
 
 (define (string->poly poly_str)
   (let loop ([loop_list (regexp-split #rx"\\+|\\-" poly_str)]
