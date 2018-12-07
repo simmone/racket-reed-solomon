@@ -17,7 +17,6 @@
       (lambda ()
         (printf "#lang scribble/base\n\n")
         (printf "@title{Error Code}\n\n")
-        (printf "last result.\n")
         (printf "@section{error code list}\n")
         (printf "~a\n" (display-double-list 
                         raw_list

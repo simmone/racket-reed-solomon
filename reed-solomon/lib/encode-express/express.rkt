@@ -17,6 +17,6 @@
           [write-report-generator-poly (-> string? path-string? void?)]
           [write-report-message-poly (-> string? path-string? void?)]
           [write-report-long-division-start (-> path-string? void?)]
-          [write-report-long-division-detail (-> natural? string? natural? string? natural? string? string? string? string? path-string? void?)]
+          [write-report-long-division-detail (-> natural? string? string? natural? natural? string? natural? string? string? string? string? natural? path-string? void?)]
           [write-report-error-code (-> natural? (listof exact-integer?) path-string? void?)]
           ))

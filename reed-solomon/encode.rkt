@@ -56,52 +56,58 @@
                 [count 1])
        
        (if (<= count message_length)
-           (let* ([step1_aligned_message_x_length #f]
-                  [step2_aligned_generator_a  #f]
-                  [step3_get_first_a #f]
-                  [step4_multiply_a #f]
-                  [step5_to_n #f]
-                  [step6_xor_n #f]
-                  [step7_discard_first_zeros_n #f]
-                  [step8_zeros_count #f])
+           (let* ([step1_message_x #f]
+                  [step2_message_n #f]
+                  [step3_aligned_generator_by_x #f]
+                  [step4_message_n_to_a #f]
+                  [step5_multiply_a #f]
+                  [step6_to_n #f]
+                  [step7_xor_n #f]
+                  [step8_discard_first_zeros_n #f]
+                  [step9_zeros_count #f])
 
-             (set! step1_aligned_message_x_length (cdar (string->poly loop_message_n)))
+             (set! step1_message_x (cdar (string->poly loop_message_n)))
 
-             (set! step2_aligned_generator_a (prepare-generator generator_poly step1_aligned_message_x_length))
+             (set! step2_message_n (caar (string->poly loop_message_n)))
 
-             (set! step3_get_first_a (hash-ref (*gf_ntoa_map*) (caar (string->poly loop_message_n))))
+             (set! step3_aligned_generator_by_x (prepare-generator generator_poly step1_message_x))
 
-             (set! step4_multiply_a (poly-multiply step2_aligned_generator_a (format "a~a" step3_get_first_a) ))
+             (set! step4_message_n_to_a (hash-ref (*gf_ntoa_map*) step2_message_n))
 
-             (set! step5_to_n (poly-a->n step4_multiply_a))
+             (set! step5_multiply_a (poly-multiply step3_aligned_generator_by_x (format "a~a" step4_message_n_to_a)))
 
-             (set! step6_xor_n (poly-n-xor loop_message_n step5_to_n))
+             (set! step6_to_n (poly-a->n step5_multiply_a))
 
-             (set! step7_discard_first_zeros_n 
+             (set! step7_xor_n (poly-n-xor loop_message_n step6_to_n))
+
+             (set! step8_discard_first_zeros_n 
                    (regexp-replace* #rx"a" 
                                     (poly->string
-                                     (let loop ([loop_list (string->poly step6_xor_n)])
+                                     (let loop ([loop_list (string->poly step7_xor_n)])
                                        (if (= (caar loop_list) 0)
                                            (loop (cdr loop_list))
                                            loop_list)))
                                     ""))
              
-             (set! step8_zeros_count (- (length (string->poly loop_message_n)) (length (string->poly step7_discard_first_zeros_n))))
+             (set! step9_zeros_count (- (length (string->poly loop_message_n)) (length (string->poly step8_discard_first_zeros_n))))
 
              (express express? (lambda () 
                                  (write-report-long-division-detail
                                   count
+                                  generator_poly
                                   loop_message_n
-                                  step1_aligned_message_x_length
-                                  step2_aligned_generator_a
-                                  step3_get_first_a
-                                  step4_multiply_a
-                                  step5_to_n
-                                  step6_xor_n
-                                  step7_discard_first_zeros_n
+                                  step1_message_x
+                                  step2_message_n
+                                  step3_aligned_generator_by_x
+                                  step4_message_n_to_a
+                                  step5_multiply_a
+                                  step6_to_n
+                                  step7_xor_n
+                                  step8_discard_first_zeros_n
+                                  step9_zeros_count
                                   express_path)))
              
-             (loop step7_discard_first_zeros_n (+ count step8_zeros_count)))
+             (loop step8_discard_first_zeros_n (+ count step9_zeros_count)))
            (let ([result
                   (map
                    (lambda (pair)
