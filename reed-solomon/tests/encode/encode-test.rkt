@@ -20,7 +20,7 @@
      (list 168  72  22  82  217  54  156  0  46  15  180  122  16))
 
     (check-equal? 
-    (encode '(1 2 3 4 5 6 7 8 9 10 11) 4 #:bit_width 4 #:primitive_poly_value 19)
+    (encode '(1 2 3 4 5 6 7 8 9 10 11) 4 #:bit_width 4 #:primitive_poly_value 19 #:express? #t)
     (list 3 3 12 12))
     )
    
