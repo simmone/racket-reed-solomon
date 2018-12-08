@@ -1,11 +1,10 @@
 #lang racket
 
-(require "lib/poly.rkt")
-(require "lib/generator-poly.rkt")
-(require "lib/long-division.rkt")
-
 (require "lib/lib.rkt")
-(require "lib/encode-express/express.rkt")
+(require "lib/encode/poly.rkt")
+(require "lib/encode/generator-poly.rkt")
+(require "lib/encode/long-division.rkt")
+(require "lib/encode/express/express.rkt")
 
 (provide (contract-out
           [encode (->* 

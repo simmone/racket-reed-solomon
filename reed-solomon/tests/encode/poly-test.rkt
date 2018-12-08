@@ -2,7 +2,7 @@
 
 (require rackunit/text-ui)
 
-(require rackunit "../lib/poly.rkt")
+(require rackunit "../../lib/encode/poly.rkt")
 
 (define test-poly
   (test-suite 

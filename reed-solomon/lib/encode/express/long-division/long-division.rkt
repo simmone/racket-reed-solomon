@@ -1,6 +1,6 @@
 #lang racket
 
-(require "../../lib.rkt")
+(require "../../../lib.rkt")
 
 (provide (contract-out
           [write-report-long-division-start (-> path-string? void?)]

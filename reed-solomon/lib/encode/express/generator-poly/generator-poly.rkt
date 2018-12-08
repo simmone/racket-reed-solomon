@@ -1,6 +1,6 @@
 #lang racket
 
-(require "../../lib.rkt")
+(require "../../../lib.rkt")
 
 (provide (contract-out
           [write-report-generator-poly (-> string? path-string? void?)]

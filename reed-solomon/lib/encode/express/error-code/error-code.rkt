@@ -1,6 +1,6 @@
 #lang racket
 
-(require "../../lib.rkt")
+(require "../../../lib.rkt")
 
 (provide (contract-out
           [write-report-error-code (-> natural? (listof exact-integer?) path-string? void?)]
