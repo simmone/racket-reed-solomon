@@ -14,7 +14,7 @@
           (let xor-loop ([loop_list raw_list]
                          [last_result loop_count])
             (if (not (null? loop_list))
-                (xor-loop (cdr loop_list) (modulo (* (bitwise-xor last_result (car loop_list)) (expt 2 loop_count)) 16))
+                (xor-loop (cdr loop_list) (bitwise-xor last_result (car loop_list)))
                 last_result))
           result_list))
         result_list)))
