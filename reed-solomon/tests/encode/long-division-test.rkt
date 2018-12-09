@@ -2,7 +2,8 @@
 
 (require rackunit/text-ui)
 
-(require "../../lib/encode/poly.rkt")
+(require "../../lib/share/poly.rkt")
+(require "../../lib/share/gf.rkt")
 (require rackunit "../../lib/encode/long-division.rkt")
 
 (define test-long-division

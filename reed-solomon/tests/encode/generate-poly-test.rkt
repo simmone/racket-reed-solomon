@@ -4,7 +4,8 @@
 
 (require rackunit "../../lib/encode/generator-poly.rkt")
 
-(require "../../lib/encode/poly.rkt")
+(require "../../lib/share/gf.rkt")
+(require "../../lib/share/poly.rkt")
 
 (define test-generator-poly
   (test-suite 

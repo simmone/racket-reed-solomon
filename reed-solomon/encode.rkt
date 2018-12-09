@@ -1,7 +1,8 @@
 #lang racket
 
-(require "lib/lib.rkt")
-(require "lib/encode/poly.rkt")
+(require "lib/share/lib.rkt")
+(require "lib/share/gf.rkt")
+(require "lib/share/poly.rkt")
 (require "lib/encode/generator-poly.rkt")
 (require "lib/encode/long-division.rkt")
 (require "lib/encode/express/express.rkt")
@@ -73,9 +74,9 @@
 
              (set! step4_message_n_to_a (hash-ref (*gf_ntoa_map*) step2_message_n))
 
-             (set! step5_multiply_a (poly-multiply step3_aligned_generator_by_x (format "a~a" step4_message_n_to_a)))
+             (set! step5_multiply_a (poly-gf-multiply step3_aligned_generator_by_x (format "a~a" step4_message_n_to_a)))
 
-             (set! step6_to_n (poly-a->n step5_multiply_a))
+             (set! step6_to_n (poly-gf-a->n step5_multiply_a))
 
              (set! step7_xor_n (poly-n-xor loop_message_n step6_to_n))
 

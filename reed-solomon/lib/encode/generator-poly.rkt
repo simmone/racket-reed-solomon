@@ -1,6 +1,7 @@
 #lang racket
 
-(require "poly.rkt")
+(require "../share/gf.rkt")
+(require "../share/poly.rkt")
 
 (provide (contract-out
           [generator-poly (-> natural? string?)]
@@ -12,8 +13,8 @@
     (if (<= loop_count count)
         (loop
          (add1 loop_count)
-         (poly-n->a
+         (poly-gf-n->a
           (poly-combine-a
-           (poly-a->n
-            (poly-multiply loop_poly (format "a0x1+a~ax0" (sub1 loop_count)))))))
+           (poly-gf-a->n
+            (poly-gf-multiply loop_poly (format "a0x1+a~ax0" (sub1 loop_count)))))))
         loop_poly)))

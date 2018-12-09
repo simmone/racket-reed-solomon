@@ -1,6 +1,7 @@
 #lang racket
 
-(require "poly.rkt")
+(require "../share/poly.rkt")
+(require "../share/gf.rkt")
 
 (provide (contract-out
           [message->poly (-> (listof exact-integer?) string?)]
@@ -23,9 +24,9 @@
 (define (prepare-message msg count)
   (let ([multiplied_poly
          (string->poly
-          (poly-a->n
-           (poly-multiply
-            (poly-n->a msg)
+          (poly-gf-a->n
+           (poly-gf-multiply
+            (poly-gf-n->a msg)
             (format "x~a" count))))])
     (regexp-replace* #rx"a" 
                       (poly->string
@@ -38,7 +39,7 @@
 
 (define (prepare-generator generator count)
   (let ([first_x (cdar (string->poly generator))])
-    (poly-multiply
+    (poly-gf-multiply
      generator (format "x~a" (- count first_x)))))
 
 (define (poly-n-xor poly1 poly2)
