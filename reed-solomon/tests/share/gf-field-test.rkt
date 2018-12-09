@@ -112,7 +112,19 @@
      (check-equal? (poly-gf-multiply "a170x1" "a164x1") "a79x2")
      
      (check-equal? (poly-gf-multiply "x+a0" "x+a1") "a0x2+a1x1+a0x1+a1x0")
-    ))
+     )
+
+    (parameterize*
+     ([*bit_width* 4]
+      [*2^m_1* (sub1 (expt 2 (*bit_width*)))]
+      [*primitive_poly_value* 19]
+      [*gf_aton_map* (get-gf-aton-hash)]
+      [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
+
+     (check-equal? (poly-gf-a->n (poly-gf-multiply (poly-gf-n->a "12x3+4x2+3x+15") "a9x")) "1x4+14x3+13x2+12x1")
+
+     (check-equal? (poly-gf-a->n (poly-gf-multiply (poly-gf-n->a "12x3+4x2+3x+15") "5x")) "1x4+14x3+13x2+12x1")
+     ))
 
    ))
 
