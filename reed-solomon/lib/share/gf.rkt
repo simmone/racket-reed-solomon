@@ -6,7 +6,9 @@
           [get-gf-aton-hash (-> hash?)]
           [poly-gf-a->n (-> string? string?)]
           [poly-gf-n->a (-> string? string?)]
-          [poly-gf-multiply (-> string? string? string?)]
+          [poly-gf-a-multiply (-> string? string? string?)]
+          [poly-gf-n-multiply (-> string? string? string?)]
+          [poly-gf-n-multiply-align (-> exact-integer? exact-integer? exact-integer?)]
           [*bit_width* parameter?]
           [*2^m_1* parameter?]
           [*primitive_poly_value* parameter?]
@@ -50,7 +52,7 @@
       (cons (hash-ref (*gf_ntoa_map*) (car pair)) (cdr pair)))
     (string->poly poly_str))))
 
-(define (poly-gf-multiply poly1 poly2)
+(define (poly-gf-a-multiply poly1 poly2)
   (let ([poly2_list (string->poly poly2)])
     (let loop ([poly1_list (string->poly poly1)]
                [result_poly '()])
@@ -65,3 +67,16 @@
                   (+ (cdar poly1_list) (cdr poly))))
                poly2_list)))
           (poly->string result_poly)))))
+
+(define (poly-gf-n-multiply poly1 poly2)
+  (poly-gf-a->n 
+   (poly-gf-a-multiply (poly-gf-n->a poly1) (poly-gf-n->a poly2))))
+
+(define (poly-gf-n-multiply-align n target)
+  (let ([n_a (hash-ref (*gf_ntoa_map*) n)]
+        [target_a (hash-ref (*gf_ntoa_map*) target)])
+    (hash-ref (*gf_aton_map*)
+              (modulo
+               (- (+ (*2^m_1*) target_a) n_a)
+               (*2^m_1*)))))
+    

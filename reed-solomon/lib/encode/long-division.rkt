@@ -25,7 +25,7 @@
   (let ([multiplied_poly
          (string->poly
           (poly-gf-a->n
-           (poly-gf-multiply
+           (poly-gf-a-multiply
             (poly-gf-n->a msg)
             (format "x~a" count))))])
     (regexp-replace* #rx"a" 
@@ -39,7 +39,7 @@
 
 (define (prepare-generator generator count)
   (let ([first_x (cdar (string->poly generator))])
-    (poly-gf-multiply
+    (poly-gf-a-multiply
      generator (format "x~a" (- count first_x)))))
 
 (define (poly-n-xor poly1 poly2)

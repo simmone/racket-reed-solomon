@@ -16,5 +16,5 @@
          (poly-gf-n->a
           (poly-combine-a
            (poly-gf-a->n
-            (poly-gf-multiply loop_poly (format "a0x1+a~ax0" (sub1 loop_count)))))))
+            (poly-gf-a-multiply loop_poly (format "a0x1+a~ax0" (sub1 loop_count)))))))
         loop_poly)))

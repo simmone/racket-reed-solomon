@@ -93,26 +93,29 @@
      ))
 
    (test-case
-    "test-gf-multiply"
+    "test-poly-gf-a-multiply"
 
     (parameterize*
      ([*bit_width* 8]
       [*2^m_1* (sub1 (expt 2 (*bit_width*)))])
     
-     (check-equal? (poly-gf-multiply "a0x1+a0x0" "a0x1+a1x0") "a0x2+a1x1+a0x1+a1x0")
+     (check-equal? (poly-gf-a-multiply "a0x1+a0x0" "a0x1+a1x0") "a0x2+a1x1+a0x1+a1x0")
 
-     (check-equal? (poly-gf-multiply "a0x1+a0x0" "x2") "a0x3+a0x2")
+     (check-equal? (poly-gf-a-multiply "a0x1+a0x0" "x2") "a0x3+a0x2")
 
-     (check-equal? (poly-gf-multiply "a1" "x2") "a1x2")
+     (check-equal? (poly-gf-a-multiply "a1" "x2") "a1x2")
 
-     (check-equal? (poly-gf-multiply "a" "x") "a1x1")
+     (check-equal? (poly-gf-a-multiply "a" "x") "a1x1")
 
-     (check-equal? (poly-gf-multiply "a3x4+a1x2" "a2x3+a0x1") "a5x7+a3x5+a3x5+a1x3")
+     (check-equal? (poly-gf-a-multiply "a3x4+a1x2" "a2x3+a0x1") "a5x7+a3x5+a3x5+a1x3")
 
-     (check-equal? (poly-gf-multiply "a170x1" "a164x1") "a79x2")
+     (check-equal? (poly-gf-a-multiply "a170x1" "a164x1") "a79x2")
      
-     (check-equal? (poly-gf-multiply "x+a0" "x+a1") "a0x2+a1x1+a0x1+a1x0")
-     )
+     (check-equal? (poly-gf-a-multiply "x+a0" "x+a1") "a0x2+a1x1+a0x1+a1x0")
+     ))
+
+   (test-case
+    "test-poly-gf-n-multiply"
 
     (parameterize*
      ([*bit_width* 4]
@@ -121,10 +124,30 @@
       [*gf_aton_map* (get-gf-aton-hash)]
       [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
 
-     (check-equal? (poly-gf-a->n (poly-gf-multiply (poly-gf-n->a "12x3+4x2+3x+15") "a9x")) "1x4+14x3+13x2+12x1")
+     (check-equal? (poly-gf-n-multiply "12x3+4x2+3x+15" "10x") "1x4+14x3+13x2+12x1")
 
-     (check-equal? (poly-gf-a->n (poly-gf-multiply (poly-gf-n->a "12x3+4x2+3x+15") "5x")) "1x4+14x3+13x2+12x1")
+     (check-equal? (poly-gf-n-multiply "12x3+4x2+3x+15" "6") "14x3+11x2+10x1+4x0")
      ))
+   
+   (test-case
+    "test-poly-gf-n-multiply-align"
+
+    (parameterize*
+     ([*bit_width* 4]
+      [*2^m_1* (sub1 (expt 2 (*bit_width*)))]
+      [*primitive_poly_value* 19]
+      [*gf_aton_map* (get-gf-aton-hash)]
+      [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
+
+     (check-equal? (poly-gf-n-multiply-align 12 1) 10)
+
+     (check-equal? (poly-gf-n-multiply-align 12 14) 6)
+
+     (check-equal? (poly-gf-n-multiply-align 6 12) 2)
+    
+     (check-equal? (poly-gf-n-multiply-align 6 8) 13)
+     )
+    )
 
    ))
 

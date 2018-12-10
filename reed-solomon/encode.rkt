@@ -74,7 +74,7 @@
 
              (set! step4_message_n_to_a (hash-ref (*gf_ntoa_map*) step2_message_n))
 
-             (set! step5_multiply_a (poly-gf-multiply step3_aligned_generator_by_x (format "a~a" step4_message_n_to_a)))
+             (set! step5_multiply_a (poly-gf-a-multiply step3_aligned_generator_by_x (format "a~a" step4_message_n_to_a)))
 
              (set! step6_to_n (poly-gf-a->n step5_multiply_a))
 
