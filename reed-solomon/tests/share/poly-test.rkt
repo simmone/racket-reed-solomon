@@ -40,14 +40,14 @@
     )
 
    (test-case
-    "test-poly-combine-a"
+    "test-poly-combine-n"
     
-    (check-equal? (poly-combine-a "3x1+2x1+8x0") "a1x1+a8x0")
-    (check-equal? (poly-combine-a "3x2+2x1+0x1+8x0+5x0") "a3x2+a2x1+a13x0")
+    (check-equal? (poly-combine-n "3x1+2x1+8x0") "a1x1+a8x0")
+    (check-equal? (poly-combine-n "3x2+2x1+0x1+8x0+5x0") "a3x2+a2x1+a13x0")
 
-    (check-equal? (poly-combine-a "1x2+2x1+1x1+2x0") "a1x2+a3x1+a2x0")
+    (check-equal? (poly-combine-n "1x2+2x1+1x1+2x0") "a1x2+a3x1+a2x0")
 
-    (check-equal? (poly-combine-a "1x3+4x2+3x2+12x1+2x1+8x0") "a1x3+a7x2+a14x1+a8x0")
+    (check-equal? (poly-combine-n "1x3+4x2+3x2+12x1+2x1+8x0") "a1x3+a7x2+a14x1+a8x0")
     )
    
    ))

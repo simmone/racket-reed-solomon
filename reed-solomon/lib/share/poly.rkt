@@ -3,7 +3,7 @@
 (provide (contract-out
           [string->poly (-> string? (listof pair?))]
           [poly->string (-> (listof pair?) string?)]
-          [poly-combine-a (-> string? string?)]
+          [poly-combine-n (-> string? string?)]
           [poly-n->string (-> (listof pair?) string?)]
           ))
 
@@ -91,7 +91,7 @@
          null
          sorted_list))))
 
-(define (poly-combine-a poly_str)
+(define (poly-combine-n poly_str)
   (let ([xa_map (make-hash)])
     (for-each
      (lambda (pair)
@@ -100,7 +100,7 @@
            (hash-set! xa_map (cdr pair) (bitwise-xor (car pair) (hash-ref xa_map (cdr pair))))))
      (string->poly poly_str))
     
-    (poly->string (map (lambda (pair) (cons (cdr pair) (car pair))) (hash->list xa_map)))))
+    (poly-n->string (map (lambda (pair) (cons (cdr pair) (car pair))) (hash->list xa_map)))))
 
 (define (poly-n->string poly_list)
   (regexp-replace* #rx"a" (poly->string poly_list) ""))

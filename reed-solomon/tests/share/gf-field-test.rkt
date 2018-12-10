@@ -4,6 +4,8 @@
 
 (require rackunit "../../lib/share/gf.rkt")
 
+(require "../../lib/share/poly.rkt")
+
 (define test-gf
   (test-suite 
    "test-gf"
@@ -162,6 +164,20 @@
      (check-equal? (poly-gf-n-multiply "7x2+7x+9" (number->string (poly-gf-n-multiply-align 9 1))) "14x2+14x1+1x0")
 
      (check-equal? (poly-gf-n-multiply "3x+14" (number->string (poly-gf-n-multiply-align 9 1))) "6x1+15x0")
+
+     ))
+
+   (test-case
+    "test-poly-multiply"
+
+    (parameterize*
+     ([*bit_width* 4]
+      [*2^m_1* (sub1 (expt 2 (*bit_width*)))]
+      [*primitive_poly_value* 19]
+      [*gf_aton_map* (get-gf-aton-hash)]
+      [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
+
+     (check-equal? (poly-combine-n (string-append (poly-gf-n-multiply "10x+6" "2x+13") "+1")) "7x2+7x1+9x0")
 
      ))
 
