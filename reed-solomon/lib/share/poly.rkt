@@ -1,14 +1,15 @@
 #lang racket
 
 (provide (contract-out
-          [string->poly (-> string? (listof pair?))]
-          [poly->string (-> (listof pair?) string?)]
-          [poly-combine-n (-> string? string?)]
+          [string-a->poly (-> string? (listof pair?))]
+          [poly-a->string (-> (listof pair?) string?)]
+          [string-n->poly (-> string? (listof pair?))]
           [poly-n->string (-> (listof pair?) string?)]
+          [poly-combine-n (-> string? string?)]
           [poly-n-add (-> string? string? string?)]
           ))
 
-(define (string->poly poly_str)
+(define (string-a->poly poly_str)
   (let loop ([loop_list (regexp-split #rx"\\+|\\-" poly_str)]
              [result_list '()])
     (if (not (null? loop_list))
@@ -70,7 +71,15 @@
           result_list))
         (reverse result_list))))
 
-(define (poly->string poly_list)
+(define (string-n->poly poly_str)
+  (map
+   (lambda (item)
+     (if (= (car item) 0)
+         (cons 1 (cdr item))
+         item))
+   (string-a->poly poly_str)))
+
+(define (poly-a->string poly_list)
   (if (null? poly_list)
       ""
       (let ([sorted_list
@@ -92,6 +101,9 @@
          null
          sorted_list))))
 
+(define (poly-n->string poly_list)
+  (regexp-replace* #rx"a" (poly-a->string poly_list) ""))
+
 (define (poly-combine-n poly_str)
   (let ([xa_map (make-hash)])
     (for-each
@@ -99,19 +111,16 @@
        (if (not (hash-has-key? xa_map (cdr pair)))
            (hash-set! xa_map (cdr pair) (car pair))
            (hash-set! xa_map (cdr pair) (bitwise-xor (car pair) (hash-ref xa_map (cdr pair))))))
-     (string->poly poly_str))
+     (string-a->poly poly_str))
     
     (poly-n->string (map (lambda (pair) (cons (cdr pair) (car pair))) (hash->list xa_map)))))
 
 (define (poly-n-add poly1_n poly2_n)
   (poly-n->string
    (let loop ([loop_list 
-               (string->poly (poly-combine-n (string-append poly1_n "+" poly2_n)))])
+               (string-a->poly (poly-combine-n (poly-n->string `(,@(string-n->poly poly1_n) ,@(string-n->poly poly2_n)))))])
      (if (not (null? loop_list))
          (if (= (caar loop_list) 0)
              (loop (cdr loop_list))
              loop_list)
          '()))))
-
-(define (poly-n->string poly_list)
-  (regexp-replace* #rx"a" (poly->string poly_list) ""))

@@ -9,34 +9,48 @@
    "test-poly"
 
    (test-case
-    "test-string->poly"
+    "test-string-a->poly"
     
-    (check-equal? (string->poly "a0x1+a0x0") '( (0 . 1) (0 . 0) ))
-    (check-equal? (string->poly "a0x1-a0x0") '( (0 . 1) (0 . 0) ))
-    (check-equal? (string->poly "a1-x1") '( (1 . 0) (0 . 1) ))
-    (check-equal? (string->poly "a1-a2") '( (1 . 0) (2 . 0) ))
-    (check-equal? (string->poly "a1x7") '( (1 . 7) ))
-    (check-equal? (string->poly "a") '( (1 . 0) ))
-    (check-equal? (string->poly "x") '( (0 . 1) ))
-    (check-equal? (string->poly "") '( (0 . 0) ))
-    (check-equal? (string->poly "a2") '( (2 . 0) ))
-    (check-equal? (string->poly "x2") '( (0 . 2) ))
-    (check-equal? (string->poly "ax") '( (1 . 1) ))
-    (check-equal? (string->poly "1x2") '( (1 . 2) ))
-    (check-equal? (string->poly "1") '( (1 . 0) ))
+    (check-equal? (string-a->poly "a0x1+a0x0") '( (0 . 1) (0 . 0) ))
+    (check-equal? (string-a->poly "a0x1-a0x0") '( (0 . 1) (0 . 0) ))
+    (check-equal? (string-a->poly "a1-x1") '( (1 . 0) (0 . 1) ))
+    (check-equal? (string-a->poly "a1-a2") '( (1 . 0) (2 . 0) ))
+    (check-equal? (string-a->poly "a1x7") '( (1 . 7) ))
+    (check-equal? (string-a->poly "a") '( (1 . 0) ))
+    (check-equal? (string-a->poly "x") '( (0 . 1) ))
+    (check-equal? (string-a->poly "") '( (0 . 0) ))
+    (check-equal? (string-a->poly "a2") '( (2 . 0) ))
+    (check-equal? (string-a->poly "x2") '( (0 . 2) ))
+    (check-equal? (string-a->poly "ax") '( (1 . 1) ))
+    (check-equal? (string-a->poly "1x2") '( (1 . 2) ))
+    (check-equal? (string-a->poly "1") '( (1 . 0) ))
+
+    (check-equal? (string-a->poly "x4") '( (0 . 4) ))
     
+    )
+
+   (test-case
+    "test-string-n->poly"
+    
+    (check-equal? (string-n->poly "x4") '( (1 . 4) ))
     )
    
    (test-case
-    "test-poly->string"
+    "test-poly-a->string"
 
-    (check-equal? (poly->string '( (0 . 1) (0 . 0) )) "a0x1+a0x0")
-    (check-equal? (poly->string '( (0 . 1) (0 . 0) )) "a0x1+a0x0")
-    (check-equal? (poly->string '( (1 . 0) (0 . 1) )) "a0x1+a1x0")
-    (check-equal? (poly->string '( (1 . 0) (2 . 0) )) "a2x0+a1x0")
-    (check-equal? (poly->string '( (1 . 7) )) "a1x7")
-    (check-equal? (poly->string '( (1 . 0) (3 . 4) (5 . 2) (2 . 3) (3 . 3) (2 . 0) )) "a3x4+a3x3+a2x3+a5x2+a2x0+a1x0")
-    (check-equal? (poly->string '()) "")
+    (check-equal? (poly-a->string '( (0 . 1) (0 . 0) )) "a0x1+a0x0")
+    (check-equal? (poly-a->string '( (0 . 1) (0 . 0) )) "a0x1+a0x0")
+    (check-equal? (poly-a->string '( (1 . 0) (0 . 1) )) "a0x1+a1x0")
+    (check-equal? (poly-a->string '( (1 . 0) (2 . 0) )) "a2x0+a1x0")
+    (check-equal? (poly-a->string '( (1 . 7) )) "a1x7")
+    (check-equal? (poly-a->string '( (1 . 0) (3 . 4) (5 . 2) (2 . 3) (3 . 3) (2 . 0) )) "a3x4+a3x3+a2x3+a5x2+a2x0+a1x0")
+    (check-equal? (poly-a->string '()) "")
+    )
+
+   (test-case
+    "test-poly-n->string"
+
+    (check-equal? (poly-n->string '( (1 . 1) (1 . 0) )) "1x1+1x0")
     )
 
    (test-case
@@ -55,6 +69,8 @@
     "test-poly-n-add"
 
     (check-equal? (poly-n-add "1x4" "1x4+14x3+13x2+12x1") "14x3+13x2+12x1")
+
+    (check-equal? (poly-n-add "x4" "1x4+14x3+13x2+12x1") "14x3+13x2+12x1")
     )
    
    ))

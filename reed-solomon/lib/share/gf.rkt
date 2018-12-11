@@ -38,23 +38,23 @@
 
 (define (poly-gf-a->n poly_str)
   (regexp-replace* #rx"a"
-                   (poly->string
+                   (poly-a->string
                     (map
                      (lambda (pair)
                        (cons (hash-ref (*gf_aton_map*) (car pair)) (cdr pair)))
-                     (string->poly poly_str)))
+                     (string-a->poly poly_str)))
                    ""))
 
 (define (poly-gf-n->a poly_str)
-  (poly->string
+  (poly-a->string
    (map
     (lambda (pair)
       (cons (hash-ref (*gf_ntoa_map*) (car pair)) (cdr pair)))
-    (string->poly poly_str))))
+    (string-a->poly poly_str))))
 
 (define (poly-gf-a-multiply poly1 poly2)
-  (let ([poly2_list (string->poly poly2)])
-    (let loop ([poly1_list (string->poly poly1)]
+  (let ([poly2_list (string-a->poly poly2)])
+    (let loop ([poly1_list (string-a->poly poly1)]
                [result_poly '()])
       (if (not (null? poly1_list))
           (loop
@@ -66,7 +66,7 @@
                   (modulo (+ (caar poly1_list) (car poly)) (*2^m_1*))
                   (+ (cdar poly1_list) (cdr poly))))
                poly2_list)))
-          (poly->string result_poly)))))
+          (poly-a->string result_poly)))))
 
 (define (poly-gf-n-multiply poly1 poly2)
   (poly-gf-a->n 

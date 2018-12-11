@@ -29,7 +29,7 @@
       [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
 
      (check-equal? (euc-init "12x3+4x2+3x+15" 2) 
-                   (cons "6x2+6x+4" "10x+6"))
+                   (cons "6x2+6x1+4x0" "10x+6"))
     ))
 
 ;   (test-case
