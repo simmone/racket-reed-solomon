@@ -5,6 +5,7 @@
           [poly->string (-> (listof pair?) string?)]
           [poly-combine-n (-> string? string?)]
           [poly-n->string (-> (listof pair?) string?)]
+          [poly-n-add (-> string? string? string?)]
           ))
 
 (define (string->poly poly_str)
@@ -101,6 +102,16 @@
      (string->poly poly_str))
     
     (poly-n->string (map (lambda (pair) (cons (cdr pair) (car pair))) (hash->list xa_map)))))
+
+(define (poly-n-add poly1_n poly2_n)
+  (poly-n->string
+   (let loop ([loop_list 
+               (string->poly (poly-combine-n (string-append poly1_n "+" poly2_n)))])
+     (if (not (null? loop_list))
+         (if (= (caar loop_list) 0)
+             (loop (cdr loop_list))
+             loop_list)
+         '()))))
 
 (define (poly-n->string poly_list)
   (regexp-replace* #rx"a" (poly->string poly_list) ""))
