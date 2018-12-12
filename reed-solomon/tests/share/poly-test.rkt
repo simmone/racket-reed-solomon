@@ -76,6 +76,20 @@
     (check-equal? (poly-n-add "x4" "1x4+14x3+13x2+12x1") "14x3+13x2+12x1")
     )
    
+   (test-case
+    "test-poly-car"
+
+    (check-equal? (poly-car "a1x4") '(1 . 4))
+    
+    (check-equal? (poly-car "1x4") '(1 . 4))
+
+    (check-equal? (poly-car "1") '(1 . 0))
+
+    (check-equal? (poly-car "") '(0 . 0))
+
+    (check-equal? (poly-car "x") '(0 . 1))
+    )
+
    ))
 
 (run-tests test-poly)

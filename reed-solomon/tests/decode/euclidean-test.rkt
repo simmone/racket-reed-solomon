@@ -32,6 +32,20 @@
                    (cons "6x2+6x1+4x0" "10x+6"))
     ))
 
+   (test-case
+    "test-euc-divide-to-end"
+
+    (parameterize*
+     ([*bit_width* 4]
+      [*2^m_1* (sub1 (expt 2 (*bit_width*)))]
+      [*primitive_poly_value* 19]
+      [*gf_aton_map* (get-gf-aton-hash)]
+      [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
+
+     (check-equal? (euc-divide-to-end "12x3+4x2+3x+15" "6x2+6x1+4x0" 2)
+                   (cons "3x+14" "7x2+7x+9x0"))
+    ))
+
 ;   (test-case
 ;    "test-get-euclideans"
 ;

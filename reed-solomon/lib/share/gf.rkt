@@ -8,7 +8,8 @@
           [poly-gf-n->a (-> string? string?)]
           [poly-gf-a-multiply (-> string? string? string?)]
           [poly-gf-n-multiply (-> string? string? string?)]
-          [poly-gf-n-multiply-align (-> exact-integer? exact-integer? exact-integer?)]
+          [poly-gf-n-divide-align (-> string? string? string?)]
+          [poly-gf-n-divide (-> string? string? string?)]
           [*bit_width* parameter?]
           [*2^m_1* parameter?]
           [*primitive_poly_value* parameter?]
@@ -72,10 +73,22 @@
   (poly-gf-a->n 
    (poly-gf-a-multiply (poly-gf-n->a poly1) (poly-gf-n->a poly2))))
 
-(define (poly-gf-n-multiply-align n target)
-  (let ([n_a (hash-ref (*gf_ntoa_map*) n)]
-        [target_a (hash-ref (*gf_ntoa_map*) target)])
-    (hash-ref (*gf_aton_map*)
-              (modulo
-               (- (+ (*2^m_1*) target_a) n_a)
-               (*2^m_1*)))))
+(define (poly-gf-n-divide-align src dst)
+  (let* ([src_pair (string-n->poly src)]
+         [dst_pair (string-n->poly dst)]
+         [src_n (caar src_pair)]
+         [src_x (cdar src_pair)]
+         [dst_n (caar dst_pair)]
+         [dst_x (cdar dst_pair)]
+         [src_a (hash-ref (*gf_ntoa_map*) src_n)]
+         [dst_a (hash-ref (*gf_ntoa_map*) dst_n)])
+    (format "~ax~a"
+            (hash-ref (*gf_aton_map*)
+                      (modulo
+                       (- (+ (*2^m_1*) dst_a) src_a)
+                       (*2^m_1*)))
+            (- dst_x src_x))))
+
+(define (poly-gf-n-divide poly1 poly2)
+  (poly-gf-n-multiply poly1 (poly-gf-n-divide-align poly2 "1")))
+

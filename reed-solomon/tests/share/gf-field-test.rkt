@@ -132,7 +132,7 @@
      ))
    
    (test-case
-    "test-poly-gf-n-multiply-align"
+    "test-poly-gf-n-divide-align"
 
     (parameterize*
      ([*bit_width* 4]
@@ -141,13 +141,15 @@
       [*gf_aton_map* (get-gf-aton-hash)]
       [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
 
-     (check-equal? (poly-gf-n-multiply-align 12 1) 10)
+     (check-equal? (poly-gf-n-divide-align "12x3" "x4") "10x1")
 
-     (check-equal? (poly-gf-n-multiply-align 12 14) 6)
+     (check-equal? (poly-gf-n-divide-align "12x3" "14x3") "6x0")
 
-     (check-equal? (poly-gf-n-multiply-align 6 12) 2)
+     (check-equal? (poly-gf-n-divide-align "6x2" "12x3") "2x1")
     
-     (check-equal? (poly-gf-n-multiply-align 6 8) 13)
+     (check-equal? (poly-gf-n-divide-align "6x2" "8x2") "13x0")
+
+     (check-equal? (poly-gf-n-divide-align "7x2" "14x2") "2x0")
      )
     )
 
@@ -161,9 +163,9 @@
       [*gf_aton_map* (get-gf-aton-hash)]
       [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
 
-     (check-equal? (poly-gf-n-multiply "7x2+7x+9" (number->string (poly-gf-n-multiply-align 9 1))) "14x2+14x1+1x0")
+     (check-equal? (poly-gf-n-multiply "7x2+7x+9" (poly-gf-n-divide-align "9" "1")) "14x2+14x1+1x0")
 
-     (check-equal? (poly-gf-n-multiply "3x+14" (number->string (poly-gf-n-multiply-align 9 1))) "6x1+15x0")
+     (check-equal? (poly-gf-n-multiply "3x+14" (poly-gf-n-divide-align "9" "1")) "6x1+15x0")
 
      ))
 

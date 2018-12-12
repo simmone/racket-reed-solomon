@@ -6,13 +6,14 @@
 (provide (contract-out
           [init-t (-> natural? string?)]
           [euc-init (-> string? natural? pair?)]
+          [euc-divide-to-end (-> string? string? natural? pair?)]
           [euclideans (-> string? natural? string?)]
           ))
 
 (define (init-t t)
   (format "x~a" (* 2 t)))
 
-(define (euc-init syndrome_poly t)
+(define (euc-init syndrome_poly_n t)
   (let (
         [init_poly #f]
         [first_syndrome_n #f]
@@ -27,7 +28,7 @@
 
     (set! init_poly (init-t t))
     
-    (set! first_syndrome_n (caar (string-a->poly syndrome_poly)))
+    (set! first_syndrome_n (caar (string-a->poly syndrome_poly_n)))
     
     (printf "first_syndrome_n:~a\n" first_syndrome_n)
     
@@ -35,7 +36,7 @@
 
     (printf "align1:~a\n" align1)
     
-    (set! poly_align1 (poly-gf-n-multiply syndrome_poly align1))
+    (set! poly_align1 (poly-gf-n-multiply syndrome_poly_n align1))
 
     (printf "init_poly:~a\n" init_poly)
 
@@ -53,7 +54,7 @@
 
     (printf "align2:~a\n" align2)
     
-    (set! poly_align2 (poly-gf-n-multiply syndrome_poly align2))
+    (set! poly_align2 (poly-gf-n-multiply syndrome_poly_n align2))
     
     (printf "poly_align2:~a\n" poly_align2)
 
@@ -62,6 +63,9 @@
     (printf "poly_add2:~a\n" poly_add2)
     
     (cons poly_add2 (string-append align1 "+" align2))))
+
+(define (euc-divide-to-end syndrome_poly_n divisor_poly_n t)
+  (cons "" ""))
 
 (define (euclideans syndrome_poly t)
   "")

@@ -7,6 +7,7 @@
           [poly-n->string (-> (listof pair?) string?)]
           [poly-n-combine (-> string? string?)]
           [poly-n-add (-> string? string? string?)]
+          [poly-car (-> string? pair?)]
           ))
 
 (define (string-a->poly poly_str)
@@ -128,3 +129,15 @@
              (loop (cdr loop_list))
              loop_list)
          '()))))
+
+(define (poly-car poly_str)
+  (let ([item (car (regexp-split #rx"\\+" poly_str))])
+    (if (string=? item "")
+        '(0 . 0)
+        (let ([result (regexp-split #rx"x" (regexp-replace* #rx"a" item ""))])
+          (if (= (length result) 1)
+              (cons (string->number (car result)) 0)
+              (cons 
+               (if (string=? (first result) "") 0 (string->number (first result)))
+               (if (string=? (second result) "") 1 (string->number (second result))))
+              )))))
