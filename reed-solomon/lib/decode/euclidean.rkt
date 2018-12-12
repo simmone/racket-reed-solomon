@@ -32,7 +32,7 @@
     
     (printf "first_syndrome_n:~a\n" first_syndrome_n)
     
-    (set! align1 (format "~ax" (poly-gf-n-multiply-align first_syndrome_n 1)))
+    (set! align1 (poly-gf-n-divide-align syndrome_poly_n init_poly))
 
     (printf "align1:~a\n" align1)
     
@@ -43,14 +43,14 @@
     (printf "poly_align1:~a\n" poly_align1)
     
     (set! poly_add1 (poly-n-add init_poly poly_align1))
-
+    
     (printf "poly_add1:~a\n" poly_add1)
     
     (set! poly_add1_align (caar (string-a->poly poly_add1)))
 
     (printf "poly_add1_align:~a\n" poly_add1_align)
     
-    (set! align2 (number->string (poly-gf-n-multiply-align first_syndrome_n poly_add1_align)))
+    (set! align2 (poly-gf-n-divide-align syndrome_poly_n poly_add1))
 
     (printf "align2:~a\n" align2)
     

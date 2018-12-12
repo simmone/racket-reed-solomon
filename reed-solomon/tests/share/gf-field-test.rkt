@@ -163,10 +163,9 @@
       [*gf_aton_map* (get-gf-aton-hash)]
       [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
 
-     (check-equal? (poly-gf-n-multiply "7x2+7x+9" (poly-gf-n-divide-align "9" "1")) "14x2+14x1+1x0")
+     (check-equal? (poly-gf-n-divide "7x2+7x+9" "9") "14x2+14x1+1x0")
 
-     (check-equal? (poly-gf-n-multiply "3x+14" (poly-gf-n-divide-align "9" "1")) "6x1+15x0")
-
+     (check-equal? (poly-gf-n-divide "3x+14" "9") "6x1+15x0")
      ))
 
    (test-case

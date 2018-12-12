@@ -91,4 +91,3 @@
 
 (define (poly-gf-n-divide poly1 poly2)
   (poly-gf-n-multiply poly1 (poly-gf-n-divide-align poly2 "1")))
-
