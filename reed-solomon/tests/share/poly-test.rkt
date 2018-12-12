@@ -26,13 +26,14 @@
     (check-equal? (string-a->poly "1") '( (1 . 0) ))
 
     (check-equal? (string-a->poly "x4") '( (0 . 4) ))
-    
     )
-
+    
    (test-case
     "test-string-n->poly"
     
     (check-equal? (string-n->poly "x4") '( (1 . 4) ))
+
+    (check-equal? (string-n->poly "0x4+14x3") '( (0 . 4) (14 . 3) ))
     )
    
    (test-case
@@ -54,15 +55,17 @@
     )
 
    (test-case
-    "test-poly-combine-n"
+    "test-poly-n-combine"
     
-    (check-equal? (poly-combine-n "3x1+2x1+8x0") "1x1+8x0")
+    (check-equal? (poly-n-combine "3x1+2x1+8x0") "1x1+8x0")
 
-    (check-equal? (poly-combine-n "3x2+2x1+0x1+8x0+5x0") "3x2+2x1+13x0")
+    (check-equal? (poly-n-combine "3x2+2x1+0x1+8x0+5x0") "3x2+2x1+13x0")
 
-    (check-equal? (poly-combine-n "1x2+2x1+1x1+2x0") "1x2+3x1+2x0")
+    (check-equal? (poly-n-combine "1x2+2x1+1x1+2x0") "1x2+3x1+2x0")
 
-    (check-equal? (poly-combine-n "1x3+4x2+3x2+12x1+2x1+8x0") "1x3+7x2+14x1+8x0")
+    (check-equal? (poly-n-combine "1x3+4x2+3x2+12x1+2x1+8x0") "1x3+7x2+14x1+8x0")
+
+    (check-equal? (poly-n-combine "1x4+1x4+14x3+13x2+12x1") "0x4+14x3+13x2+12x1")
     )
    
    (test-case

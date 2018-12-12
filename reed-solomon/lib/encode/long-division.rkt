@@ -23,29 +23,27 @@
 
 (define (prepare-message msg count)
   (let ([multiplied_poly
-         (string->poly
+         (string-a->poly
           (poly-gf-a->n
            (poly-gf-a-multiply
             (poly-gf-n->a msg)
             (format "x~a" count))))])
-    (regexp-replace* #rx"a" 
-                      (poly->string
-                       (let loop ([loop_count (sub1 count)]
-                                  [result_list '()])
-                         (if (>= loop_count 0)
-                             (loop (sub1 loop_count) (cons (cons 0 loop_count) result_list))
-                             `(,@multiplied_poly ,@result_list))))
-                      "")))
+    (poly-n->string
+     (let loop ([loop_count (sub1 count)]
+                [result_list '()])
+       (if (>= loop_count 0)
+           (loop (sub1 loop_count) (cons (cons 0 loop_count) result_list))
+           `(,@multiplied_poly ,@result_list))))))
 
 (define (prepare-generator generator count)
-  (let ([first_x (cdar (string->poly generator))])
+  (let ([first_x (cdar (string-a->poly generator))])
     (poly-gf-a-multiply
      generator (format "x~a" (- count first_x)))))
 
 (define (poly-n-xor poly1 poly2)
   (poly-n->string
-   (let loop ([poly1_list (string->poly poly1)]
-              [poly2_list (string->poly poly2)]
+   (let loop ([poly1_list (string-n->poly poly1)]
+              [poly2_list (string-n->poly poly2)]
               [result_list '()])
      (if (or (not (null? poly1_list)) (not (null? poly2_list)))
          (cond

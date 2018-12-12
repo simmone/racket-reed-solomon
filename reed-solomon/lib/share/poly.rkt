@@ -2,14 +2,20 @@
 
 (provide (contract-out
           [string-a->poly (-> string? (listof pair?))]
-          [poly-a->string (-> (listof pair?) string?)]
           [string-n->poly (-> string? (listof pair?))]
+          [poly-a->string (-> (listof pair?) string?)]
           [poly-n->string (-> (listof pair?) string?)]
-          [poly-combine-n (-> string? string?)]
+          [poly-n-combine (-> string? string?)]
           [poly-n-add (-> string? string? string?)]
           ))
 
 (define (string-a->poly poly_str)
+  (string->poly poly_str 'a))
+
+(define (string-n->poly poly_str)
+  (string->poly poly_str 'n))
+
+(define (string->poly poly_str aorn)
   (let loop ([loop_list (regexp-split #rx"\\+|\\-" poly_str)]
              [result_list '()])
     (if (not (null? loop_list))
@@ -26,7 +32,7 @@
                    [(char=? (car chars_list) #\a)
                     (char-loop (cdr chars_list) 'ap pair_list)]
                    [(char=? (car chars_list) #\x)
-                    (char-loop (cdr chars_list) 'xp (cons "0" pair_list))]
+                    (char-loop (cdr chars_list) 'xp (if (eq? aorn 'a) (cons "0" pair_list) (cons "1" pair_list)))]
                    [(char-numeric? (car chars_list))
                     (let* ([items (regexp-match #rx"^([0-9]+).*" (list->string chars_list))]
                            [num (second items)])
@@ -71,21 +77,22 @@
           result_list))
         (reverse result_list))))
 
-(define (string-n->poly poly_str)
-  (map
-   (lambda (item)
-     (if (= (car item) 0)
-         (cons 1 (cdr item))
-         item))
-   (string-a->poly poly_str)))
-
 (define (poly-a->string poly_list)
+  (poly->string poly_list 'a))
+
+(define (poly-n->string poly_list)
+  (poly->string poly_list 'n))
+
+(define (poly->string poly_list aorn)
   (if (null? poly_list)
       ""
       (let ([sorted_list
              (map
               (lambda (poly)
-                (format "a~ax~a" (car poly) (cdr poly)))
+                (format "~a~ax~a"
+                        (if (eq? aorn 'a) "a" "")
+                        (car poly)
+                        (cdr poly)))
               (sort
                poly_list
                (lambda (poly1 poly2)
@@ -101,10 +108,7 @@
          null
          sorted_list))))
 
-(define (poly-n->string poly_list)
-  (regexp-replace* #rx"a" (poly-a->string poly_list) ""))
-
-(define (poly-combine-n poly_str)
+(define (poly-n-combine poly_str)
   (let ([xa_map (make-hash)])
     (for-each
      (lambda (pair)
@@ -118,7 +122,7 @@
 (define (poly-n-add poly1_n poly2_n)
   (poly-n->string
    (let loop ([loop_list 
-               (string-a->poly (poly-combine-n (poly-n->string `(,@(string-n->poly poly1_n) ,@(string-n->poly poly2_n)))))])
+               (string-n->poly (poly-n-combine (poly-n->string `(,@(string-n->poly poly1_n) ,@(string-n->poly poly2_n)))))])
      (if (not (null? loop_list))
          (if (= (caar loop_list) 0)
              (loop (cdr loop_list))

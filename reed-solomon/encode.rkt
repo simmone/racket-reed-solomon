@@ -66,9 +66,9 @@
                   [step8_discard_first_zeros_n #f]
                   [step9_zeros_count #f])
 
-             (set! step1_message_x (cdar (string->poly loop_message_n)))
+             (set! step1_message_x (cdar (string-n->poly loop_message_n)))
 
-             (set! step2_message_n (caar (string->poly loop_message_n)))
+             (set! step2_message_n (caar (string-n->poly loop_message_n)))
 
              (set! step3_aligned_generator_by_x (prepare-generator generator_poly step1_message_x))
 
@@ -81,15 +81,13 @@
              (set! step7_xor_n (poly-n-xor loop_message_n step6_to_n))
 
              (set! step8_discard_first_zeros_n 
-                   (regexp-replace* #rx"a" 
-                                    (poly->string
-                                     (let loop ([loop_list (string->poly step7_xor_n)])
-                                       (if (= (caar loop_list) 0)
-                                           (loop (cdr loop_list))
-                                           loop_list)))
-                                    ""))
+                   (poly-n->string
+                    (let loop ([loop_list (string-n->poly step7_xor_n)])
+                      (if (= (caar loop_list) 0)
+                          (loop (cdr loop_list))
+                          loop_list))))
              
-             (set! step9_zeros_count (- (length (string->poly loop_message_n)) (length (string->poly step8_discard_first_zeros_n))))
+             (set! step9_zeros_count (- (length (string-n->poly loop_message_n)) (length (string-n->poly step8_discard_first_zeros_n))))
 
              (express express? (lambda () 
                                  (write-report-long-division-detail
@@ -112,6 +110,6 @@
                   (map
                    (lambda (pair)
                      (car pair))
-                   (string->poly loop_message_n))])
+                   (string-n->poly loop_message_n))])
              (express express? (lambda () (write-report-error-code bit_width result express_path)))
              result))))))

@@ -177,7 +177,7 @@
       [*gf_aton_map* (get-gf-aton-hash)]
       [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
 
-     (check-equal? (poly-combine-n (string-append (poly-gf-n-multiply "10x+6" "2x+13") "+1")) "7x2+7x1+9x0")
+     (check-equal? (poly-n-combine (string-append (poly-gf-n-multiply "10x+6" "2x+13") "+1")) "7x2+7x1+9x0")
 
      ))
 
