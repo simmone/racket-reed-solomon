@@ -1,0 +1,24 @@
+from: https://github.com/nceruchalu/reed_solomon
+
+Determination of the error locator polynomial using the Euclidean Algorithm This runs the extended euclidean algorithm with: a(x) = x^2t and b(x) = s(x), until deg(r_i(x)) < t. 
+
+At this terminating value of i:
+
+The error magnitude/value/evaluator polynomial: omega(x) = r_i(x)/t_i(0)
+
+The error locator polynomial: lambda(x) = t_i(x)/t_i(0)
+
+Below is the euclidean algorithm in pseudo-code:
+
+Initialization: r_(-1)(x) = a(x);   r_0(x) = b(x); 
+                s_(-1)(x) = 1;      s_0(x) = 0
+                t_(-1)(x) = 0;      t_0(x) = 1;
+
+while(deg(r_i(x)) >= t)
+{
+   // compute quotient[q_i(x)] and remainder [r_i(x)]
+   q_i(x) = r_(i-2)(x) / r_(i-1)(x)    
+   r_i(x) = r_(i-2)(x) % r_(i-1)(x) = r_(i-2)(x) - q_i(x)*r_(i-1)(x)
+   s_i(x) = s_(i-2)(x) - q_i(x)*s_(i-1)(x) 
+   t_i(x) = t_(i-2)(x) - q_i(x)*t_(i-1)(x) 
+}
