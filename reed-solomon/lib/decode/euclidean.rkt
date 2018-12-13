@@ -65,7 +65,9 @@
     (cons poly_add2 (string-append align1 "+" align2))))
 
 (define (euc-divide-to-end syndrome_poly_n divisor_poly_n t)
-  (cons "" ""))
+  (let loop ([loop_t t]
+             [divide_stage 'init]
+             [
 
 (define (euclideans syndrome_poly t)
   "")
