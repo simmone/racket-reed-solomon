@@ -129,6 +129,14 @@
      (check-equal? (poly-gf-n-multiply "12x3+4x2+3x+15" "10x") "1x4+14x3+13x2+12x1")
 
      (check-equal? (poly-gf-n-multiply "12x3+4x2+3x+15" "6") "14x3+11x2+10x1+4x0")
+
+     (check-equal? (poly-gf-n-multiply "1x4+14x3+13x2+12x1" "6") "6x4+2x3+8x2+14x1")
+
+     (check-equal? (poly-gf-n-multiply "12x3+4x2+3x+15" "10x" "6") "6x4+2x3+8x2+14x1")
+
+     (check-equal? (apply poly-gf-n-multiply '("12x3+4x2+3x+15" "10x" "6")) "6x4+2x3+8x2+14x1")
+
+     (check-equal? (poly-n-combine (string-append (poly-gf-n-multiply "10x+6" "2x+13") "+1")) "7x2+7x1+9x0")
      ))
    
    (test-case
@@ -169,18 +177,11 @@
      ))
 
    (test-case
-    "test-poly-multiply"
-
-    (parameterize*
-     ([*bit_width* 4]
-      [*2^m_1* (sub1 (expt 2 (*bit_width*)))]
-      [*primitive_poly_value* 19]
-      [*gf_aton_map* (get-gf-aton-hash)]
-      [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
-
-     (check-equal? (poly-n-combine (string-append (poly-gf-n-multiply "10x+6" "2x+13") "+1")) "7x2+7x1+9x0")
-
-     ))
+    "test-poly-gf-flatten"
+    
+    (check-equal? (poly-gf-flatten "1-(2x+13)*(10x+6)") "7x2+7x1+9x0")
+    (check-equal? (poly-gf-flatten "1+(2x+13)*(10x+6)") "7x2+7x1+9x0")
+    )
 
    ))
 

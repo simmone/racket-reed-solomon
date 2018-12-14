@@ -6,10 +6,11 @@
           [get-gf-aton-hash (-> hash?)]
           [poly-gf-a->n (-> string? string?)]
           [poly-gf-n->a (-> string? string?)]
-          [poly-gf-a-multiply (-> string? string? string?)]
-          [poly-gf-n-multiply (-> string? string? string?)]
+          [poly-gf-a-multiply (->* (string? string?) () #:rest (listof string?) string?)]
+          [poly-gf-n-multiply (->* (string? string?) () #:rest (listof string?) string?)]
           [poly-gf-n-divide-align (-> string? string? string?)]
           [poly-gf-n-divide (-> string? string? string?)]
+          [poly-gf-flatten (-> string? string?)]
           [*bit_width* parameter?]
           [*2^m_1* parameter?]
           [*primitive_poly_value* parameter?]
@@ -53,25 +54,36 @@
       (cons (hash-ref (*gf_ntoa_map*) (car pair)) (cdr pair)))
     (string-a->poly poly_str))))
 
-(define (poly-gf-a-multiply poly1 poly2)
-  (let ([poly2_list (string-a->poly poly2)])
-    (let loop ([poly1_list (string-a->poly poly1)]
-               [result_poly '()])
-      (if (not (null? poly1_list))
+(define poly-gf-a-multiply
+  (lambda (poly1 poly2 . rst)
+    (let loop ([loop_poly `(,poly2 ,@rst)]
+               [last_poly poly1])
+      (if (not (null? loop_poly))
           (loop
-           (cdr poly1_list)
-           `(,@result_poly
-             ,@(map
-               (lambda (poly)
-                 (cons 
-                  (modulo (+ (caar poly1_list) (car poly)) (*2^m_1*))
-                  (+ (cdar poly1_list) (cdr poly))))
-               poly2_list)))
-          (poly-a->string result_poly)))))
+           (cdr loop_poly)
+           (let inner-loop ([poly1_list (string-a->poly (car loop_poly))]
+                            [result_poly '()])
+             (if (not (null? poly1_list))
+                 (inner-loop
+                  (cdr poly1_list)
+                  `(,@result_poly
+                    ,@(map
+                       (lambda (poly)
+                         (cons 
+                          (modulo (+ (caar poly1_list) (car poly)) (*2^m_1*))
+                          (+ (cdar poly1_list) (cdr poly))))
+                       (string-a->poly last_poly))))
+                 (poly-a->string result_poly))))
+          last_poly))))
 
-(define (poly-gf-n-multiply poly1 poly2)
-  (poly-gf-a->n 
-   (poly-gf-a-multiply (poly-gf-n->a poly1) (poly-gf-n->a poly2))))
+(define poly-gf-n-multiply
+  (lambda (poly1 poly2 . rst)
+    (poly-gf-a->n
+     (apply poly-gf-a-multiply
+            (map
+             (lambda (poly_n)
+               (poly-gf-n->a poly_n))
+             `(,poly1 ,poly2 ,@rst))))))
 
 (define (poly-gf-n-divide-align src dst)
   (let* ([src_pair (string-n->poly src)]
@@ -91,3 +103,6 @@
 
 (define (poly-gf-n-divide poly1 poly2)
   (poly-gf-n-multiply poly1 (poly-gf-n-divide-align poly2 "1")))
+
+(define (poly-gf-flatten poly)
+  "")
