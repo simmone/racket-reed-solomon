@@ -19,7 +19,7 @@
     )
    
    (test-case
-    "test-euc-init"
+    "test-euc-divide"
 
     (parameterize*
      ([*bit_width* 4]
@@ -28,12 +28,16 @@
       [*gf_aton_map* (get-gf-aton-hash)]
       [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
 
-     (check-equal? (euc-init "12x3+4x2+3x+15" 2)
-                   (cons "6x2+6x1+4x0" "10x1+6x0"))
-    ))
+     (check-equal? (euc-divide "x4" "12x3+4x2+3x+15")
+                   '("10x1+6x0" . "6x2+6x1+4x0"))
+
+     (check-equal? (euc-divide "12x3+4x2+3x+15" "6x2+6x1+4x0")
+                   '("2x1+13x0" . "3x1+14x0"))
+
+     ))
 
 ;   (test-case
-;    "test-euc-divide-to-end"
+;    "test-euc-divide"
 ;
 ;    (parameterize*
 ;     ([*bit_width* 4]
@@ -42,8 +46,8 @@
 ;      [*gf_aton_map* (get-gf-aton-hash)]
 ;      [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
 ;
-;     (check-equal? (euc-divide-to-end "12x3+4x2+3x+15" "6x2+6x1+4x0" 2)
-;                   (cons "3x+14" "7x2+7x+9x0"))
+;     (check-equal? (euc-divide "12x3+4x2+3x+15" "6x2+6x1+4x0" 2)
+;                   (cons "6x+15" "14x2+14x+1x0"))
 ;    ))
 ;
 ;   (test-case

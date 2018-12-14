@@ -177,11 +177,17 @@
      ))
 
    (test-case
-    "test-poly-gf-flatten"
+    "test-poly-gf-calculate"
+
+    (parameterize*
+     ([*bit_width* 4]
+      [*2^m_1* (sub1 (expt 2 (*bit_width*)))]
+      [*primitive_poly_value* 19]
+      [*gf_aton_map* (get-gf-aton-hash)]
+      [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
     
-    (check-equal? (poly-gf-flatten "1-(2x+13)*(10x+6)") "7x2+7x1+9x0")
-    (check-equal? (poly-gf-flatten "1+(2x+13)*(10x+6)") "7x2+7x1+9x0")
-    )
+     (check-equal? (poly-n-add "1" (poly-gf-n-multiply "(2x+13)" "(10x+6)")) "7x2+7x1+9x0")
+    ))
 
    ))
 
