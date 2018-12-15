@@ -4,19 +4,11 @@
 
 (require "../../lib/share/gf.rkt")
 
-(require rackunit "../../lib/decode/euclidean.rkt")
+(require rackunit "../../lib/share/euclidean.rkt")
 
 (define test-euclidean
   (test-suite 
    "test-euclidean"
-   
-   (test-case
-    "test-init-t"
-    
-    (check-equal? (init-t 2) "x4")
-
-    (check-equal? (init-t 2) "x4")
-    )
    
    (test-case
     "test-euc-divide"
@@ -28,11 +20,13 @@
       [*gf_aton_map* (get-gf-aton-hash)]
       [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
 
-     (check-equal? (euc-divide "x4" "12x3+4x2+3x+15")
-                   '("10x1+6x0" . "6x2+6x1+4x0"))
+     (let-values ([(quotient remainder) (euc-divide "x4" "12x3+4x2+3x+15")])
+       (check-equal? quotient "10x1+6x0")
+       (check-equal? remainder "6x2+6x1+4x0"))
 
-     (check-equal? (euc-divide "12x3+4x2+3x+15" "6x2+6x1+4x0")
-                   '("2x1+13x0" . "3x1+14x0"))
+     (let-values ([(quotient remainder) (euc-divide "12x3+4x2+3x+15" "6x2+6x1+4x0")])
+       (check-equal? quotient "2x1+13x0")
+       (check-equal? remainder "3x1+14x0"))
 
      ))
 

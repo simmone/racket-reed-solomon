@@ -8,6 +8,8 @@
           [poly-n-combine (-> string? string?)]
           [poly-n-add (-> string? string? string?)]
           [poly-car (-> string? pair?)]
+          [poly-n->coeffients (-> string? (listof natural?))]
+          [coeffients->poly-n (-> (listof natural?) string?)]
           ))
 
 (define (string-a->poly poly_str)
@@ -141,3 +143,20 @@
                (if (string=? (first result) "") 0 (string->number (first result)))
                (if (string=? (second result) "") 1 (string->number (second result))))
               )))))
+
+(define (poly-n->coeffients poly_n_str)
+  (map
+   (lambda (item)
+     (car item))
+   (string-n->poly poly_n_str)))
+
+(define (coeffients->poly-n raw_list)
+  (with-output-to-string
+    (lambda ()
+      (let loop ([loop_list raw_list]
+                 [count (sub1 (length raw_list))])
+          (when (not (null? loop_list))
+                (if (= count 0)
+                    (printf "~ax0" (car loop_list))
+                    (printf "~ax~a+" (car loop_list) count))
+                (loop (cdr loop_list) (sub1 count)))))))

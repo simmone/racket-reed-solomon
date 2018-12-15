@@ -91,6 +91,8 @@
     
      (check-equal? (poly-gf-n->a "a1x2+a3x1+a2x0") "a0x2+a25x1+a1x0")
 
+     (check-equal? (poly-gf-n->a "x0") "a0")
+
      (check-equal? (poly-gf-n->a "a1x3+a7x2+a14x1+a8x0") "a0x3+a198x2+a199x1+a3x0")
      ))
 
@@ -127,6 +129,11 @@
       [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
 
      (check-equal? (poly-gf-n-multiply "12x3+4x2+3x+15" "10x") "1x4+14x3+13x2+12x1")
+
+     (check-equal? (poly-gf-n-multiply 
+                    "12x3+4x2+3x+15"
+                    "1x10")
+                   "12x13+4x12+3x11+15x10")
 
      (check-equal? (poly-gf-n-multiply "12x3+4x2+3x+15" "6") "14x3+11x2+10x1+4x0")
 

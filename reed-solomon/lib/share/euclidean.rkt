@@ -1,19 +1,13 @@
 #lang racket
 
-(require "../share/gf.rkt")
-(require "../share/poly.rkt")
+(require "gf.rkt")
+(require "poly.rkt")
 
 (provide (contract-out
-          [init-t (-> natural? string?)]
-          [euc-divide (-> string? string? pair?)]
+          [euc-divide (-> string? string? (values string? string?))]
           ))
 
-(define (init-t t)
-  (format "x~a" (* 2 t)))
-
 (define (euc-divide dividend divisor)
-  (printf "dividend:~a\n" dividend)
-  (printf "divisor:~a\n" divisor)
   (let ([divisor_degree (cdr (poly-car divisor))])
     (let loop ([loop_dividend dividend]
                [quotient_list '()])
@@ -41,7 +35,7 @@
               (printf "loop_substract:~a\n" loop_substract)
         
               (loop loop_substract (cons loop_align_factor quotient_list)))
-            (cons
+            (values
              (foldr (lambda (a b) (if b (string-append a "+" b) a)) #f (reverse quotient_list))
              loop_dividend))))))
 
