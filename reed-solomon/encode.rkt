@@ -22,46 +22,39 @@
          #:express? [express? #f]
          #:express_path [express_path ".encode.express"])
 
-  (when express?
-        (delete-directory/files #:must-exist? #f express_path)
-        (make-directory* express_path))
-
-  (express express? (lambda () (write-report-header express_path)))
-
-  (express express?
-           (lambda () (write-report-input raw_list patrity_length bit_width primitive_poly_value express_path)))
-
-  (express express? (lambda () (write-report-primitive-poly express_path)))
-
   (parameterize*
-   ([*bit_width* bit_width]
+   ([*express?* express?]
+    [*express_path* express_path]
+    [*bit_width* bit_width]
     [*2^m_1* (sub1 (expt 2 (*bit_width*)))]
     [*primitive_poly_value* primitive_poly_value]
     [*gf_aton_map* (get-gf-aton-hash)]
     [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
 
+   (express-start)
+
+   (express-input raw_list patrity_length bit_width primitive_poly_value)
+
+   (express-primitive-poly)
+
    (let* ([generator_poly (generator-poly patrity_length)]
           [message_poly (coeffients->poly-n raw_list)]
           [message_length (length raw_list)])
+     
+     (express-galois-fields (*gf_aton_map*) (*gf_ntoa_map*))
 
-     (express express? (lambda () (write-report-galois-fields (*gf_aton_map*) (*gf_ntoa_map*) express_path)))
+     (express-generator-poly generator_poly)
 
-     (express express? (lambda () (write-report-generator-poly generator_poly express_path)))
-
-     (express express? (lambda () (write-report-message-poly message_poly express_path)))
+     (express-message-poly message_poly)
 
      (let-values ([(quotient remainder) 
                    (euc-divide 
                     (poly-gf-n-multiply message_poly (format "x~a" patrity_length))
-                    (poly-gf-a->n generator_poly))])
+                    (poly-gf-a->n generator_poly)
+                    #t)])
 
-       (let ([result
-              (map
-               (lambda (pair)
-                 (car pair))
-               (string-n->poly remainder))])
-
-       (express express? (lambda () (write-report-error-code bit_width result express_path)))
+       (let ([result (poly-n->coeffient remainder)])
+         (express-error-code bit_width result)
        
-       result)))))
+         result)))))
        

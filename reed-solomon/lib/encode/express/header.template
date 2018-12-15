@@ -14,7 +14,7 @@ report the process of creating Reed Solomon patrity.
 
 @include-section["message-poly/message-poly.scrbl"]
 
-@include-section["long-division/long-division.scrbl"]
+@include-section["euclidean-divide/euclidean-divide.scrbl"]
 
 @include-section["error-code/error-code.scrbl"]
 
