@@ -1,6 +1,6 @@
 #lang racket
 
-(require "../../share/lib/lib.rkt")
+(require "../../share/lib.rkt")
 
 (provide (contract-out
           [express-start (-> void?)]

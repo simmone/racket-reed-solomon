@@ -30,7 +30,7 @@
     [*primitive_poly_value* primitive_poly_value]
     [*gf_aton_map* (get-gf-aton-hash)]
     [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
-
+   
    (express-start)
 
    (express-input raw_list patrity_length bit_width primitive_poly_value)
@@ -53,7 +53,7 @@
                     (poly-gf-a->n generator_poly)
                     #t)])
 
-       (let ([result (poly-n->coeffient remainder)])
+       (let ([result (poly-n->coeffients remainder)])
          (express-error-code bit_width result)
        
          result)))))
