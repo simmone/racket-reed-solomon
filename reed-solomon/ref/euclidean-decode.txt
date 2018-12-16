@@ -1,6 +1,8 @@
-from: https://github.com/nceruchalu/reed_solomon
+source: https://github.com/nceruchalu/reed_solomon
 
-Determination of the error locator polynomial using the Euclidean Algorithm This runs the extended euclidean algorithm with: a(x) = x^2t and b(x) = s(x), until deg(r_i(x)) < t. 
+Determination of the error locator polynomial using the Euclidean Algorithm.
+
+This runs the extended euclidean algorithm with: a(x) = x^2t and b(x) = s(x), until deg(r_i(x)) < t. 
 
 At this terminating value of i:
 

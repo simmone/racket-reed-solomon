@@ -77,20 +77,6 @@
     )
    
    (test-case
-    "test-poly-car"
-
-    (check-equal? (poly-car "a1x4") '(1 . 4))
-    
-    (check-equal? (poly-car "1x4") '(1 . 4))
-
-    (check-equal? (poly-car "1") '(1 . 0))
-
-    (check-equal? (poly-car "") '(0 . 0))
-
-    (check-equal? (poly-car "x") '(0 . 1))
-    )
-
-   (test-case
     "test-poly-n->coeffients"
 
     (check-equal? (poly-n->coeffients
@@ -110,6 +96,35 @@
     
     (check-equal? (coeffients->poly-n '(32 91 11 120 209 114 220 77 67 64 236 17 236 17 236 17))
                   "32x15+91x14+11x13+120x12+209x11+114x10+220x9+77x8+67x7+64x6+236x5+17x4+236x3+17x2+236x1+17x0")
+    )
+
+   (test-case
+    "test-poly-n-car"
+
+    (check-equal? (poly-n-car "a1x4") '(1 . 4))
+    
+    (check-equal? (poly-n-car "1x4") '(1 . 4))
+
+    (check-equal? (poly-n-car "1") '(1 . 0))
+
+    (check-equal? (poly-n-car "") '(0 . 0))
+
+    (check-equal? (poly-n-car "x") '(1 . 1))
+    )
+
+
+   (test-case
+    "test-poly-n-tail"
+
+    (check-equal? (poly-n-tail "a1x4") '(1 . 4))
+    
+    (check-equal? (poly-n-tail "2x5+1x4") '(1 . 4))
+
+    (check-equal? (poly-n-tail "1") '(1 . 0))
+
+    (check-equal? (poly-n-tail "") '(0 . 0))
+
+    (check-equal? (poly-n-tail "x2+x+1") '(1 . 0))
     )
 
    ))

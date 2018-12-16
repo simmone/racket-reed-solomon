@@ -7,7 +7,8 @@
           [poly-n->string (-> (listof pair?) string?)]
           [poly-n-combine (-> string? string?)]
           [poly-n-add (-> string? string? string?)]
-          [poly-car (-> string? pair?)]
+          [poly-n-car (-> string? pair?)]
+          [poly-n-tail (-> string? pair?)]
           [poly-n->coeffients (-> string? (listof natural?))]
           [coeffients->poly-n (-> (listof natural?) string?)]
           ))
@@ -132,17 +133,11 @@
              loop_list)
          '()))))
 
-(define (poly-car poly_str)
-  (let ([item (car (regexp-split #rx"\\+" poly_str))])
-    (if (string=? item "")
-        '(0 . 0)
-        (let ([result (regexp-split #rx"x" (regexp-replace* #rx"a" item ""))])
-          (if (= (length result) 1)
-              (cons (string->number (car result)) 0)
-              (cons 
-               (if (string=? (first result) "") 0 (string->number (first result)))
-               (if (string=? (second result) "") 1 (string->number (second result))))
-              )))))
+(define (poly-n-car poly_str)
+  (car (string-n->poly poly_str)))
+
+(define (poly-n-tail poly_str)
+  (car (take-right (string-n->poly poly_str) 1)))
 
 (define (poly-n->coeffients poly_n_str)
   (map
