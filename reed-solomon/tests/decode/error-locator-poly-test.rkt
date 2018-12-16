@@ -20,9 +20,9 @@
       [*gf_aton_map* (get-gf-aton-hash)]
       [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
      
-     (let-values ([(lam ome) (error-locator-poly "12x3+4x2+3x1+15" 2)])
-       (check-equal? lam "14x2+14x1+1")
-       (check-equal? ome "6x+15"))
+     (let-values ([(ome lam) (error-locator-poly "12x3+4x2+3x1+15" 2)])
+       (check-equal? ome "6x1+15x0")
+       (check-equal? lam "14x2+14x1+1x0"))
     ))
    ))
 
