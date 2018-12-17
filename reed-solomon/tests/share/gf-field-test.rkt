@@ -185,6 +185,40 @@
      )
     )
 
+   (test-case
+    "test-poly-gf-n-sub-x->a"
+
+    (parameterize*
+     ([*bit_width* 4]
+      [*2^m_1* (sub1 (expt 2 (*bit_width*)))]
+      [*primitive_poly_value* 19]
+      [*gf_aton_map* (get-gf-aton-hash)]
+      [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
+
+     (check-equal? (poly-gf-n-sub-x->a "10x+2" 6) 4)
+
+     (check-equal? (poly-gf-n-sub-x->a "10x+2" 13) 14)
+     )
+
+    (parameterize*
+     ([*bit_width* 4]
+      [*2^m_1* (sub1 (expt 2 (*bit_width*)))]
+      [*primitive_poly_value* 19]
+      [*gf_aton_map* (get-gf-aton-hash)]
+      [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
+
+     (check-equal? (poly-gf-n-divide-align "12x3" "x4") "10x1")
+
+     (check-equal? (poly-gf-n-divide-align "12x3" "14x3") "6x0")
+
+     (check-equal? (poly-gf-n-divide-align "6x2" "12x3") "2x1")
+    
+     (check-equal? (poly-gf-n-divide-align "6x2" "8x2") "13x0")
+
+     (check-equal? (poly-gf-n-divide-align "7x2" "14x2") "2x0")
+     )
+    )
+
    ))
 
 (run-tests test-gf)

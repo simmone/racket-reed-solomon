@@ -9,6 +9,7 @@
           [poly-gf-a-multiply (->* (string? string?) () #:rest (listof string?) string?)]
           [poly-gf-n-multiply (->* (string? string?) () #:rest (listof string?) string?)]
           [poly-gf-n-divide-align (-> string? string? string?)]
+          [poly-gf-n-sub-x->a (-> string? exact-integer? exact-integer?)]
           [*bit_width* parameter?]
           [*2^m_1* parameter?]
           [*primitive_poly_value* parameter?]
@@ -98,3 +99,6 @@
                        (- (+ (*2^m_1*) dst_a) src_a)
                        (*2^m_1*)))
             (- dst_x src_x))))
+
+(define (poly-gf-n-sub-x->a poly_n a)
+  0)
