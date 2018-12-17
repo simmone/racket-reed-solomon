@@ -36,6 +36,17 @@
        (check-equal? quotient "6x1+15x0")
        (check-equal? remainder ""))
 
+     (let-values ([(quotient remainder) (euc-divide "15x9+6" "14")])
+       (check-equal? quotient "2x9+10x0")
+       (check-equal? remainder ""))
+
+     (let-values ([(quotient remainder) (euc-divide "15x2+6" "14")])
+       (check-equal? quotient "2x2+10x0")
+       (check-equal? remainder ""))
+
+     (let-values ([(quotient remainder) (euc-divide "6x+15" "14")])
+       (check-equal? quotient "10x1+2x0")
+       (check-equal? remainder ""))
     ))
    
    ))
