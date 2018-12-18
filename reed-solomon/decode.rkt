@@ -39,6 +39,12 @@
 
    (express-start)
 
+   (express-input raw_list patrity_length bit_width primitive_poly_value)
+
+   (express-primitive-poly)
+
+   (express-euclidean-decode)
+
    (let (
          [t #f]
          [syndromes #f]
@@ -52,11 +58,13 @@
      
      (set! t (floor (/ patrity_length 2)))
 
-     (set! syndromes (get-syndromes raw_list (* 2 t)))
-     
+     (set! syndromes (get-syndromes raw_list (* 2 t) #t))
+
      (set! syndrome_poly (coeffients->poly-n syndromes))
      
-     (let-values ([(ome lam) (error-locator-poly syndrome_poly t)])
+     (express-syndrome-poly syndrome_poly)
+     
+     (let-values ([(ome lam) (error-locator-poly syndrome_poly t #t)])
        (set! ome_poly ome)
        (set! lam_poly lam))
      
