@@ -14,6 +14,12 @@ report the process of decode Reed-Solomon coded data.
 
 @include-section["error-locator/error-locator.scrbl"]
 
+@include-section["chien-search/chien-search.scrbl"]
+
+@include-section["forney/forney.scrbl"]
+
+@include-section["finally/finally.scrbl"]
+
 @include-section["primitive-poly/primitive-poly.scrbl"]
 
 @include-section["euclidean-decode/euclidean-decode.scrbl"]

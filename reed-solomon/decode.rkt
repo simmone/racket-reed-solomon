@@ -51,6 +51,8 @@
          [syndrome_poly #f]
          [lam_poly #f]
          [ome_poly #f]
+         [lam_derivative_poly #f]
+         [Yj_poly #f]
          [err_places #f]
          [err_correct_pairs #f]
          [corrected_values #f]
@@ -70,17 +72,28 @@
      
      (set! err_places (chien-search lam_poly))
      
+     (express-chien-search err_places)
+
+     (set! lam_derivative_poly (derivative-lam lam_poly))
+    
+     (let-values ([(quotient remainder) (euc-divide ome_poly lam_derivative_poly)])
+       (set! Yj_poly quotient))
+
      (set! err_correct_pairs
            (map
             (lambda (err_place)
               (cons
                err_place
-               (forney lam_poly ome_poly err_place)))
+               (forney Yj_poly err_place)))
             err_places))
-     
+
+     (express-forney lam_derivative_poly Yj_poly err_correct_pairs)
+
      (set! corrected_values 
            (correct-error 
             raw_list
             err_correct_pairs))
+
+     (express-finally corrected_values bit_width)
 
      corrected_values)))
