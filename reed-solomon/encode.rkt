@@ -5,6 +5,7 @@
 (require "lib/share/poly.rkt")
 (require "lib/share/euclidean.rkt")
 (require "lib/encode/generator-poly.rkt")
+
 (require "lib/encode/express/express.rkt")
 
 (provide (contract-out

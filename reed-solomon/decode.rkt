@@ -11,6 +11,8 @@
 (require "lib/decode/forney.rkt")
 (require "lib/decode/correct-error.rkt")
 
+(require "lib/decode/express/express.rkt")
+
 (provide (contract-out
           [decode (->* 
                    ((listof exact-integer?) natural?) 
@@ -34,6 +36,8 @@
     [*primitive_poly_value* primitive_poly_value]
     [*gf_aton_map* (get-gf-aton-hash)]
     [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
+
+   (express-start)
 
    (let (
          [t #f]

@@ -1,0 +1,8 @@
+#lang scribble/manual
+
+@title{Reed Solomon Decode Report}
+
+report the process of decode Reed-Solomon coded data.
+
+@table-of-contents[]
+
