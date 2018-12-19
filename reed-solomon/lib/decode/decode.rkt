@@ -15,9 +15,9 @@
 
 (provide (contract-out
           [rs-decode (->* 
-                   ((listof exact-integer?) natural?) 
-                   (#:bit_width natural? #:primitive_poly_value natural? #:express? boolean? #:express_path path-string?) 
-                   (listof exact-integer?))]
+                      ((listof exact-integer?) natural?) 
+                      (#:bit_width natural? #:primitive_poly_value natural? #:express? boolean? #:express_path path-string?) 
+                      (listof exact-integer?))]
           ))
 
 (define (rs-decode 
@@ -37,72 +37,77 @@
     [*gf_aton_map* (get-gf-aton-hash)]
     [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
 
-   (express-start)
+   (dynamic-wind
+       (lambda ()
+         (express-start))
+       (lambda ()
+         (express-input raw_list patrity_length bit_width primitive_poly_value)
 
-   (express-input raw_list patrity_length bit_width primitive_poly_value)
-
-   (express-primitive-poly)
-
-   (express-euclidean-decode)
-
-   (let (
-         [t #f]
-         [syndromes #f]
-         [syndrome_poly #f]
-         [lam_poly #f]
-         [ome_poly #f]
-         [lam_derivative_poly #f]
-         [Yj_poly #f]
-         [err_places #f]
-         [err_correct_pairs #f]
-         [corrected_values #f]
-         )
-     
-     (set! t (floor (/ patrity_length 2)))
-
-     (set! syndromes (get-syndromes raw_list (* 2 t) #t))
-
-     (set! syndrome_poly (coeffients->poly-n syndromes))
+         (let (
+               [t #f]
+               [syndromes #f]
+               [syndrome_poly #f]
+               [lam_poly #f]
+               [ome_poly #f]
+               [lam_derivative_poly #f]
+               [Yj_poly #f]
+               [err_places #f]
+               [err_correct_pairs #f]
+               [corrected_values #f]
+               )
            
-     (express-syndrome-poly syndrome_poly)
-     
-     (if (= (foldr + 0 syndromes) 0)
-         (begin
-           (express-no-error)
-           raw_list)
-         (with-handlers
-          ([exn:fail?
-            (lambda (v)
-              (express-too-many-errors)
-              raw_list)])
-          (let-values ([(ome lam) (error-locator-poly syndrome_poly t #t)])
-            (set! ome_poly ome)
-            (set! lam_poly lam)
+           (set! t (floor (/ patrity_length 2)))
+
+           (set! syndromes (get-syndromes raw_list (* 2 t) #t))
+
+           (set! syndrome_poly (coeffients->poly-n syndromes))
            
-            (set! err_places (chien-search lam_poly))
-                 
-            (express-chien-search err_places)
+           (express-syndrome-poly syndrome_poly)
+           
+           (if (= (foldr + 0 syndromes) 0)
+               (begin
+                 (express-no-error)
+                 raw_list)
+               (with-handlers
+                ([exn:fail?
+                  (lambda (v)
+                    (express-too-many-errors)
+                    raw_list)])
+                (let-values ([(ome lam) (error-locator-poly syndrome_poly t #t)])
+                  (set! ome_poly ome)
+                  (set! lam_poly lam)
+                  
+                  (set! err_places (chien-search lam_poly))
+                  
+                  (express-chien-search err_places)
 
-            (set! lam_derivative_poly (derivative-lam lam_poly))
-            
-            (let-values ([(quotient remainder) (euc-divide ome_poly lam_derivative_poly)])
-              (set! Yj_poly quotient))
+                  (set! lam_derivative_poly (derivative-lam lam_poly))
+                  
+                  (let-values ([(quotient remainder) (euc-divide ome_poly lam_derivative_poly)])
+                    (set! Yj_poly quotient))
 
-            (set! err_correct_pairs
-                  (map
-                   (lambda (err_place)
-                     (cons
-                      err_place
-                      (forney Yj_poly err_place)))
-                   err_places))
+                  (set! err_correct_pairs
+                        (map
+                         (lambda (err_place)
+                           (cons
+                            err_place
+                            (forney Yj_poly err_place)))
+                         err_places))
 
-            (express-forney lam_derivative_poly Yj_poly err_correct_pairs)
+                  (express-forney lam_derivative_poly Yj_poly err_correct_pairs)
 
-            (set! corrected_values 
-                  (correct-error 
-                   raw_list
-                   err_correct_pairs))
+                  (set! corrected_values 
+                        (correct-error 
+                         raw_list
+                         err_correct_pairs))
 
-            (express-finally corrected_values bit_width)
+                  (express-finally corrected_values bit_width)
 
-            corrected_values))))))
+                  corrected_values)))))
+       (lambda ()
+         (express-primitive-poly)
+
+         (express-euclidean-decode)))))
+
+
+

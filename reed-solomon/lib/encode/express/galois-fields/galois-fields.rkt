@@ -6,13 +6,15 @@
           [express-galois-fields (-> hash? hash? void?)]
           ))
 
-(require racket/runtime-path)
-(define-runtime-path primitive_poly_tip "primitive_poly_tip")
-
 (define (express-galois-fields aton_map ntoa_map)
   (when (*express?*)
         (let* ([scrbl_dir (build-path (*express_path*) "galois-fields")]
                [scrbl_file (build-path scrbl_dir "galois-fields.scrbl")])
+
+          (with-output-to-file
+              (build-path (*express_path*) "report.scrbl") #:exists 'append
+              (lambda ()
+                (printf "@include-section[\"galois-fields/galois-fields.scrbl\"]\n\n")))
 
           (make-directory* scrbl_dir)
 

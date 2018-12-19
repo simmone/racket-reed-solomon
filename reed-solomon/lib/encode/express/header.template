@@ -5,18 +5,3 @@
 report the process of creating Reed-Solomon codes.
 
 @table-of-contents[]
-
-@include-section["input/input.scrbl"]
-
-@include-section["galois-fields/galois-fields.scrbl"]
-
-@include-section["generator-poly/generator-poly.scrbl"]
-
-@include-section["message-poly/message-poly.scrbl"]
-
-@include-section["euclidean-divide/euclidean-divide.scrbl"]
-
-@include-section["error-code/error-code.scrbl"]
-
-@include-section["primitive-poly/primitive-poly.scrbl"]
-

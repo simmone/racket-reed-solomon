@@ -10,9 +10,9 @@
 
 (provide (contract-out
           [rs-encode (->* 
-                   ((listof exact-integer?) natural?) 
-                   (#:bit_width natural? #:primitive_poly_value natural? #:express? boolean? #:express_path path-string?) 
-                   (listof exact-integer?))]
+                      ((listof exact-integer?) natural?) 
+                      (#:bit_width natural? #:primitive_poly_value natural? #:express? boolean? #:express_path path-string?) 
+                      (listof exact-integer?))]
           ))
 
 (define (rs-encode 
@@ -32,30 +32,34 @@
     [*gf_aton_map* (get-gf-aton-hash)]
     [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
    
-   (express-start)
+   (dynamic-wind
+       (lambda ()
+         (express-start))
+       (lambda ()
+         (express-input raw_list patrity_length bit_width primitive_poly_value)
 
-   (express-input raw_list patrity_length bit_width primitive_poly_value)
+         (let* ([generator_poly (generator-poly patrity_length)]
+                [message_poly (coeffients->poly-n raw_list)]
+                [message_length (length raw_list)])
+           
+           (express-galois-fields (*gf_aton_map*) (*gf_ntoa_map*))
 
-   (express-primitive-poly)
+           (express-generator-poly generator_poly)
 
-   (let* ([generator_poly (generator-poly patrity_length)]
-          [message_poly (coeffients->poly-n raw_list)]
-          [message_length (length raw_list)])
-     
-     (express-galois-fields (*gf_aton_map*) (*gf_ntoa_map*))
+           (express-message-poly message_poly)
 
-     (express-generator-poly generator_poly)
+           (let-values ([(quotient remainder) 
+                         (euc-divide 
+                          (poly-gf-n-multiply message_poly (format "x~a" patrity_length))
+                          (poly-gf-a->n generator_poly)
+                          #t)])
 
-     (express-message-poly message_poly)
+             (let ([result (poly-n->coeffients remainder)])
+               (express-error-code bit_width result)
+               
+               result))))
+       (lambda ()
+         (express-primitive-poly)))))
 
-     (let-values ([(quotient remainder) 
-                   (euc-divide 
-                    (poly-gf-n-multiply message_poly (format "x~a" patrity_length))
-                    (poly-gf-a->n generator_poly)
-                    #t)])
 
-       (let ([result (poly-n->coeffients remainder)])
-         (express-error-code bit_width result)
-       
-         result)))))
-       
+   

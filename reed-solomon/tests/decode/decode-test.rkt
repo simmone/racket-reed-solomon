@@ -40,9 +40,24 @@
     ;; all is errors
     (check-equal? (rs-decode 
                    '(12 12 1 3 11 10 9 8 7 6 5 4 3 2 1) 4
-                   #:bit_width 4 #:primitive_poly_value 19 #:express? #t)
+                   #:bit_width 4 #:primitive_poly_value 19)
                    '(12 12 1 3 11 10 9 8 7 6 5 4 3 2 1))
 
+    ;; correction length is odd
+    (check-equal? (rs-decode
+                   '(1 2 3 4 5 11 7 8 9 0 11 15 11 11 0 15) 5
+                   #:bit_width 4 #:primitive_poly_value 19 #:express? #t)
+                   '(1 2 3 4 5 6 7 8 9 10 11 15 11 11 0 15))
+
+    )
+   
+   (test-case
+    "test-decode-8"
+    
+    (check-equal?
+     (list->bytes
+      (rs-decode (bytes->list #"chenxiao is a simple astronomer.\337\2oH\16\364\226b\215\263\261\324p\312s8\312\327\350\334gZ") 22 #:express? #t))
+          (string->bytes/utf-8 "chenxiao is a simple programmer."))
     )
 
    ))

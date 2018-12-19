@@ -11,6 +11,11 @@
         (let* ([scrbl_dir (build-path (*express_path*) "message-poly")]
                [scrbl_file (build-path scrbl_dir "message-poly.scrbl")])
 
+          (with-output-to-file
+              (build-path (*express_path*) "report.scrbl") #:exists 'append
+              (lambda ()
+                (printf "@include-section[\"message-poly/message-poly.scrbl\"]\n\n")))
+
           (make-directory* scrbl_dir)
 
           (with-output-to-file
