@@ -82,8 +82,10 @@
                   (express-chien-search err_places)
 
                   (set! lam_derivative_poly (derivative-lam lam_poly))
-                  
+
                   (let-values ([(quotient remainder) (euc-divide ome_poly lam_derivative_poly)])
+                    (printf "remainder:~a\n" remainder)
+
                     (set! Yj_poly quotient))
 
                   (set! err_correct_pairs
@@ -94,7 +96,7 @@
                             (forney Yj_poly err_place)))
                          err_places))
 
-                  (express-forney lam_derivative_poly Yj_poly err_correct_pairs)
+                  (express-forney lam_poly ome_poly lam_derivative_poly Yj_poly err_correct_pairs)
 
                   (set! corrected_values 
                         (correct-error 

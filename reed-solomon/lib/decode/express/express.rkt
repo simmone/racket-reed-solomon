@@ -18,7 +18,7 @@
           [express-primitive-poly (-> void?)]
           [express-euclidean-decode (-> void?)]
           [express-chien-search (-> (listof exact-integer?) void?)]
-          [express-forney (-> string? string? (listof pair?) void?)]
+          [express-forney (-> string? string? string? string? (listof pair?) void?)]
           [express-finally (-> (listof exact-integer?) natural? void?)]
           [express-no-error (-> void?)]
           [express-too-many-errors (-> void?)]

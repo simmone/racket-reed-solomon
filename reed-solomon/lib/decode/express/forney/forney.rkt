@@ -3,10 +3,10 @@
 (require "../../../share/lib.rkt")
 
 (provide (contract-out
-          [express-forney (-> string? string? (listof pair?) void?)]
+          [express-forney (-> string? string? string? string? (listof pair?) void?)]
           ))
 
-(define (express-forney lam_derivative_poly Yj_poly err_correct_pairs)
+(define (express-forney lam_poly ome_poly lam_derivative_poly Yj_poly err_correct_pairs)
   (when (*express?*)
         (let* ([scrbl_dir (build-path (*express_path*) "forney")]
                [scrbl_file (build-path scrbl_dir "forney.scrbl")])
@@ -24,10 +24,12 @@
               (printf "#lang scribble/base\n\n")
               (printf "@title{Forney Algorithm}\n\n")
               (printf "find error correction throuth forney algorithm.\n")
+              (printf "@section{Lambda Poly}\n")
+              (printf "@verbatim{~a}\n" lam_poly)
               (printf "@section{Derivative Lambda Poly}\n")
               (printf "@verbatim{~a}\n" lam_derivative_poly)
               (printf "@section{omega / derivative}\n")
-              (printf "@verbatim{omega poly / derivative lambda poly = ~a}\n" Yj_poly)
+              (printf "@verbatim{~a / ~a = ~a}\n" ome_poly lam_derivative_poly Yj_poly)
               (printf "@section{Error Calculation Example}\n")
               (printf "@verbatim{error correction = a^i * (replace last poly's x with a^-i)}\n")
               (printf "@verbatim{for example:}\n")

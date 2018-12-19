@@ -11,54 +11,66 @@
    "test-decode"
 
    (test-case
-    "test-decode-4"
+    "test-first"
 
-    ;; fix two errors
-    (check-equal? (rs-decode 
-                   '(1 2 3 4 5 11 7 8 9 10 11 3 1 12 12) 4
-                   #:bit_width 4 #:primitive_poly_value 19)
-                  '(1 2 3 4 5 6 7 8 9 10 11 3 3 12 12))
-
-    ;; fix one errors
-    (check-equal? (rs-decode 
-                   '(1 2 3 4 5 6 7 8 9 10 11 3 1 12 12) 4
-                   #:bit_width 4 #:primitive_poly_value 19)
-                  '(1 2 3 4 5 6 7 8 9 10 11 3 3 12 12))
-
-    ;; no error
-    (check-equal? (rs-decode 
-                   '(1 2 3 4 5 6 7 8 9 10 11 3 3 12 12) 4
-                   #:bit_width 4 #:primitive_poly_value 19)
-                  '(1 2 3 4 5 6 7 8 9 10 11 3 3 12 12))
-
-    ;; three errors
-    (check-equal? (rs-decode 
-                   '(5 2 3 4 5 11 7 8 9 10 11 3 1 12 12) 4
-                   #:bit_width 4 #:primitive_poly_value 19)
-                   '(5 2 3 4 5 11 7 8 9 10 11 3 1 12 12))
-
-    ;; all is errors
-    (check-equal? (rs-decode 
-                   '(12 12 1 3 11 10 9 8 7 6 5 4 3 2 1) 4
-                   #:bit_width 4 #:primitive_poly_value 19)
-                   '(12 12 1 3 11 10 9 8 7 6 5 4 3 2 1))
-
-    ;; correction length is odd
-    (check-equal? (rs-decode
-                   '(1 2 3 4 5 11 7 8 9 0 11 15 11 11 0 15) 5
-                   #:bit_width 4 #:primitive_poly_value 19 #:express? #t)
-                   '(1 2 3 4 5 6 7 8 9 10 11 15 11 11 0 15))
-
-    )
-   
-   (test-case
-    "test-decode-8"
-    
     (check-equal?
-     (list->bytes
-      (rs-decode (bytes->list #"chenxiao is a simple astronomer.\337\2oH\16\364\226b\215\263\261\324p\312s8\312\327\350\334gZ") 22 #:express? #t))
-          (string->bytes/utf-8 "chenxiao is a simple programmer."))
+     (rs-decode '(32 1 2 3 4 5 220 77 67 64 236 17 236 17 236 17 196 35 39 119 235 215 231 226 93 23) 10 #:express? #t)
+     '(32 91 11 120 209 114 220 77 67 64 236 17 236 17 236 17 196))
     )
+
+;   (test-case
+;    "test-decode-4"
+;
+;    ;; fix two errors
+;    (check-equal? (rs-decode 
+;                   '(1 2 3 4 5 11 7 8 9 10 11 3 1 12 12) 4
+;                   #:bit_width 4 #:primitive_poly_value 19)
+;                  '(1 2 3 4 5 6 7 8 9 10 11 3 3 12 12))
+;
+;    ;; fix one errors
+;    (check-equal? (rs-decode 
+;                   '(1 2 3 4 5 6 7 8 9 10 11 3 1 12 12) 4
+;                   #:bit_width 4 #:primitive_poly_value 19)
+;                  '(1 2 3 4 5 6 7 8 9 10 11 3 3 12 12))
+;
+;    ;; no error
+;    (check-equal? (rs-decode 
+;                   '(1 2 3 4 5 6 7 8 9 10 11 3 3 12 12) 4
+;                   #:bit_width 4 #:primitive_poly_value 19)
+;                  '(1 2 3 4 5 6 7 8 9 10 11 3 3 12 12))
+;
+;    ;; three errors
+;    (check-equal? (rs-decode 
+;                   '(5 2 3 4 5 11 7 8 9 10 11 3 1 12 12) 4
+;                   #:bit_width 4 #:primitive_poly_value 19)
+;                   '(5 2 3 4 5 11 7 8 9 10 11 3 1 12 12))
+;
+;    ;; all is errors
+;    (check-equal? (rs-decode 
+;                   '(12 12 1 3 11 10 9 8 7 6 5 4 3 2 1) 4
+;                   #:bit_width 4 #:primitive_poly_value 19)
+;                   '(12 12 1 3 11 10 9 8 7 6 5 4 3 2 1))
+;
+;    ;; correction length is odd
+;    (check-equal? (rs-decode
+;                   '(1 2 3 4 5 11 7 8 9 0 11 15 11 11 0 15) 5
+;                   #:bit_width 4 #:primitive_poly_value 19 #:express? #t)
+;                   '(1 2 3 4 5 6 7 8 9 10 11 15 11 11 0 15))
+;
+;    )
+;   
+;   (test-case
+;    "test-decode-8"
+;
+;    (check-equal?
+;     (rs-decode '(32 1 2 3 4 5 220 77 67 64 236 17 236 17 236 17 196 35 39 119 235 215 231 226 93 23) 10 #:express? #t)
+;     '(32 91 11 120 209 114 220 77 67 64 236 17 236 17 236 17 196))
+;    
+;    (check-equal?
+;     (list->bytes
+;      (rs-decode (bytes->list #"chenxiao is a simple astronomer.\337\2oH\16\364\226b\215\263\261\324p\312s8\312\327\350\334gZ") 22))
+;          (string->bytes/utf-8 "chenxiao is a simple programmer."))
+;    )
 
    ))
 
