@@ -14,6 +14,11 @@
         (let* ([scrbl_dir (build-path (*express_path*) "euclidean-decode")]
                [scrbl_file (build-path scrbl_dir "euclidean-decode.scrbl")])
 
+          (with-output-to-file
+              (build-path (*express_path*) "report.scrbl") #:exists 'append
+              (lambda ()
+                (printf "@include-section[\"euclidean-decode/euclidean-decode.scrbl\"]\n\n")))
+
           (make-directory* scrbl_dir)
 
           (with-output-to-file

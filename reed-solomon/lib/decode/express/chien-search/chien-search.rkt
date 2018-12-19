@@ -11,6 +11,11 @@
         (let* ([scrbl_dir (build-path (*express_path*) "chien-search")]
                [scrbl_file (build-path scrbl_dir "chien-search.scrbl")])
 
+          (with-output-to-file
+              (build-path (*express_path*) "report.scrbl") #:exists 'append
+              (lambda ()
+                (printf "@include-section[\"chien-search/chien-search.scrbl\"]\n\n")))
+
           (make-directory* scrbl_dir)
 
           (with-output-to-file

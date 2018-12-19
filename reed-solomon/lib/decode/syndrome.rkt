@@ -13,6 +13,11 @@
       (let* ([scrbl_dir (build-path (*express_path*) "syndrome")]
              [scrbl_file (build-path scrbl_dir "syndrome.scrbl")])
 
+        (with-output-to-file
+            (build-path (*express_path*) "report.scrbl") #:exists 'append
+            (lambda ()
+              (printf "@include-section[\"syndrome/syndrome.scrbl\"]\n\n")))
+
         (make-directory* scrbl_dir)
         
         (set! out (open-output-file scrbl_file #:exists 'replace))))

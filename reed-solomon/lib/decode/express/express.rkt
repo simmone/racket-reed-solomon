@@ -9,6 +9,7 @@
 (require "forney/forney.rkt")
 (require "finally/finally.rkt")
 (require "no-error/no-error.rkt")
+(require "too-many-errors/too-many-errors.rkt")
 
 (provide (contract-out
           [express-start (-> void?)]
@@ -20,5 +21,6 @@
           [express-forney (-> string? string? (listof pair?) void?)]
           [express-finally (-> (listof exact-integer?) natural? void?)]
           [express-no-error (-> void?)]
+          [express-too-many-errors (-> void?)]
           ))
 

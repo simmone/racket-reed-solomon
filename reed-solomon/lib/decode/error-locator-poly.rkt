@@ -6,7 +6,7 @@
 (require "../share/euclidean.rkt")
 
 (provide (contract-out
-          [error-locator-poly (->* (string? natural?) (boolean?) (values string? string?))]
+          [error-locator-poly (->* (string? natural?) (boolean?) (values (or/c #f string?) (or/c #f string?)))]
           ))
 
 (define (error-locator-poly syndrome_poly_n error_length [need-express? #t])
@@ -14,6 +14,11 @@
     (when (and need-express? (*express?*))
       (let* ([scrbl_dir (build-path (*express_path*) "error-locator")]
              [scrbl_file (build-path scrbl_dir "error-locator.scrbl")])
+
+        (with-output-to-file
+            (build-path (*express_path*) "report.scrbl") #:exists 'append
+            (lambda ()
+              (printf "@include-section[\"error-locator/error-locator.scrbl\"]\n\n")))
 
         (make-directory* scrbl_dir)
         
@@ -69,8 +74,12 @@
 
               (fprintf out "@verbatim{t(0):~a}\n" t0)
 
-              (let-values ([(ome_quotient ome_remainder) (euc-divide r t0)]
-                           [(lam_quotient lam_remainder) (euc-divide t t0)])
-                (fprintf out "@verbatim{ome = (/ ~a ~a) = ~a}\n" r t0 ome_quotient)
-                (fprintf out "@verbatim{lam = (/ ~a ~a) = ~a}\n" t t0 lam_quotient)
-                (values ome_quotient lam_quotient))))))))
+              (if (string=? t0 "0")
+                  (begin
+                    (fprintf out "@verbatim{too much errors occurs(> ~a), can't be fixed. }\n" error_length)
+                    (values #f #f))
+                  (let-values ([(ome_quotient ome_remainder) (euc-divide r t0)]
+                               [(lam_quotient lam_remainder) (euc-divide t t0)])
+                    (fprintf out "@verbatim{ome = (/ ~a ~a) = ~a}\n" r t0 ome_quotient)
+                    (fprintf out "@verbatim{lam = (/ ~a ~a) = ~a}\n" t t0 lam_quotient)
+                    (values ome_quotient lam_quotient)))))))))
