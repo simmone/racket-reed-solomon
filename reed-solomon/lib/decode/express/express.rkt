@@ -8,6 +8,7 @@
 (require "chien-search/chien-search.rkt")
 (require "forney/forney.rkt")
 (require "finally/finally.rkt")
+(require "no-error/no-error.rkt")
 
 (provide (contract-out
           [express-start (-> void?)]
@@ -18,5 +19,6 @@
           [express-chien-search (-> (listof exact-integer?) void?)]
           [express-forney (-> string? string? (listof pair?) void?)]
           [express-finally (-> (listof exact-integer?) natural? void?)]
+          [express-no-error (-> void?)]
           ))
 

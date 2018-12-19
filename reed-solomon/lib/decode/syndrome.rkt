@@ -9,17 +9,13 @@
 
 (define (get-syndromes raw_list error_code_length [need-express? #f])
   (let ([out (open-output-nowhere)])
-    (cond
-     [(and need-express? (not (*express?*)))
-      (set! out (current-output-port))]
-     [(and need-express? (*express?*))
+    (when (and need-express? (*express?*))
       (let* ([scrbl_dir (build-path (*express_path*) "syndrome")]
              [scrbl_file (build-path scrbl_dir "syndrome.scrbl")])
 
         (make-directory* scrbl_dir)
         
-        (set! out (open-output-file scrbl_file #:exists 'replace)))]
-     )
+        (set! out (open-output-file scrbl_file #:exists 'replace))))
     
     (fprintf out "#lang scribble/base\n\n")
 

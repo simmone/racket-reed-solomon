@@ -11,17 +11,13 @@
 
 (define (error-locator-poly syndrome_poly_n error_length [need-express? #t])
   (let ([out (open-output-nowhere)])
-    (cond
-     [(and need-express? (not (*express?*)))
-      (set! out (current-output-port))]
-     [(and need-express? (*express?*))
+    (when (and need-express? (*express?*))
       (let* ([scrbl_dir (build-path (*express_path*) "error-locator")]
              [scrbl_file (build-path scrbl_dir "error-locator.scrbl")])
 
         (make-directory* scrbl_dir)
         
-        (set! out (open-output-file scrbl_file #:exists 'replace)))]
-     )
+        (set! out (open-output-file scrbl_file #:exists 'replace))))
     
     (fprintf out "#lang scribble/base\n\n")
 

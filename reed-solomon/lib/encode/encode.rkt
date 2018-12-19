@@ -1,21 +1,21 @@
 #lang racket
 
-(require "lib/share/lib.rkt")
-(require "lib/share/gf.rkt")
-(require "lib/share/poly.rkt")
-(require "lib/share/euclidean.rkt")
-(require "lib/encode/generator-poly.rkt")
+(require "../share/lib.rkt")
+(require "../share/gf.rkt")
+(require "../share/poly.rkt")
+(require "../share/euclidean.rkt")
 
-(require "lib/encode/express/express.rkt")
+(require "generator-poly.rkt")
+(require "express/express.rkt")
 
 (provide (contract-out
-          [encode (->* 
+          [rs-encode (->* 
                    ((listof exact-integer?) natural?) 
                    (#:bit_width natural? #:primitive_poly_value natural? #:express? boolean? #:express_path path-string?) 
                    (listof exact-integer?))]
           ))
 
-(define (encode 
+(define (rs-encode 
          raw_list
          patrity_length
          #:bit_width [bit_width 8]
