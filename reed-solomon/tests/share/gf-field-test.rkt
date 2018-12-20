@@ -94,6 +94,8 @@
      (check-equal? (poly-gf-n->a "x0") "a0x0")
 
      (check-equal? (poly-gf-n->a "a1x3+a7x2+a14x1+a8x0") "a0x3+a198x2+a199x1+a3x0")
+
+     (check-equal? (poly-gf-n->a "0x9") "")
      ))
 
    (test-case
@@ -163,7 +165,21 @@
      (check-equal? (apply poly-gf-n-multiply '("12x3+4x2+3x+15" "10x" "6")) "6x4+2x3+8x2+14x1")
 
      (check-equal? (poly-n-combine (string-append (poly-gf-n-multiply "10x+6" "2x+13") "+1")) "7x2+7x1+9x0")
-     ))
+     )
+
+    (parameterize*
+     ([*bit_width* 8]
+      [*2^m_1* (sub1 (expt 2 (*bit_width*)))]
+      [*primitive_poly_value* 285]
+      [*gf_aton_map* (get-gf-aton-hash)]
+      [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
+
+     (check-equal? (poly-gf-n-multiply 
+                    "90x31+37x30+110x29+211x28+242x27+150x26+94x25+229x24+231x23+222x22+79x21+189x20+15x18+223x17+148x16+99x15+33x14+35x13+173x12+129x11+106x10+246x9+160x8+174x7+24x6+252x5+83x4+244x3+243x2+107x1+80x0"
+                    "83x1")
+                   "36x32+176x31+158x30+39x29+198x28+92x27+117x26+59x25+157x24+135x23+127x22+185x21+6x19+212x18+250x17+62x16+225x15+71x14+224x13+161x12+207x11+151x10+64x9+21x8+251x7+147x6+213x5+49x4+149x3+156x2+32x1")
+     )
+    )
    
    (test-case
     "test-poly-gf-n-divide-align"

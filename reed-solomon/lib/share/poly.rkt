@@ -6,6 +6,7 @@
           [poly-a->string (-> (listof pair?) string?)]
           [poly-n->string (-> (listof pair?) string?)]
           [poly-n-combine (-> string? string?)]
+          [poly-n-strip (-> string? string?)]
           [poly-n-add (-> string? string? string?)]
           [poly-n-car (-> string? pair?)]
           [poly-n-tail (-> string? pair?)]
@@ -122,6 +123,13 @@
      (string-a->poly poly_str))
     
     (poly-n->string (map (lambda (pair) (cons (cdr pair) (car pair))) (hash->list xa_map)))))
+
+(define (poly-n-strip poly_str)
+  (poly-n->string
+   (filter
+    (lambda (item)
+      (not (= (car item) 0)))
+    (string-n->poly poly_str))))
 
 (define (poly-n-add poly1_n poly2_n)
   (poly-n->string

@@ -67,6 +67,13 @@
 
     (check-equal? (poly-n-combine "1x4+1x4+14x3+13x2+12x1") "0x4+14x3+13x2+12x1")
     )
+
+   (test-case
+    "test-poly-n-strip"
+    
+    (check-equal? (poly-n-strip "0x3+2x2") "2x2")
+    (check-equal? (poly-n-strip "0x3+2x2+0x1+10x0") "2x2+10x0")
+    )
    
    (test-case
     "test-poly-n-add"

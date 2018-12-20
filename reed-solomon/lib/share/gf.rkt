@@ -51,7 +51,7 @@
    (map
     (lambda (pair)
       (cons (hash-ref (*gf_ntoa_map*) (car pair)) (cdr pair)))
-    (string-n->poly poly_str))))
+    (filter (lambda (item) (not (= (car item) 0))) (string-n->poly poly_str)))))
 
 (define poly-gf-a-multiply
   (lambda (poly1 poly2 . rst)
