@@ -43,10 +43,10 @@
             [t #f]
             [r_degree #f])
         
-        (fprintf out "@verbatim{r~a:~a, " (- i 2) r-2)
-        (fprintf out "r~a:~a, " (- i 1) r-1)
-        (fprintf out "t~a:~a, " (- i 2) t-2)
-        (fprintf out "t~a:~a}\n" (- i 1) t-1)
+        (fprintf out "@verbatim{r~a:~a}\n" (- i 2) r-2)
+        (fprintf out "@verbatim{r~a:~a}\n" (- i 1) r-1)
+        (fprintf out "@verbatim{t~a:~a}\n" (- i 2) t-2)
+        (fprintf out "@verbatim{t~a:~a}\n" (- i 1) t-1)
 
         (let-values ([(quotient remainder) (euc-divide r-2 r-1)])
           (set! q quotient)

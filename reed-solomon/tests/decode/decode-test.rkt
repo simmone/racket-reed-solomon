@@ -57,13 +57,38 @@
     (check-equal?
      (rs-decode '(32 1 2 3 4 5 220 77 67 64 236 17 236 17 236 17 196 35 39 119 235 215 231 226 93 23) 10)
      '(32 91 11 120 209 114 220 77 67 64 236 17 236 17 236 17 196 35 39 119 235 215 231 226 93 23))
-    
+
+    ;; 5 errors recovery
     (check-equal?
      (list->bytes
       (take
-       (rs-decode (bytes->list #"chenxiao is a simple astronomer.\337\2oH\16\364\226b\215\263\261\324p\312s8\312\327\350\334gZ") 22 #:express? #t)
-       32))
-     (string->bytes/utf-8 "chenxiao is a simple programmer."))
+       (rs-decode `(,@(bytes->list #"Chen Xiao is just a progr54321.")
+                    ,@(bytes->list #"\372\275m\251\275\265LH^\255"))
+                  10)
+       31))
+               (string->bytes/utf-8 "Chen Xiao is just a programmer."))
+
+    ;; 6 errors can't recover
+    (check-not-equal?
+     (list->bytes
+      (take
+       (rs-decode `(,@(bytes->list #"Chen Xiao is just a prog654321.")
+                    ,@(bytes->list #"\372\275m\251\275\265LH^\255"))
+                  10)
+       31))
+               (string->bytes/utf-8 "Chen Xiao is just a programmer.")
+               )
+
+    ;; 17 errors
+    (check-equal?
+     (list->bytes
+      (take
+       (rs-decode `(,@(bytes->list #"Chen Xiao is a great violinist.")
+                    ,@(bytes->list #"\311\350\375\363Z\371\212\346o!IA\350\362\210\265\256\270\277\237\347\36 \233L\26\201\35\314.\310.e."))
+                  34
+                  #:express? #t)
+       31))
+               (string->bytes/utf-8 "Chen Xiao is just a programmer."))
     )
 
    ))

@@ -20,12 +20,12 @@
 
         (make-directory* scrbl_dir)
         
-        (set! out (open-output-file scrbl_file #:exists 'replace))))
+        (set! out (open-output-file scrbl_file #:exists 'replace))
+
+        (fprintf out "#lang scribble/base\n\n")
+
+        (fprintf out "@title{Get Syndromes}\n\n")))
     
-    (fprintf out "#lang scribble/base\n\n")
-
-    (fprintf out "@title{Get Syndromes}\n\n")
-
     (let loop ([loop_a_count 0]
                [result_list '()])
       (if (< loop_a_count error_code_length)

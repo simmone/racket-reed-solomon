@@ -34,10 +34,20 @@
     (check-equal?
      (list->bytes
       (rs-encode
-       (bytes->list (string->bytes/utf-8 "chenxiao is a simple programmer."))
-       22
+       (bytes->list (string->bytes/utf-8 "Chen Xiao is just a programmer."))
+       10))
+     #"\372\275m\251\275\265LH^\255"
+     )
+
+    (check-equal?
+     (list->bytes
+      (rs-encode
+       (bytes->list (string->bytes/utf-8 "Chen Xiao is just a programmer."))
+       34
        #:express? #t))
-     #"\337\2oH\16\364\226b\215\263\261\324p\312s8\312\327\350\334gZ")
+     #"\311\350\375\363Z\371\212\346o!IA\350\362\210\265\256\270\277\237\347\36 \233L\26\201\35\314.\310.e."
+     )
+
     )
    
    ))

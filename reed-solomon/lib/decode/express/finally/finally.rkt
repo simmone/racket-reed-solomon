@@ -29,6 +29,6 @@
                        raw_list
                        (map (lambda (num) (~r #:base 2 #:min-width bit_width #:pad-string "0" num)) raw_list)
                        (add1 bit_width)
-                       10))
+                       5))
               )))))
 

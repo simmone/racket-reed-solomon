@@ -42,8 +42,6 @@
                 [message_poly (coeffients->poly-n raw_list)]
                 [message_length (length raw_list)])
            
-           (express-galois-fields (*gf_aton_map*) (*gf_ntoa_map*))
-
            (express-generator-poly generator_poly)
 
            (express-message-poly message_poly)
@@ -59,6 +57,8 @@
                
                result))))
        (lambda ()
+         (express-galois-fields (*gf_aton_map*) (*gf_ntoa_map*))
+
          (express-primitive-poly)))))
 
 

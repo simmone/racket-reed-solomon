@@ -22,7 +22,7 @@
               scrbl_file
             (lambda ()
               (printf "#lang scribble/base\n\n")
-              (printf "@title{Galois Fields}\n\n")
+              (printf "@title{Appendix. Galois Fields}\n\n")
               (printf "@section{a -> n}\n")
               (printf (display-double-list
                        (sort (hash-keys aton_map) <)

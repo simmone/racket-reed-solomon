@@ -9,7 +9,8 @@
           ))
 
 (define (euc-divide dividend divisor [need-express? #f])
-  (let ([out (open-output-nowhere)])
+;  (let ([out (open-output-nowhere)])
+  (let ([out (current-output-port)])
     (when (and need-express? (*express?*))
       (let* ([scrbl_dir (build-path (*express_path*) "euclidean-divide")]
              [scrbl_file (build-path scrbl_dir "euclidean-divide.scrbl")])

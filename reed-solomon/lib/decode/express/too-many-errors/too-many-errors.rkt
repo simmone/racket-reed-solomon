@@ -3,10 +3,10 @@
 (require "../../../share/lib.rkt")
 
 (provide (contract-out
-          [express-too-many-errors (-> void?)]
+          [express-too-many-errors (-> exn? void?)]
           ))
 
-(define (express-too-many-errors)
+(define (express-too-many-errors exn)
   (when (*express?*)
         (let* ([scrbl_dir (build-path (*express_path*) "too-many-errors")]
                [scrbl_file (build-path scrbl_dir "too-many-errors.scrbl")])
@@ -24,5 +24,6 @@
               (printf "#lang scribble/base\n\n")
               (printf "@title{Too Many Errors}\n\n")
               (printf "too many errors occurs, can't be fixed, stop.\n")
+              (printf "@verbatim{~a}\n" (exn-message exn))
               )))))
 

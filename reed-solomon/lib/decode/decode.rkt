@@ -69,7 +69,7 @@
                (with-handlers
                 ([exn:fail?
                   (lambda (v)
-                    (express-too-many-errors)
+                    (express-too-many-errors v)
                     raw_list)])
                 (let-values ([(ome_poly lam_poly) (error-locator-poly syndrome_poly t #t)])
                   (set! err_places (chien-search lam_poly))
@@ -87,6 +87,8 @@
 
                   corrected_values)))))
        (lambda ()
+         (express-galois-fields (*gf_aton_map*) (*gf_ntoa_map*))
+
          (express-primitive-poly)
 
          (express-euclidean-decode)))))

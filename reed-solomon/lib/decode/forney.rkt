@@ -34,29 +34,53 @@
 
         (make-directory* scrbl_dir)
         
-        (set! out (open-output-file scrbl_file #:exists 'replace))))
-    
-    (map
-     (lambda (error_index)
-       (let ([derivative_lam (derivative-lam lam_poly)]
-             [ome_a #f]
-             [delam_a #f])
-         
-         (printf "error_index:~a\n" error_index)
-         
-         (printf "ome_poly:~a\n" ome_poly)
+        (set! out (open-output-file scrbl_file #:exists 'replace))
 
-         (set! ome_a (poly-gf-n-sub-x->a ome_poly (- (*2^m_1*) error_index)))
-         
-         (printf "ome_a:~a\n" ome_a)
+        (fprintf out "#lang scribble/base\n\n")
 
-         (printf "delam_poly:~a\n" derivative_lam)
+        (fprintf out "@title{Forney Algorithm}\n\n")))
 
-         (set! delam_a (poly-gf-n-sub-x->a derivative_lam (- (*2^m_1*) error_index)))
+    (let ([derivative_lam (derivative-lam lam_poly)])
+      (map
+       (lambda (error_index)
+         (let ([ome_a #f]
+               [delam_a #f]
+               [cal_a #f]
+               [positive_a #f]
+               [modulo_a #f]
+               [result_n #f])
+           
+           (fprintf out "@section{error_index:~a}\n" error_index)
+           
+           (fprintf out "@verbatim{omega poly:~a}\n" ome_poly)
 
-         (printf "delam_a:~a\n" delam_a)
+           (set! ome_a (poly-gf-n-sub-x->a ome_poly (- (*2^m_1*) error_index)))
+           
+           (fprintf out "@verbatim{omega poly replace x width a^(-~a) = ~a(alpha)}\n" error_index ome_a)
 
-         (cons
-          error_index
-          (hash-ref (*gf_aton_map*) (modulo (+ (+ (- ome_a delam_a) error_index) (*2^m_1*)) (*2^m_1*))))))
-     err_places)))
+           (fprintf out "@verbatim{lambda poly:~a}\n" lam_poly)
+           
+           (fprintf out "@verbatim{derivative lambda poly:~a}\n" derivative_lam)
+
+           (set! delam_a (poly-gf-n-sub-x->a derivative_lam (- (*2^m_1*) error_index)))
+
+           (fprintf out "@verbatim{derivative lambda poly replace x width a^(-~a) = ~a(alpha)}\n" error_index delam_a)
+           
+           (set! cal_a (+ error_index (- ome_a delam_a)))
+
+           (fprintf out "@verbatim{a^~a*(transformed_omega_poly/transformed_derivative_lamda_poly)}\n" error_index)
+
+           (fprintf out "@verbatim{=(+ ~a (- ~a ~a) ) = ~a}\n" error_index ome_a delam_a cal_a)
+           
+           (set! positive_a (+ cal_a (*2^m_1*)))
+
+           (fprintf out "@verbatim{turn perhaps negative ~a to ~a by add ~a}\n" cal_a positive_a (*2^m_1*))
+
+           (set! modulo_a (modulo positive_a (*2^m_1*)))
+
+           (set! result_n (hash-ref (*gf_aton_map*) modulo_a))
+
+           (fprintf out "@verbatim{turn alpha (~a % ~a) = ~a to number = ~a}\n" positive_a (*2^m_1*) modulo_a result_n)
+
+           (cons error_index result_n)))
+       err_places))))
