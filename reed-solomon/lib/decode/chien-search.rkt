@@ -7,7 +7,7 @@
 
 (provide (contract-out
           [chien-value (-> string? natural? exact-integer?)]
-          [chien-search (-> string? list?)]
+          [chien-search (-> string? (listof exact-integer?))]
           ))
 
 (define (chien-value lam_poly gf_seq)

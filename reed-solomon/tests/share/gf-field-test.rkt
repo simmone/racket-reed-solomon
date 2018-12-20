@@ -200,6 +200,10 @@
      (check-equal? (poly-gf-n-sub-x->a "10x+2" 6) 4)
 
      (check-equal? (poly-gf-n-sub-x->a "10x+2" 13) 14)
+
+     (check-equal? (poly-gf-n-sub-x->a "6x+15" 6) 0)
+
+     (check-equal? (poly-gf-n-sub-x->a "14x0" 6) 11)
      )
     )
 

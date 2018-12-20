@@ -26,6 +26,8 @@
               (printf "find error correction throuth forney algorithm.\n")
               (printf "@section{Lambda Poly}\n")
               (printf "@verbatim{~a}\n" lam_poly)
+              (printf "@section{Omega Poly}\n")
+              (printf "@verbatim{~a}\n" ome_poly)
               (printf "@section{Derivative Lambda Poly}\n")
               (printf "@verbatim{~a}\n" lam_derivative_poly)
               (printf "@section{omega / derivative}\n")

@@ -109,5 +109,5 @@
      (lambda (item)
        (hash-ref
         (*gf_aton_map*)
-        (modulo (+ (car item) (* (cdr item) a)) (*2^m_1*))))
+        (modulo (+ (car item) (* a (cdr item))) (*2^m_1*))))
      (string-a->poly (poly-gf-n->a poly_n))))))

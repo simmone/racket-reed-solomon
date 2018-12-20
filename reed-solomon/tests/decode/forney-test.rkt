@@ -33,9 +33,7 @@
       [*gf_aton_map* (get-gf-aton-hash)]
       [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
 
-     (check-equal? (forney "14x2+14x1+1x0" "6x+15" 9) 13)
-
-     (check-equal? (forney "14x2+14x1+1x0" "6x+15" 2) 2)
+     (check-equal? (forney "14x2+14x1+1x0" "6x+15" '(9 2)) '( (9 . 13)  (2 . 2)))
     ))
 
    ))

@@ -47,8 +47,6 @@
                [t #f]
                [syndromes #f]
                [syndrome_poly #f]
-               [lam_poly #f]
-               [ome_poly #f]
                [lam_derivative_poly #f]
                [Yj_poly #f]
                [err_places #f]
@@ -73,30 +71,12 @@
                   (lambda (v)
                     (express-too-many-errors)
                     raw_list)])
-                (let-values ([(ome lam) (error-locator-poly syndrome_poly t #t)])
-                  (set! ome_poly ome)
-                  (set! lam_poly lam)
-                  
+                (let-values ([(ome_poly lam_poly) (error-locator-poly syndrome_poly t #t)])
                   (set! err_places (chien-search lam_poly))
                   
                   (express-chien-search err_places)
 
-                  (set! lam_derivative_poly (derivative-lam lam_poly))
-
-                  (let-values ([(quotient remainder) (euc-divide ome_poly lam_derivative_poly)])
-                    (printf "remainder:~a\n" remainder)
-
-                    (set! Yj_poly quotient))
-
-                  (set! err_correct_pairs
-                        (map
-                         (lambda (err_place)
-                           (cons
-                            err_place
-                            (forney Yj_poly err_place)))
-                         err_places))
-
-                  (express-forney lam_poly ome_poly lam_derivative_poly Yj_poly err_correct_pairs)
+                  (set! err_correct_pairs (forney lam_poly ome_poly err_places #t))
 
                   (set! corrected_values 
                         (correct-error 
