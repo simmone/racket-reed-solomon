@@ -8,6 +8,8 @@
 
 reed-solomon is a racket implementation for Reed Solomon Algorithm.
 
+@link["https://en.wikipedia.org/wiki/Reed%E2%80%93Solomon_error_correction" "Reed–Solomon error correction"]
+
 @table-of-contents[]
 
 @section[#:tag "install"]{Install}
@@ -29,14 +31,19 @@ raco pkg install reed-solomon
   data_list is a list of integer, each integer's range is 0 - 2^bit_width-1
 
   parity_length is user defined, (floor (/ parity_length 2)) is recovery capacity.
+
   ie: parity_length is 4, it can recover 2 symbols at most.
 
   bit_width: from 2 - 32
 
   primitive_poly_value: each bit width has multiple available primitive values.
+
   encode and decode should use the same primitive poly value.
+
+  @link["https://github.com/simmone/racket-reed-solomon/blob/master/reed-solomon/ref/primitive_poly.txt" "2-32 bits available primitive value table"]
   
   set #:express? to true will generate a detail report in express_path.
+
   into the express folder, @verbatim{scribble --htmls report.scrbl} to generate a detail report.
 
   Warning: express will generate a set of scribble files, it's very slow, debug usage only.
@@ -57,6 +64,7 @@ raco pkg install reed-solomon
   parity_length, bit_width, primitive_poly_value should be consistent as encode.
   
   set #:express? to true will generate a detail report in express_path.
+
   into the express folder, @verbatim{scribble --htmls report.scrbl} to generate a detail report.
 
   Warning: express will generate a set of scribble files, it's very slow, debug usage only.
