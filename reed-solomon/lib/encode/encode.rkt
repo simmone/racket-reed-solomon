@@ -17,7 +17,7 @@
 
 (define (rs-encode 
          raw_list
-         patrity_length
+         parity_length
          #:bit_width [bit_width 8]
          #:primitive_poly_value [primitive_poly_value 285]
          #:express? [express? #f]
@@ -36,9 +36,9 @@
        (lambda ()
          (express-start))
        (lambda ()
-         (express-input raw_list patrity_length bit_width primitive_poly_value)
+         (express-input raw_list parity_length bit_width primitive_poly_value)
 
-         (let* ([generator_poly (generator-poly patrity_length)]
+         (let* ([generator_poly (generator-poly parity_length)]
                 [message_poly (coeffients->poly-n raw_list)]
                 [message_length (length raw_list)])
            
@@ -48,7 +48,7 @@
 
            (let-values ([(quotient remainder) 
                          (euc-divide 
-                          (poly-gf-n-multiply message_poly (format "x~a" patrity_length))
+                          (poly-gf-n-multiply message_poly (format "x~a" parity_length))
                           (poly-gf-a->n generator_poly)
                           #t)])
 

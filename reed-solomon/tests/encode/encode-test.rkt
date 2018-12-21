@@ -43,8 +43,7 @@
      (list->bytes
       (rs-encode
        (bytes->list (string->bytes/utf-8 "Chen Xiao is just a programmer."))
-       34
-       #:express? #t))
+       34))
      #"\311\350\375\363Z\371\212\346o!IA\350\362\210\265\256\270\277\237\347\36 \233L\26\201\35\314.\310.e."
      )
 

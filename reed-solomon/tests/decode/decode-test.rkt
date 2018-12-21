@@ -46,7 +46,7 @@
     ;; correction length is odd
     (check-equal? (rs-decode
                    '(1 2 3 4 5 11 7 8 9 0 11 15 11 11 0 15) 5
-                   #:bit_width 4 #:primitive_poly_value 19 #:express? #t)
+                   #:bit_width 4 #:primitive_poly_value 19)
                    '(1 2 3 4 5 6 7 8 9 10 11 15 11 11 0 15))
 
     )
@@ -79,16 +79,25 @@
                (string->bytes/utf-8 "Chen Xiao is just a programmer.")
                )
 
-    ;; 17 errors
+    ;; 17 errors, max recovery
     (check-equal?
      (list->bytes
       (take
-       (rs-decode `(,@(bytes->list #"Chen Xiao is a great violinist.")
+       (rs-decode `(,@(bytes->list #"Chen Xiao is a fabulous artist.")
                     ,@(bytes->list #"\311\350\375\363Z\371\212\346o!IA\350\362\210\265\256\270\277\237\347\36 \233L\26\201\35\314.\310.e."))
-                  34
-                  #:express? #t)
+                  34)
        31))
                (string->bytes/utf-8 "Chen Xiao is just a programmer."))
+
+    ;; 18 errors, can't recover
+    (check-equal?
+     (list->bytes
+      (take
+       (rs-decode `(,@(bytes->list #"Chen Xiao is a fabulous artist!")
+                    ,@(bytes->list #"\311\350\375\363Z\371\212\346o!IA\350\362\210\265\256\270\277\237\347\36 \233L\26\201\35\314.\310.e."))
+                  34)
+       31))
+               (string->bytes/utf-8 "Chen Xiao is a fabulous artist!"))
     )
 
    ))
