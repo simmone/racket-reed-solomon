@@ -18,6 +18,10 @@ raco pkg install reed-solomon
 
 @section{Usage}
 
+@defmodule[reed-solomon]
+
+@(require (for-label reed-solomon))
+
 @defproc[(rs-encode
            [data_list (listof exact-integer?)]
            [parity_length natural?]
