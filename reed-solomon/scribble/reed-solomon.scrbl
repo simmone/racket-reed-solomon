@@ -1,6 +1,7 @@
 #lang scribble/manual
 
 @(require (for-label racket))
+@(require (for-label reed-solomon))
 
 @title{Reed-Solomon}
 
@@ -19,8 +20,6 @@ raco pkg install reed-solomon
 @section{Usage}
 
 @defmodule[reed-solomon]
-
-@(require (for-label reed-solomon))
 
 @defproc[(rs-encode
            [data_list (listof exact-integer?)]
@@ -76,7 +75,7 @@ raco pkg install reed-solomon
 
 @section{Example}
 
-@verbatim{
+@codeblock{
 #lang racket
 
 (require reed-solomon)
