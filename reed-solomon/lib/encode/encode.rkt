@@ -53,6 +53,9 @@
                           #t)])
 
              (let ([result (poly-n->coeffients remainder)])
+               (when (< (length result) parity_length)
+                     (set! result (append (make-list (- parity_length (length result)) 0) result)))
+                   
                (express-error-code bit_width result)
                
                result))))

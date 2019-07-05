@@ -66,6 +66,8 @@
     (check-equal? (poly-n-combine "1x3+4x2+3x2+12x1+2x1+8x0") "1x3+7x2+14x1+8x0")
 
     (check-equal? (poly-n-combine "1x4+1x4+14x3+13x2+12x1") "0x4+14x3+13x2+12x1")
+
+    (check-equal? (poly-n-combine "1x4+1x4+1x3+1x3+13x2+12x1") "0x4+0x3+13x2+12x1")
     )
 
    (test-case
@@ -81,6 +83,11 @@
     (check-equal? (poly-n-add "1x4" "1x4+14x3+13x2+12x1") "14x3+13x2+12x1")
 
     (check-equal? (poly-n-add "x4" "1x4+14x3+13x2+12x1") "14x3+13x2+12x1")
+
+    (check-equal? (poly-n-add
+                   "90x16+66x15+95x14+186x13+120x12+50x11+156x10+158x9+140x8+174x7+108x6+152x5+41x4+88x3+169x2+200x1"
+                   "90x16+66x15+197x14+102x13+133x12+118x11+150x10+226x9+234x8+103x7+89x6+63x5+165x4+56x3+242x2+250x1+66x0")
+                  "154x14+220x13+253x12+68x11+10x10+124x9+102x8+201x7+53x6+167x5+140x4+96x3+91x2+50x1+66x0")
     )
    
    (test-case

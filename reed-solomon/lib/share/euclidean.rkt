@@ -14,6 +14,10 @@
       (let* ([scrbl_dir (build-path (*express_path*) "euclidean-divide")]
              [scrbl_file (build-path scrbl_dir "euclidean-divide.scrbl")])
 
+        (with-output-to-file (build-path (*express_path*) "report.scrbl") #:exists 'append
+                             (lambda ()
+                               (printf "@include-section[\"euclidean-divide/euclidean-divide.scrbl\"]\n\n")))
+
         (make-directory* scrbl_dir)
             
         (set! out (open-output-file scrbl_file #:exists 'replace))
@@ -48,6 +52,8 @@
                 (fprintf out "@verbatim{align_factor:~a}\n" loop_align_factor)
                           
                 (set! loop_divisor_multiply_factor (poly-gf-n-multiply divisor loop_align_factor))
+
+                (fprintf out "@verbatim{loop_dividend:~a}\n" loop_dividend)
                           
                 (fprintf out "@verbatim{divisor_multiply_factor:~a}\n" loop_divisor_multiply_factor)
                           

@@ -25,7 +25,11 @@
 
     (check-equal?
     (rs-encode '(1 2 3 4 5 6 7 8 9 10 11) 5 #:bit_width 4 #:primitive_poly_value 19)
-    (list 15 11 11 0 15)) 
+    (list 15 11 11 0 15))
+
+    (check-equal?
+     (rs-encode '(35  37  245 131 35  83  116 84  83) 16)
+     (list 0 154 220 253 68  10  124 102 201 53  167 140 96  91  50  66))
     )
    
    (test-case
