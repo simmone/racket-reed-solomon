@@ -1,14 +1,9 @@
 #lang racket
 
 (provide (contract-out
-          [*express?* parameter?]
-          [*express_path* parameter?]
           [display-double-list (->* (list? list?) (natural? natural?) string?)]
           [display-list (->* (list?) (natural? natural?) string?)]
           ))
-
-(define *express?* (make-parameter #f))
-(define *express_path* (make-parameter #f))
 
 (define (display-double-list input_list result_list [col_width 12] [line_count 10])
   (if (and
