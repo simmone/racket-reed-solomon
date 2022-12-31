@@ -18,4 +18,8 @@
   (display-list input_data_list)
   
   (printf "parity_length:~a\n\n" parity_length)
+
+  (printf "bit_length:~a\n\n" (*bit_width*))
+
+  (printf "2^m-1:~a\n\n" (*2^m_1*))
   )
