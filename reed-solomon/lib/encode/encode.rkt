@@ -21,12 +21,12 @@
          #:primitive_poly_value [primitive_poly_value 285]
          )
 
-  (parameterize*
-   ([*bit_width* bit_width]
-    [*2^m_1* (sub1 (expt 2 (*bit_width*)))]
-    [*primitive_poly_value* primitive_poly_value]
-    [*gf_aton_map* (get-gf-aton-hash)]
-    [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
+  (let ([2^m_1 (sub1 (expt 2 bit_width))]
+        [gf_aton_map #f]
+        [gf_ntoa_map #f])
+
+    (set! gf_aton_map (get-gf-aton-hash 2^m_1 primitive_poly_value))
+    (set! gf_ntoa_map (make-hash (hash-map gf_aton_map (lambda (a n) (cons n a)))))
    
    (let* ([generator_poly (generator-poly parity_length)]
           [message_poly (coeffients->poly-n raw_list)]
