@@ -23,18 +23,11 @@
 ;;    (check-equal?
 ;;     (rs-encode '(32 91 11 120 209 114 220 77 67 64 236 17 236 17 236 17) 10)
 ;;     (list 196  35  39  119  235  215  231  226  93  23))
-    
-(let* (
-       [input_data_list '(32 91 11 120 209 114 220 77 67 64 236 17 236 17 236 17)]
-       [parity_length 10]
-       [bit_width 8]
-       [2^m_1 (sub1 (expt 2 bit_width))]
-       [primitive_poly_value 285]
-       [gf_aton_map #f]
-       [gf_ntoa_map #f]
-       [generator_poly #f]
-       [message_poly #f]
-       )
+
+(let (
+      [input_data_list '(32 91 11 120 209 114 220 77 67 64 236 17 236 17 236 17)]
+      [parity_length 10]
+      )
 
   (printf "start enode\n\n")
 
@@ -44,51 +37,55 @@
   
   (printf "parity_length:~a\n\n" parity_length)
 
-  (printf "bit_length:~a\n\n" bit_width)
+  (parameterize*
+   ([*bit_width* 8]
+    [*2^m_1* (sub1 (expt 2 (*bit_width*)))]
+    [*primitive_poly_value* 285]
+    [*gf_aton_map* (get-gf-aton-hash)]
+    [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
 
-  (printf "2^m-1:~a\n\n" 2^m_1)
-  
-  (printf "bit_length:~a, primitive_poly:~a, primitive_poly_value=~a\n\n" bit_width "x^8+x^4+x^3+x^2+1" primitive_poly_value)
+   (printf "*bit_width*:~a\n\n" (*bit_width*))
 
-  (set! gf_aton_map (get-gf-aton-hash 2^m_1 primitive_poly_value))
+   (printf "*2^m-1*:~a\n\n" (*2^m_1*))
+   
+   (printf "*bit_width*:~a, primitive_poly:~a, *primitive_poly_value*=~a\n\n" (*bit_width*) "x^8+x^4+x^3+x^2+1" (*primitive_poly_value*))
 
-  (printf "gf_aton_map:\n\n")
+   (printf "*gf_aton_map*:\n\n")
 
-  (display-list (hash->list gf_aton_map) 15)
+   (display-list (hash->list (*gf_aton_map*)) 15)
 
-  (set! gf_ntoa_map (make-hash (hash-map gf_aton_map (lambda (a n) (cons n a)))))
+   (printf "*gf_ntoa_map*:\n\n")
 
-  (printf "gf_ntoa_map:\n\n")
+   (display-list (hash->list (*gf_ntoa_map*)) 15)
 
-  (display-list (hash->list gf_ntoa_map) 15)
-  
-  (printf "generator_poly = (generate-poly gf_aton_map gf_ntoa_map 2^m_1 parity_length)):\n\n")
+   (let* ([generator_poly (generator-poly parity_length)]
+          [message_poly (coeffients->poly-n input_data_list)])
 
-  (set! generator_poly (generate-poly gf_aton_map gf_ntoa_map 2^m_1 parity_length))
-  
-  (printf "~a\n\n" generator_poly)
+     (printf "generator_poly = (generate-poly 2^m_1 parity_length)):\n\n")
 
-  (set! message_poly (coeffients->poly-n input_data_list))
+     (printf "~a\n\n" generator_poly)
 
-  (printf "message_poly = (coeffients->poly-n input_list):\n\n")
+     (printf "message_poly = (coeffients->poly-n input_list):\n\n")
 
-  (printf "~a\n\n" message_poly)
+     (printf "~a\n\n" message_poly)
 
-  (printf "euclidean divide:\n\n")
+     (printf "euclidean divide:\n\n")
 
-  (let* ([parity_length_poly (format "x~a" parity_length)]
-         [message_poly*parity_length
-          (poly-gf-n-multiply gf_ntoa_map 2^m_1 message_poly parity_length_poly)]
-         [generate_poly_n (poly-gf-a->n gf_aton_map generator_poly)])
-    
-    (printf "parity_length_poly:~a\n\n" parity_length_poly)
-    
-    (printf "message_poly*parity_length = (poly-gf-n-multiply message_poly parity_length_poly)\n\n")
+     (let* ([parity_length_poly (format "x~a" parity_length)]
+            [message_poly*parity_length
+             (poly-gf-n-multiply message_poly parity_length_poly)]
+            [generate_poly_n (poly-gf-a->n generator_poly)])
+       
+       (printf "parity_length_poly:~a\n\n" parity_length_poly)
+       
+       (printf "message_poly*parity_length = (poly-gf-n-multiply message_poly parity_length_poly)\n\n")
 
-    (printf "~a\n\n" message_poly*parity_length)
-    
-    (printf "generate_poly_n = (poly-gf-a->n generator_poly):\n\n")
-    
-    (printf "~a\n\n" generate_poly_n)
+       (printf "~a\n\n" message_poly*parity_length)
+       
+       (printf "generate_poly_n = (poly-gf-a->n generator_poly):\n\n")
+       
+       (printf "~a\n\n" generate_poly_n)
+       )
+     )
+   )
   )
-)
