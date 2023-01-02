@@ -1,8 +1,8 @@
 #lang racket
 
-(require rackunit/text-ui)
+(require rackunit rackunit/text-ui)
 
-(require rackunit "../../lib/encode/generator-poly.rkt")
+(require "../../lib/encode/encode.rkt")
 
 (require "../../lib/share/gf.rkt")
 (require "../../lib/share/poly.rkt")

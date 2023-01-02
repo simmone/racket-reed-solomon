@@ -3,6 +3,7 @@
 (require "../lib/encode/encode.rkt")
 (require "../lib/share/gf.rkt")
 (require "../lib/share/poly.rkt")
+(require "../lib/share/euclidean.rkt")
 
 (define (display-list input_list [col_width 12] [line_count 10])
   (let loop ([loop_list input_list]
@@ -61,7 +62,7 @@
    (let* ([generator_poly (generator-poly parity_length)]
           [message_poly (coeffients->poly-n input_data_list)])
 
-     (printf "generator_poly = (generate-poly 2^m_1 parity_length)):\n\n")
+     (printf "generator_poly = (generate-poly parity_length)):\n\n")
 
      (printf "~a\n\n" generator_poly)
 
@@ -74,7 +75,7 @@
      (let* ([parity_length_poly (format "x~a" parity_length)]
             [message_poly*parity_length
              (poly-gf-n-multiply message_poly parity_length_poly)]
-            [generate_poly_n (poly-gf-a->n generator_poly)])
+            [generator_poly_n (poly-gf-a->n generator_poly)])
        
        (printf "parity_length_poly:~a\n\n" parity_length_poly)
        
@@ -82,10 +83,39 @@
 
        (printf "~a\n\n" message_poly*parity_length)
        
-       (printf "generate_poly_n = (poly-gf-a->n generator_poly):\n\n")
+       (printf "generator_poly_n = (poly-gf-a->n generator_poly):\n\n")
        
-       (printf "~a\n\n" generate_poly_n)
-       )
-     )
-   )
-  )
+       (printf "~a\n\n" generator_poly_n)
+       
+       (printf "(euc-divide message_poly*parity_length generate_poly_n)\n\n")
+
+       (let-values ([(quotient remainder) 
+                     (euc-divide
+                      message_poly*parity_length
+                      generator_poly_n)])
+
+         (printf "quotient:~a\n\n" quotient)
+
+         (printf "remainder:~a\n\n" remainder)
+
+         (let ([result (poly-n->coeffients remainder)])
+
+           (printf "result: (poly-n->coeffients remainder)\n\n")
+
+           (printf "result:~a\n\n" result)
+
+           (when (< (length result) parity_length)
+             (printf "result_length:~a < parity_length:~a\n\n" (length result) parity_length)
+             
+             (printf "should append 0: (set! result (append (make-list (- parity_length (length result)) 0) result))\n\n")
+
+             (set! result (append (make-list (- parity_length (length result)) 0) result)))
+           
+           
+           (printf "result data list:\n\n")
+  
+           (display-list result)
+           
+           (printf "encode end.\n\n")
+
+           result))))))
