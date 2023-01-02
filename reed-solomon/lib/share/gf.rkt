@@ -7,7 +7,7 @@
           [poly-gf-a->n (-> hash? string? string?)]
           [poly-gf-n->a (-> hash? string? string?)]
           [poly-gf-a-multiply (->* (natural? string? string?) () #:rest (listof string?) string?)]
-          [poly-gf-n-multiply (->* (natural? string? string?) () #:rest (listof string?) string?)]
+          [poly-gf-n-multiply (->* (hash? natural? string? string?) () #:rest (listof string?) string?)]
           [poly-gf-n-divide-align (-> hash? hash? natural? string? string? string?)]
           [poly-gf-n-sub-x->a (-> hash? hash? natural? string? exact-integer? exact-integer?)]
           ))
@@ -65,13 +65,16 @@
           last_poly))))
 
 (define poly-gf-n-multiply
-  (lambda (poly1 poly2 . rst)
+  (lambda (gf_ntoa_map 2^m_1 poly1 poly2 . rst)
     (poly-gf-a->n
+     gf_aton_map
      (apply poly-gf-a-multiply
-            (map
-             (lambda (poly_n)
-               (poly-gf-n->a poly_n))
-             `(,poly1 ,poly2 ,@rst))))))
+            `(
+              ,2^m_1
+              ,@(map
+                 (lambda (poly_n)
+                   (poly-gf-n->a gf_ntoa_map poly_n))
+                 `(,poly1 ,poly2 ,@rst)))))))
 
 (define (poly-gf-n-divide-align gf_ntoa_map gf_aton_map 2^m_1 src dst)
   (let* ([src_pair (string-n->poly src)]

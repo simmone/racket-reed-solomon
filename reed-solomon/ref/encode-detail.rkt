@@ -2,6 +2,7 @@
 
 (require "../lib/encode/encode.rkt")
 (require "../lib/share/gf.rkt")
+(require "../lib/share/poly.rkt")
 
 (define (display-list input_list [col_width 12] [line_count 10])
   (let loop ([loop_list input_list]
@@ -32,6 +33,7 @@
        [gf_aton_map #f]
        [gf_ntoa_map #f]
        [generator_poly #f]
+       [message_poly #f]
        )
 
   (printf "start enode\n\n")
@@ -65,4 +67,28 @@
   (set! generator_poly (generate-poly gf_aton_map gf_ntoa_map 2^m_1 parity_length))
   
   (printf "~a\n\n" generator_poly)
+
+  (set! message_poly (coeffients->poly-n input_data_list))
+
+  (printf "message_poly = (coeffients->poly-n input_list):\n\n")
+
+  (printf "~a\n\n" message_poly)
+
+  (printf "euclidean divide:\n\n")
+
+  (let* ([parity_length_poly (format "x~a" parity_length)]
+         [message_poly*parity_length
+          (poly-gf-n-multiply gf_ntoa_map 2^m_1 message_poly parity_length_poly)]
+         [generate_poly_n (poly-gf-a->n gf_aton_map generator_poly)])
+    
+    (printf "parity_length_poly:~a\n\n" parity_length_poly)
+    
+    (printf "message_poly*parity_length = (poly-gf-n-multiply message_poly parity_length_poly)\n\n")
+
+    (printf "~a\n\n" message_poly*parity_length)
+    
+    (printf "generate_poly_n = (poly-gf-a->n generator_poly):\n\n")
+    
+    (printf "~a\n\n" generate_poly_n)
   )
+)

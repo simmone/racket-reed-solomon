@@ -40,7 +40,6 @@
         [gf_ntoa_map #f]
         [generator_poly #f]
         [message_poly #f]
-        [message_length #f]
         )
 
     (set! gf_aton_map (get-gf-aton-hash 2^m_1 primitive_poly_value))
@@ -51,8 +50,6 @@
 
     (set! message_poly (coeffients->poly-n raw_list))
 
-    (set! message_length (length raw_list))
-      
     (let-values ([(quotient remainder) 
                   (euc-divide 
                    (poly-gf-n-multiply message_poly (format "x~a" parity_length))
