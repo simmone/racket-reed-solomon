@@ -4,22 +4,7 @@
 (require "../lib/share/gf.rkt")
 (require "../lib/share/poly.rkt")
 (require "../lib/share/euclidean.rkt")
-
-(define (display-list input_list [col_width 12] [line_count 10])
-  (let loop ([loop_list input_list]
-             [item_count 1])
-    (when (not (null? loop_list))
-      (let ([item (~a #:min-width col_width #:align 'left #:right-pad-string " " (format "[~a]" (car loop_list)))])
-        (if (<= item_count line_count)
-            (begin
-              (printf "~a" item)
-              
-              (loop (cdr loop_list) (add1 item_count)))
-            (begin
-              (printf "\n~a" item)
-
-              (loop (cdr loop_list) 2))))))
-  (printf "\n\n"))
+(require "../lib/share/lib.rkt")
 
 ;;    (check-equal?
 ;;     (rs-encode '(32 91 11 120 209 114 220 77 67 64 236 17 236 17 236 17) 10)
