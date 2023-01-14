@@ -1,10 +1,10 @@
 #lang racket
 
 (require "../src/decode/decode.rkt")
+(require "../src/decode/syndrome.rkt")
 (require "../src/lib/gf.rkt")
 (require "../src/lib/poly.rkt")
 (require "../src/lib/euclidean.rkt")
-(require "../src/lib/generator-poly.rkt")
 
 (define (display-list input_list [col_width 12] [line_count 10])
   (let loop ([loop_list input_list]
@@ -61,6 +61,30 @@
 
    (display-list (hash->list (*gf_ntoa_map*)) 15)
 
-   (printf "decode end.\n\n")
+   (let (
+         [t #f]
+         [syndromes #f]
+         [syndrome_poly #f]
+         [lam_derivative_poly #f]
+         [Yj_poly #f]
+         [err_places #f]
+         [err_correct_pairs #f]
+         [corrected_values #f]
+         )
+     
+     (set! t (floor (/ parity_length 2)))
+     
+     (printf "t: ~a\n\n" t)
 
-   result))
+     (set! syndromes (get-syndromes input_data_list (* 2 t)))
+     
+     (printf "syndromes: [(get-syndromes input_data_list (* 2 t))]: [~a]\n\n" syndromes)
+
+     (set! syndrome_poly (coeffients->poly-n syndromes))
+
+     (printf "syndrome_poly: ~a\n\n" syndrome_poly)
+
+     )
+
+   (printf "decode end.\n\n")
+   ))

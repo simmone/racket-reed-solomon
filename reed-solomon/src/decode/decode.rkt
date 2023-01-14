@@ -19,7 +19,7 @@
 
 (define (rs-decode 
          raw_list
-         patrity_length
+         parity_length
          #:bit_width [bit_width 8]
          #:primitive_poly_value [primitive_poly_value 285])
 
@@ -41,7 +41,7 @@
          [corrected_values #f]
          )
      
-     (set! t (floor (/ patrity_length 2)))
+     (set! t (floor (/ parity_length 2)))
 
      (set! syndromes (get-syndromes raw_list (* 2 t) #t))
 

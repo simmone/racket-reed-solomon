@@ -3,10 +3,10 @@
 (require "../lib/gf.rkt")
 
 (provide (contract-out
-          [get-syndromes (->* ((listof exact-integer?) natural?) (boolean?) (listof exact-integer?))]
+          [get-syndromes (-> (listof exact-integer?) natural? (listof exact-integer?))]
           ))
 
-(define (get-syndromes raw_list error_code_length [need-express? #f])
+(define (get-syndromes raw_list error_code_length)
   (let loop ([loop_a_count 0]
              [result_list '()])
     (if (< loop_a_count error_code_length)

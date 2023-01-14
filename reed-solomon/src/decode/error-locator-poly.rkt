@@ -5,10 +5,10 @@
 (require "../lib/euclidean.rkt")
 
 (provide (contract-out
-          [error-locator-poly (->* (string? natural?) (boolean?) (values (or/c #f string?) (or/c #f string?)))]
+          [error-locator-poly (-> string? natural? (values (or/c #f string?) (or/c #f string?)))]
           ))
 
-(define (error-locator-poly syndrome_poly_n error_length [need-express? #t])
+(define (error-locator-poly syndrome_poly_n error_length)
   (let loop ([i 1]
              [r-2 (format "x~a" (* 2 error_length))]
              [r-1 syndrome_poly_n]

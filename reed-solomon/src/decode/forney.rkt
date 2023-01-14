@@ -6,7 +6,7 @@
 
 (provide (contract-out
           [derivative-lam (-> string? string?)]
-          [forney (->* (string? string? (listof exact-integer?)) (boolean?) (listof pair?))]
+          [forney (-> string? string? (listof exact-integer?) (listof pair?))]
           ))
 
 (define (derivative-lam lam_poly)
@@ -20,7 +20,7 @@
                  "x")])
     quotient))
 
-(define (forney lam_poly ome_poly err_places [need-express? #f])
+(define (forney lam_poly ome_poly err_places)
   (let ([derivative_lam (derivative-lam lam_poly)])
     (map
      (lambda (error_index)
