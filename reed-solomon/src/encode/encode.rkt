@@ -2,7 +2,6 @@
 
 (require "../lib/gf.rkt")
 (require "../lib/poly.rkt")
-(require "../lib/generator-poly.rkt")
 (require "../lib/euclidean.rkt")
 
 (provide (contract-out
@@ -10,7 +9,20 @@
                       ((listof exact-integer?) natural?) 
                       (#:bit_width natural? #:primitive_poly_value natural?) 
                       (listof exact-integer?))]
+          [generator-poly (-> natural? string?)]
           ))
+
+(define (generator-poly count)
+  (let loop ([loop_count 2]
+             [loop_poly "a0x1+a0x0"])
+    (if (<= loop_count count)
+        (loop
+         (add1 loop_count)
+         (poly-gf-n->a
+          (poly-n-combine
+           (poly-gf-a->n
+            (poly-gf-a-multiply loop_poly (format "a0x1+a~ax0" (sub1 loop_count)))))))
+        loop_poly)))
 
 (define (rs-encode 
          raw_list

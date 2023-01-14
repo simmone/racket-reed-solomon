@@ -22,16 +22,17 @@
               (loop (cdr loop_list) 2))))))
   (printf "\n\n"))
 
-;;    (check-equal?
-;;     (rs-decode '(32 91 11 120 209 114 220 77 67 64 236 17 236 17 236 17) 10)
-;;     (list 196  35  39  119  235  215  231  226  93  23))
+;;    (check-equal? (rs-decode 
+;;                   '(32 91 10 121 209 114 220 77 67 64 236 16 235 17 236 17 196 35 39 119 235 215 231 226 93 22)
+;;                   10)
+;;                   '(32 91 11 120 209 114 220 77 67 64 236 17 236 17 236 17 196 35 39 119 235 215 231 226 93 23)))
 
 (let (
-      [input_data_list '(32 91 11 120 209 114 220 77 67 64 236 17 236 17 236 17)]
+      [input_data_list '(32 91 10 121 209 114 220 77 67 64 236 16 235 17 236 17 196 35 39 119 235 215 231 226 93 22)]
       [parity_length 10]
       )
 
-  (printf "start enode\n\n")
+  (printf "start decode\n\n")
 
   (printf "input data list:\n\n")
   
@@ -60,63 +61,6 @@
 
    (display-list (hash->list (*gf_ntoa_map*)) 15)
 
-   (let* ([generator_poly (generator-poly parity_length)]
-          [message_poly (coeffients->poly-n input_data_list)])
+   (printf "decode end.\n\n")
 
-     (printf "generator_poly = (generate-poly parity_length)):\n\n")
-
-     (printf "~a\n\n" generator_poly)
-
-     (printf "message_poly = (coeffients->poly-n input_list):\n\n")
-
-     (printf "~a\n\n" message_poly)
-
-     (printf "euclidean divide:\n\n")
-
-     (let* ([parity_length_poly (format "x~a" parity_length)]
-            [message_poly*parity_length
-             (poly-gf-n-multiply message_poly parity_length_poly)]
-            [generator_poly_n (poly-gf-a->n generator_poly)])
-       
-       (printf "parity_length_poly:~a\n\n" parity_length_poly)
-       
-       (printf "message_poly*parity_length = (poly-gf-n-multiply message_poly parity_length_poly)\n\n")
-
-       (printf "~a\n\n" message_poly*parity_length)
-       
-       (printf "generator_poly_n = (poly-gf-a->n generator_poly):\n\n")
-       
-       (printf "~a\n\n" generator_poly_n)
-       
-       (printf "(euc-divide message_poly*parity_length generate_poly_n)\n\n")
-
-       (let-values ([(quotient remainder) 
-                     (euc-divide
-                      message_poly*parity_length
-                      generator_poly_n)])
-
-         (printf "quotient:~a\n\n" quotient)
-
-         (printf "remainder:~a\n\n" remainder)
-
-         (let ([result (poly-n->coeffients remainder)])
-
-           (printf "result: (poly-n->coeffients remainder)\n\n")
-
-           (printf "result:~a\n\n" result)
-
-           (when (< (length result) parity_length)
-             (printf "result_length:~a < parity_length:~a\n\n" (length result) parity_length)
-             
-             (printf "should append 0: (set! result (append (make-list (- parity_length (length result)) 0) result))\n\n")
-
-             (set! result (append (make-list (- parity_length (length result)) 0) result)))
-           
-           
-           (printf "result data list:\n\n")
-  
-           (display-list result)
-           
-           (printf "decode end.\n\n")
-
-           result))))))
+   result))
