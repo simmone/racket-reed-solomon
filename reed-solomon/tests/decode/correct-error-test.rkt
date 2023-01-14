@@ -1,10 +1,9 @@
 #lang racket
 
-(require rackunit/text-ui)
+(require rackunit/text-ui rackunit)
 
-(require "../../lib/share/gf.rkt")
-
-(require rackunit "../../lib/decode/correct-error.rkt")
+(require "../../src/lib/gf.rkt")
+(require "../../src/decode/correct-error.rkt")
 
 (define test-correct-error
   (test-suite

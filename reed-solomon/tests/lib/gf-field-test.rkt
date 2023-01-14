@@ -1,10 +1,9 @@
 #lang racket
 
-(require rackunit/text-ui)
+(require rackunit/text-ui rackunit)
 
-(require rackunit "../../lib/share/gf.rkt")
-
-(require "../../lib/share/poly.rkt")
+(require "../../src/lib/gf.rkt")
+(require "../../src/lib/poly.rkt")
 
 (define test-gf
   (test-suite 

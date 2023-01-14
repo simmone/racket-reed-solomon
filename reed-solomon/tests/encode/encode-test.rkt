@@ -1,8 +1,8 @@
 #lang racket
 
-(require rackunit/text-ui)
+(require rackunit/text-ui rackunit)
 
-(require rackunit "../../lib/encode/encode.rkt")
+(require "../../src/encode/encode.rkt")
 
 (define test-encode
   (test-suite 

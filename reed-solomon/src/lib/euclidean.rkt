@@ -1,6 +1,5 @@
 #lang racket
 
-(require "lib.rkt")
 (require "gf.rkt")
 (require "poly.rkt")
 

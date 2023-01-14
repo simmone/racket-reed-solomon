@@ -1,9 +1,8 @@
 #lang racket
 
-(require "../share/lib.rkt")
-(require "../share/gf.rkt")
-(require "../share/poly.rkt")
-(require "../share/euclidean.rkt")
+(require "../lib/gf.rkt")
+(require "../lib/poly.rkt")
+(require "../lib/euclidean.rkt")
 
 (provide (contract-out
           [error-locator-poly (->* (string? natural?) (boolean?) (values (or/c #f string?) (or/c #f string?)))]

@@ -1,10 +1,9 @@
 #lang racket
 
-(require rackunit/text-ui)
+(require rackunit/text-ui rackunit)
 
-(require "../../lib/share/gf.rkt")
-
-(require rackunit "../../lib/share/euclidean.rkt")
+(require "../../src/lib/gf.rkt")
+(require  "../../src/lib/euclidean.rkt")
 
 (define test-euclidean
   (test-suite 

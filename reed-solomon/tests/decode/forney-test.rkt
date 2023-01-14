@@ -1,10 +1,9 @@
 #lang racket
 
-(require rackunit/text-ui)
+(require rackunit/text-ui rackunit)
 
-(require "../../lib/share/gf.rkt")
-
-(require rackunit "../../lib/decode/forney.rkt")
+(require "../../src/lib/gf.rkt")
+(require "../../src/decode/forney.rkt")
 
 (define test-forney
   (test-suite 

@@ -2,10 +2,10 @@
 
 (require rackunit rackunit/text-ui)
 
-(require "../../lib/encode/encode.rkt")
-
-(require "../../lib/share/gf.rkt")
-(require "../../lib/share/poly.rkt")
+(require "../../src/encode/encode.rkt")
+(require "../../src/lib/gf.rkt")
+(require "../../src/lib/poly.rkt")
+(require "../../src/lib/generator-poly.rkt")
 
 (define test-generator-poly
   (test-suite 

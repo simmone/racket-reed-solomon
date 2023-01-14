@@ -1,10 +1,9 @@
 #lang racket
 
-(require rackunit/text-ui)
+(require rackunit/text-ui rackunit)
 
-(require "../../lib/share/gf.rkt")
-
-(require rackunit "../../lib/decode/decode.rkt")
+(require "../../src/lib/gf.rkt")
+(require "../../src/decode/decode.rkt")
 
 (define test-decode
   (test-suite

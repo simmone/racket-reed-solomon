@@ -1,9 +1,8 @@
 #lang racket
 
-(require "../share/lib.rkt")
-(require "../share/gf.rkt")
-(require "../share/poly.rkt")
-(require "../share/euclidean.rkt")
+(require "../lib/gf.rkt")
+(require "../lib/poly.rkt")
+(require "../lib/euclidean.rkt")
 
 (provide (contract-out
           [chien-value (-> string? natural? exact-integer?)]

@@ -1,10 +1,9 @@
 #lang racket
 
-(require rackunit/text-ui)
+(require rackunit/text-ui rackunit)
 
-(require "../../lib/share/gf.rkt")
-
-(require rackunit "../../lib/decode/error-locator-poly.rkt")
+(require "../../src/lib/gf.rkt")
+(require "../../src/decode/error-locator-poly.rkt")
 
 (define test-error-locator-poly
   (test-suite 

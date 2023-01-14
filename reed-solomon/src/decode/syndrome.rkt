@@ -1,7 +1,6 @@
 #lang racket
 
-(require "../share/gf.rkt")
-(require "../share/lib.rkt")
+(require "../lib/gf.rkt")
 
 (provide (contract-out
           [get-syndromes (->* ((listof exact-integer?) natural?) (boolean?) (listof exact-integer?))]
