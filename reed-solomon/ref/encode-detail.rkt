@@ -4,7 +4,6 @@
 (require "../src/lib/gf.rkt")
 (require "../src/lib/poly.rkt")
 (require "../src/lib/euclidean.rkt")
-(require "../src/lib/generator-poly.rkt")
 
 (define (display-list input_list [col_width 12] [line_count 10])
   (let loop ([loop_list input_list]

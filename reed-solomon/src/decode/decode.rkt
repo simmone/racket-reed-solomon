@@ -31,6 +31,12 @@
     [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
 
    (let (
+         [appended_data_list 
+          (if (> (*2^m_1*) (length raw_list))
+              (append
+               raw_list
+               (make-list (- (*2^m_1*) (length raw_list)) 0))
+              raw_list)]
          [t #f]
          [syndromes #f]
          [syndrome_poly #f]
@@ -43,7 +49,7 @@
      
      (set! t (floor (/ parity_length 2)))
 
-     (set! syndromes (get-syndromes raw_list (* 2 t) #t))
+     (set! syndromes (get-syndromes appended_data_list (* 2 t)))
 
      (set! syndrome_poly (coeffients->poly-n syndromes))
      
@@ -53,17 +59,17 @@
           ([exn:fail?
             (lambda (v)
               raw_list)])
-          (let-values ([(ome_poly lam_poly) (error-locator-poly syndrome_poly t #t)])
+          (let-values ([(ome_poly lam_poly) (error-locator-poly syndrome_poly t)])
             (set! err_places (chien-search lam_poly))
             
-            (set! err_correct_pairs (forney lam_poly ome_poly err_places #t))
+            (set! err_correct_pairs (forney lam_poly ome_poly err_places))
 
             (set! corrected_values 
                   (correct-error 
-                   raw_list
+                   appended_data_list
                    err_correct_pairs))
 
-            corrected_values))))))
+            (take corrected_values (length raw_list))))))))
 
 
 

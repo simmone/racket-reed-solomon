@@ -5,7 +5,6 @@
 (require "../../src/encode/encode.rkt")
 (require "../../src/lib/gf.rkt")
 (require "../../src/lib/poly.rkt")
-(require "../../src/lib/generator-poly.rkt")
 
 (define test-generator-poly
   (test-suite 
