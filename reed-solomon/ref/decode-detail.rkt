@@ -9,32 +9,11 @@
 (require "../src/lib/gf.rkt")
 (require "../src/lib/poly.rkt")
 (require "../src/lib/euclidean.rkt")
-
-(define (display-list input_list [col_width 12] [line_count 10])
-  (let loop ([loop_list input_list]
-             [item_count 1])
-    (when (not (null? loop_list))
-      (let ([item (~a #:min-width col_width #:align 'left #:right-pad-string " " (format "[~a]" (car loop_list)))])
-        (if (<= item_count line_count)
-            (begin
-              (printf "~a" item)
-              
-              (loop (cdr loop_list) (add1 item_count)))
-            (begin
-              (printf "\n~a" item)
-
-              (loop (cdr loop_list) 2))))))
-  (printf "\n\n"))
-
-;;    fix max 5 errors
-;;    (check-equal? (rs-decode 
-;;                   '(32 91 10 121 209 114 220 77 67 64 236 16 235 17 236 17 196 35 39 119 235 215 231 226 93 22)
-;;                   10)
-;;                   '(32 91 11 120 209 114 220 77 67 64 236 17 236 17 236 17 196 35 39 119 235 215 231 226 93 23)))
+(require "../src/lib/lib.rkt")
 
 (let (
-      [input_data_list '(32 91 10 121 209 114 220 77 67 64 236 16 235 17 236 17 196 35 39 119 235 215 231 226 93 22)]
-      [parity_length 10]
+      [input_data_list '(129 236 88 46 106 125 11 0 179 122 213 106 186 93 251 192 240 21 69 219 85 191 60)]
+      [parity_length 16]
       [appended_data_list #f]
       )
 
