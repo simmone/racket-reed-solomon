@@ -65,6 +65,13 @@
        (check-equal? remainder
                      "90x31+37x30+110x29+211x28+242x27+150x26+94x25+229x24+231x23+222x22+79x21+189x20+0x19+15x18+223x17+148x16+99x15+33x14+35x13+173x12+129x11+106x10+246x9+160x8+174x7+24x6+252x5+83x4+244x3+243x2+107x1+80x0"))
 
+     (let-values ([(quotent remainder)
+                   (euc-divide
+                    "x16"
+                    "0x15+49x14+195x13+228x12+166x11+225x10+133x9+24x8+105x7+4x6+9x5+222x4+119x3+138x2+193x1+87x0"
+                    )])
+       (check-equal? quotient "135x1+225x0")
+       (check-equal? remainder "90x31+37x30"))
     )
 
     )

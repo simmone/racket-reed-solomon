@@ -91,8 +91,13 @@
          [src_x (cdar src_pair)]
          [dst_n (caar dst_pair)]
          [dst_x (cdar dst_pair)]
-         [src_a (hash-ref (*gf_ntoa_map*) src_n)]
-         [dst_a (hash-ref (*gf_ntoa_map*) dst_n)])
+         [src_a #f]
+         [dst_a #f])
+    
+    (set! src_a (hash-ref (*gf_ntoa_map*) src_n))
+
+    (set! dst_a (hash-ref (*gf_ntoa_map*) dst_n))
+
     (format "~ax~a"
             (hash-ref (*gf_aton_map*)
                       (modulo

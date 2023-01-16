@@ -20,7 +20,7 @@
           [t #f]
           [r_degree #f])
       
-      (let-values ([(quotient remainder) (euc-divide r-2 r-1)])
+      (let-values ([(quotient remainder) (euc-divide r-2 (poly-n-strip r-1))])
         (set! q quotient)
         (set! r remainder))
 

@@ -26,6 +26,8 @@
     [*primitive_poly_value* 285]
     [*gf_aton_map* (get-gf-aton-hash)]
     [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
+   
+   (hash-set! (*gf_ntoa_map*) 0 256)
 
    (printf "*bit_width*:~a\n\n" (*bit_width*))
 

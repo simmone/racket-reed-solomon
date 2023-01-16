@@ -198,8 +198,20 @@
     
      (check-equal? (poly-gf-n-divide-align "6x2" "8x2") "13x0")
 
-     (check-equal? (poly-gf-n-divide-align "7x2" "14x2") "2x0")
-     )
+     (check-equal? (poly-gf-n-divide-align "7x2" "14x2") "2x0"))
+
+    (parameterize*
+     ([*bit_width* 8]
+      [*2^m_1* (sub1 (expt 2 (*bit_width*)))]
+      [*primitive_poly_value* 285]
+      [*gf_aton_map* (get-gf-aton-hash)]
+      [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
+
+     (check-equal?
+      (poly-gf-n-divide-align
+       "49x14+195x13+228x12+166x11+225x10+133x9+24x8+105x7+4x6+9x5+222x4+119x3+138x2+193x1+87x0"
+       "x16")
+      "10x1"))
     )
 
    (test-case

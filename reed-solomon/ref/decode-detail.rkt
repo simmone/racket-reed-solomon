@@ -32,6 +32,8 @@
     [*gf_aton_map* (get-gf-aton-hash)]
     [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
 
+   (hash-set! (*gf_ntoa_map*) 0 0)
+
    (set! appended_data_list
          (append
           input_data_list
