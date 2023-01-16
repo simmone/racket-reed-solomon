@@ -95,7 +95,6 @@
 
              (set! result (append (make-list (- parity_length (length result)) 0) result)))
            
-           
            (printf "result data list:\n\n")
   
            (display-list result)

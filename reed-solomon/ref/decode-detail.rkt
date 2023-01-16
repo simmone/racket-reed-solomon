@@ -12,9 +12,8 @@
 (require "../src/lib/lib.rkt")
 
 (let (
-      [input_data_list '(248 146 101 20 154 230 111 233 94 213 1 93 180 149 155 81 253 215 246 143 121 234 121 19 172 146 19 15 170 25 3 93 89 58 63 51 156 203 103 230 157 102 132 246 74 75 14 50 50 125 148 194 1 144 15 98 36 222 214 1 242 232 68 48 254 100 102 143 142 194 199 92 140 18 93 43 230 28 206 110 194 76 135 0 21 105 163 172 251 99 243 175 68 158 186 81 17 106 173)]
+      [input_data_list '(215 134 230 162 94 212 85 175 164 168 225 56 61 100 23 221 109 73 32 182 229 196 140 163 7 32 39 26 73 230 97 238 2 77 40 113 20 167 59 234 53 230 188 68 64 149 106 202 226 229 60 105 12 93 227 107 252 168 128 98 87 138 134 177 12 136 93 227 151 253 27 174 125 119 164 58 42 59 196 236 176 96 231 179 1 16 194 100 54 182 112 89 78 241 241 120 38 109 227 131 9 32 64 0 222 160 75 25 86 253 154 132 251 165 219 90 222 151 1)]
       [parity_length 16]
-      [appended_data_list #f]
       )
 
   (printf "start decode\n\n")
@@ -32,17 +31,8 @@
     [*gf_aton_map* (get-gf-aton-hash)]
     [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
 
-   (hash-set! (*gf_ntoa_map*) 0 255)
+   (hash-set! (*gf_ntoa_map*) 0 0)
 
-   (set! appended_data_list
-         (append
-          input_data_list
-          (make-list (- (*2^m_1*) (length input_data_list)) 0)))
-  
-   (printf "appended data list:\n\n")
-   (display-list appended_data_list)
-   (printf "appened raw data:~a\n\n" appended_data_list)
-  
    (printf "*bit_width*:~a\n\n" (*bit_width*))
 
    (printf "*2^m-1*:~a\n\n" (*2^m_1*))
@@ -72,9 +62,9 @@
      
      (printf "t: ~a\n\n" t)
 
-     (set! syndromes (get-syndromes appended_data_list (* 2 t)))
+     (set! syndromes (get-syndromes input_data_list (* 2 t)))
      
-     (printf "syndromes: [(get-syndromes appended_data_list (* 2 t))]: [~a]\n\n" syndromes)
+     (printf "syndromes: [(get-syndromes input_data_list (* 2 t))]: [~a]\n\n" syndromes)
 
      (set! syndrome_poly (coeffients->poly-n syndromes))
 
@@ -107,7 +97,7 @@
 
               (set! corrected_values 
                     (correct-error 
-                     appended_data_list
+                     input_data_list
                      err_correct_pairs))
               (printf "corrected values:\n\n")
               (display-list corrected_values)

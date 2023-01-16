@@ -32,6 +32,8 @@
    
    (hash-set! (*gf_ntoa_map*) 0 0)
 
+   (printf "s0\n")
+
    (let (
          [appended_data_list 
           (if (> (*2^m_1*) (length raw_list))
@@ -41,37 +43,61 @@
               raw_list)]
          [t #f]
          [syndromes #f]
+         [syndromes_sum #f]
          [syndrome_poly #f]
          [lam_derivative_poly #f]
          [Yj_poly #f]
          [err_places #f]
          [err_correct_pairs #f]
          [corrected_values #f]
+         [result #f]
          )
      
      (set! t (floor (/ parity_length 2)))
 
+     (printf "s1\n")
+
      (set! syndromes (get-syndromes appended_data_list (* 2 t)))
 
+     (printf "s2\n")
+
      (set! syndrome_poly (coeffients->poly-n syndromes))
+
+     (printf "s3, syndromes_poly: ~a\n" syndrome_poly)
      
-     (if (= (foldr + 0 syndromes) 0)
-         raw_list
-         (with-handlers
-          ([exn:fail?
-            (lambda (v)
-              raw_list)])
-          (let-values ([(ome_poly lam_poly) (error-locator-poly syndrome_poly t)])
-            (set! err_places (chien-search lam_poly))
-            
-            (set! err_correct_pairs (forney lam_poly ome_poly err_places))
+     (set! syndromes_sum (foldr + 0 syndromes))
+     
+     (printf "syndromes sum:~a\n" syndromes_sum)
+     
+     (if (= syndromes_sum 0)
+         (set! result raw_list)
+         (let-values ([(ome_poly lam_poly) (error-locator-poly (poly-n-strip syndrome_poly) t)])
+           (if (not lam_poly)
+               (set! result raw_list)
+               (begin
+                 (printf "chinen-search: ~a\n" lam_poly)
 
-            (set! corrected_values 
-                  (correct-error 
-                   appended_data_list
-                   err_correct_pairs))
+                 (set! err_places (chien-search lam_poly))
 
-            (take corrected_values (length raw_list))))))))
+                 (printf "s4\n")
 
+                 (if (null? err_places)
+                     (set! result raw_list)
+                     (begin
+                       (set! err_correct_pairs (forney lam_poly ome_poly err_places))
 
+                       (printf "s5\n")
 
+                       (set! corrected_values 
+                             (correct-error 
+                              appended_data_list
+                              err_correct_pairs))
+
+                       (printf "s6\n")
+
+                       (set! result (take corrected_values (length raw_list)))))))))
+
+     (printf "s7\n")
+     
+     result
+     )))
