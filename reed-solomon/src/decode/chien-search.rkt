@@ -29,6 +29,7 @@
              [result_list '()])
     (if (>= loop_index 0)
         (let ([chien_value (chien-value lam_poly loop_index)])
+;;          (printf "(chien-value ~a ~a) = ~a\n" lam_poly loop_index chien_value)
           (if (= chien_value 0)
               (loop (sub1 loop_index) (cons loop_index result_list))
               (loop (sub1 loop_index) result_list)))

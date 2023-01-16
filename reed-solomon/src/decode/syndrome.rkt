@@ -25,7 +25,9 @@
 
                     (set! gf+ (bitwise-xor last_result_n (car loop_n_list)))
 
-                    (set! ntoa (hash-ref (*gf_ntoa_map*) gf+ 0))
+                    (set! ntoa (hash-ref (*gf_ntoa_map*) gf+))
+                    
+;;                    (printf "gf+:~a, ntoa:~a\n" gf+ ntoa)
 
                     (if (= gf+ 0)
                         (begin

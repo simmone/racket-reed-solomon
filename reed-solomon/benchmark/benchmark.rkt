@@ -11,7 +11,7 @@
 ;; decode to the correct data list
 ;; encode 1000 times, decode 1000 times.
 
-(define *BENCHMARK_DATA_COUNT* 10)
+(define *BENCHMARK_DATA_COUNT* 100)
 (define *RANDOM_ERROR_COUNT* 8)
 (define *PARITY_LENGTH* 16)
 
@@ -35,7 +35,7 @@
          (lambda (data)
            `(,@data ,@(rs-encode data *PARITY_LENGTH*)))
          random_data_list)])
-
+  
   (let loop ([encoded_data encoded_data_list])
     (when (not (null? encoded_data))
       (let* ([data (car encoded_data)]
@@ -45,7 +45,10 @@
                 (if (<= count *RANDOM_ERROR_COUNT*)
                     (loop-error-place
                      (add1 count)
-                     (cons (random 0 (length data)) error_places))
+                     (let loop-random-place ([random_place (random 0 (length data))])
+                       (if (member random_place error_places)
+                           (loop-random-place (random 0 (length data)))
+                           (cons random_place error_places))))
                     (reverse error_places)))])
         
         (let ([polluted_data

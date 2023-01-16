@@ -12,7 +12,7 @@
 (require "../src/lib/lib.rkt")
 
 (let (
-      [input_data_list '(197 115 41 125 254 185 37 168 67 214 59 104 236 180 183 46 125 136 152 13 175 0 201 226 255 133 166 36 220 218 35 32 195 102 169 3 107 51 78 69 84 153 38 161 4 126 45 119 204 233 84 22 89 26 214 173 46 50 213 199 125 171 53 5 242 117 76 241 92 230 138 123 249 43 46 196 116 253 222 129 166 200 121 147 34 10 234 28 147 240 122 28 86 247 9 55 132 31 137 154 189 118 217 226 176 176 205 128 138 234 166 150 87 141 165 230 36 167 206 228 76 68 46 105 225 198 207 217 14 127 81 48 32 182 112 1 117 181 22 142 195 197 223 158 208 56 153 142 52 28 232 40 48 68 122 194 73 214 24 143 202 57 105 159 106 100 225 254 19 139 107 82 43 239 69 206 92 92 190 189 215 5 135 122 234 38 113 61 221 170 19 43 202 67 226 87 108 88 139 146 216 5 121 74 4 211 158)]
+      [input_data_list '(248 146 101 20 154 230 111 233 94 213 1 93 180 149 155 81 253 215 246 143 121 234 121 19 172 146 19 15 170 25 3 93 89 58 63 51 156 203 103 230 157 102 132 246 74 75 14 50 50 125 148 194 1 144 15 98 36 222 214 1 242 232 68 48 254 100 102 143 142 194 199 92 140 18 93 43 230 28 206 110 194 76 135 0 21 105 163 172 251 99 243 175 68 158 186 81 17 106 173)]
       [parity_length 16]
       [appended_data_list #f]
       )
@@ -32,16 +32,16 @@
     [*gf_aton_map* (get-gf-aton-hash)]
     [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
 
-   (hash-set! (*gf_ntoa_map*) 0 0)
+   (hash-set! (*gf_ntoa_map*) 0 255)
 
    (set! appended_data_list
          (append
           input_data_list
           (make-list (- (*2^m_1*) (length input_data_list)) 0)))
   
-   (printf "appened data list:\n\n")
-
+   (printf "appended data list:\n\n")
    (display-list appended_data_list)
+   (printf "appened raw data:~a\n\n" appended_data_list)
   
    (printf "*bit_width*:~a\n\n" (*bit_width*))
 
@@ -84,12 +84,12 @@
        (if (= (foldr + 0 syndromes) 0)
            (begin
              (printf "syndromes sum == 0, return input data list")
-             appended_data_list)
+             input_data_list)
            (with-handlers
             ([exn:fail?
               (lambda (v)
                 (printf "exception happens: ~a\n\n" v)
-                appended_data_list)])
+                input_data_list)])
             (let-values ([(ome_poly lam_poly) (error-locator-poly syndrome_poly t)])
               (printf "error-locator-poly result:\n")
               (printf "ome_poly: ~a\n\n" ome_poly)

@@ -37,6 +37,21 @@
      
      (check-equal? (chien-search "14x2+14x1+1x0") '(9 2))
     ))
+
+   (test-case
+    "test-chien-value2"
+
+    (parameterize*
+     ([*bit_width* 8]
+      [*2^m_1* (sub1 (expt 2 (*bit_width*)))]
+      [*primitive_poly_value* 285]
+      [*gf_aton_map* (get-gf-aton-hash)]
+      [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
+
+     (hash-set! (*gf_ntoa_map*) 0 0)
+
+     (check-equal? (chien-search "148x8+38x7+153x6+74x5+43x4+7x3+226x2+102x1+1x0") '(1 2))
+     ))
    ))
 
 (run-tests test-chien-search)
