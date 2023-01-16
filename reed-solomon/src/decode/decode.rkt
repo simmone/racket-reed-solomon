@@ -28,7 +28,7 @@
     [*2^m_1* (sub1 (expt 2 (*bit_width*)))]
     [*primitive_poly_value* primitive_poly_value]
     [*gf_aton_map* (get-gf-aton-hash)]
-    [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
+    [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons (sub1 n) a))))])
 
    (let (
          [appended_data_list 

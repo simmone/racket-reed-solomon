@@ -22,7 +22,7 @@
               (loop-all
                (add1 count)
                (cons
-                (let loop-data ([data_length (random 1 240)]
+                (let loop-data ([data_length (random 8 240)]
                                 [data_count 1]
                                 [data_list '()])
                   (if (<= data_count data_length)
