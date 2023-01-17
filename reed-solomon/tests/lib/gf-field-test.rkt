@@ -29,7 +29,32 @@
        (check-equal? (hash-ref aton_map 79) 240)
        (check-equal? (hash-ref aton_map 204) 221)
        (check-equal? (hash-ref aton_map 254) 142)
-       )))
+       ))
+
+    (parameterize*
+     ([*bit_width* 4]
+      [*2^m_1* (sub1 (expt 2 (*bit_width*)))]
+      [*primitive_poly_value* 19]) ;; x^4+x^1+1=19
+
+     (let ([aton_map (get-gf-aton-hash)])
+       (check-equal? (hash-ref aton_map 0) 0)
+       (check-equal? (hash-ref aton_map 1) 1)
+       (check-equal? (hash-ref aton_map 2) 4)
+       (check-equal? (hash-ref aton_map 3) 8)
+       (check-equal? (hash-ref aton_map 4) 3)
+       (check-equal? (hash-ref aton_map 5) 6)
+       (check-equal? (hash-ref aton_map 6) 12)
+       (check-equal? (hash-ref aton_map 7) 11)
+       (check-equal? (hash-ref aton_map 8) 5)
+       (check-equal? (hash-ref aton_map 9) 10)
+       (check-equal? (hash-ref aton_map 10) 7)
+       (check-equal? (hash-ref aton_map 11) 14)
+       (check-equal? (hash-ref aton_map 12) 15)
+       (check-equal? (hash-ref aton_map 13) 13)
+       (check-equal? (hash-ref aton_map 14) 9)
+       ))
+    
+    )
 
    (test-case
     "test-get-gf-hash"
@@ -211,7 +236,7 @@
       (poly-gf-n-divide-align
        "49x14+195x13+228x12+166x11+225x10+133x9+24x8+105x7+4x6+9x5+222x4+119x3+138x2+193x1+87x0"
        "x16")
-      "10x1"))
+      "137x2"))
     )
 
    (test-case
