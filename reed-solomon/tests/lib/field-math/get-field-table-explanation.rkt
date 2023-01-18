@@ -15,14 +15,20 @@
 
     (hash-set! poly_index->decimal_hash "0" "0")
     (hash-set! poly_index->poly_hash "0" "0")
+
+    (hash-set! poly_index->decimal_hash "a0" "1")
+    (hash-set! poly_index->poly_hash "a0" "1")
     
     (printf "calculating each index's field element\n\n")
-    (let loop ([index 0])
+    (let loop ([index 1]
+               [last_val 1])
       (when (< index 2^m_1)
-        (printf "index: ~a\n" index)
-        (loop (add1 index))))
+        (printf "index: a~a\n" index)
+        (printf "  step1: (poly-multiply last_val a):\n")
+        (printf "    (poly-multiply ~a a) = ~a\n" last_val last_val)
+        (loop (add1 index) last_val)))
 
-    (printf "[~a][~a][~a]\n"
+    (printf "\nfield_elements_table:\n[~a][~a][~a]\n"
             (~a #:min-width 10 #:align 'left #:right-pad-string " " "index form")
             (~a #:min-width 20 #:align 'left #:right-pad-string " " "polynomial form")
             (~a #:min-width 20 #:align 'left #:right-pad-string " " "decimal form"))
