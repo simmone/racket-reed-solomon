@@ -8,6 +8,7 @@
           [poly_a->sum (-> string? natural?)]
           [poly_a->equal_pair (-> string? (cons/c string? string?))]
           [poly_a-remove_dup (-> string? string?)]
+          [poly_a-multiply-poly_a (-> string? string? string?)]
           ))
 
 (define (get-field-table bit_width field_generator_poly)
@@ -78,3 +79,17 @@
               (cdr index_list)
               (cons (car index_list) result_list)))
          (reverse result_list)))))
+
+(define (poly_a-multiply-poly_a poly1_a poly2_a)
+  (poly_a-remove_dup
+   (index_list->poly_a
+    (let loop-poly1 ([poly1_indexes (poly_a->index_list poly1_a)]
+                     [poly1_result '()])
+      (if (not (null? poly1_indexes))
+          (loop-poly1
+           (cdr poly1_indexes)
+           (cons
+            (poly_a->index_list
+             (poly_a-multiply-n poly2_a (car poly1_indexes)))
+            poly1_result))
+          (sort (flatten poly1_result) <))))))

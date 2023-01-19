@@ -32,6 +32,13 @@
     (check-equal? (poly_a-multiply-n "a2+a1+1" 1) "a3+a2+a1")
     (check-equal? (poly_a-multiply-n "a2+a1+1" 2) "a4+a3+a2")
     )
+
+   (test-case
+    "poly_a-multiply-poly_a"
+    
+    (check-equal? (poly_a-multiply-poly_a "a3+a" "a3+a2+1") "a6+a5+a4+a1")
+    (check-equal? (poly_a-multiply-poly_a "a4+a2+a+1" "a3+a4") "a8+a7+a6+a3")
+    )
    
    (test-case
     "poly_a->sum"
