@@ -5,7 +5,9 @@
           [poly_a->index_list (-> string? (listof natural?))]
           [index_list->poly_a (-> (listof natural?) string?)]
           [poly_a-multiply-n (-> string? natural? string?)]
-          [poly_a->n (-> string? natural?)]
+          [poly_a->sum (-> string? natural?)]
+          [poly_a->equal_pair (-> string? (cons/c string? string?))]
+          [poly_a-remove_dup (-> string? string?)]
           ))
 
 (define (get-field-table bit_width field_generator_poly)
@@ -21,6 +23,7 @@
           (let ([a_item (string-trim (car loop_list))])
             (cond
              [(string=? a_item "1") 0]
+             [(string=? a_item "a") 1]
              [else
               (string->number (second (regexp-split #rx"a" a_item)))]))
           result_list))
@@ -49,9 +52,29 @@
       (+ index n))
     (poly_a->index_list poly))))  
 
-(define (poly_a->n poly)
+(define (poly_a->sum poly)
   (foldl + 0
          (map
           (lambda (index)
             (expt 2 index))
           (poly_a->index_list poly))))
+
+(define (poly_a->equal_pair poly)
+  (let ([index_list (poly_a->index_list poly)])
+    (cons
+     (index_list->poly_a (list (car index_list)))
+     (index_list->poly_a (cdr index_list)))))
+
+(define (poly_a-remove_dup poly)
+  (index_list->poly_a
+   (let loop ([index_list (poly_a->index_list poly)]
+              [result_list '()])
+     (if (not (null? index_list))
+         (if (member (car index_list) result_list)
+             (loop
+              (cdr index_list)
+              (remove (car index_list) result_list))
+             (loop
+              (cdr index_list)
+              (cons (car index_list) result_list)))
+         (reverse result_list)))))

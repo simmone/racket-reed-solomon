@@ -12,6 +12,7 @@
     "poly_a->index_list"
     
     (check-equal? (poly_a->index_list "1") '(0))
+    (check-equal? (poly_a->index_list "a") '(1))
     (check-equal? (poly_a->index_list "a4+a3+a2+a1+1") '(4 3 2 1 0))
     (check-equal? (poly_a->index_list " a4 + a3+a2+a1+1 ") '(4 3 2 1 0))
     (check-equal? (poly_a->index_list "a4+a3+a1+a2+1") '(4 3 2 1 0))
@@ -28,20 +29,35 @@
    (test-case
     "poly_a-multiply-n"
     
-    (check-equal? (poly_a-multiply-n "a2+1" 1) "a3+a1")
-    (check-equal? (poly_a-multiply-n "a2+1" 2) "a4+a2")
+    (check-equal? (poly_a-multiply-n "a2+a1+1" 1) "a3+a2+a1")
+    (check-equal? (poly_a-multiply-n "a2+a1+1" 2) "a4+a3+a2")
     )
    
    (test-case
-    "poly_a->n"
+    "poly_a->sum"
     
-    (check-equal? (poly_a->n "1") 1)
-    (check-equal? (poly_a->n "a1") 2)
-    (check-equal? (poly_a->n "a1+1") 3)
-    (check-equal? (poly_a->n "a2") 4)
-    (check-equal? (poly_a->n "a2+1") 5)
-    (check-equal? (poly_a->n "a2+a1") 6)
-    (check-equal? (poly_a->n "a2+a1+1") 7)
+    (check-equal? (poly_a->sum "1") 1)
+    (check-equal? (poly_a->sum "a1") 2)
+    (check-equal? (poly_a->sum "a1+1") 3)
+    (check-equal? (poly_a->sum "a2") 4)
+    (check-equal? (poly_a->sum "a2+1") 5)
+    (check-equal? (poly_a->sum "a2+a1") 6)
+    (check-equal? (poly_a->sum "a2+a1+1") 7)
+    )
+   
+   (test-case
+    "poly_a->equal_pair"
+    
+    (check-equal? (poly_a->equal_pair "a4+a+1") '("a4" . "a1+1"))
+    (check-equal? (poly_a->equal_pair "a8+a4+a3+a2+1") '("a8" . "a4+a3+a2+1"))
+    )
+   
+   (test-case
+    "poly_a-remove_dup"
+    
+    (check-equal? (poly_a-remove_dup "a4+a+1+a") "a4+1")
+    (check-equal? (poly_a-remove_dup "a4+a+1+a+1") "a4")
+    (check-equal? (poly_a-remove_dup "a4+a2+1+a+1") "a4+a2+a1")
     )
 
   ))
