@@ -70,8 +70,9 @@
    (test-case
     "poly->coefficients"
     
-    (check-equal? (poly->coefficients "a6+a5+a4+a1") '(1 1 1 0 0 1 0))
-    (check-equal? (poly->coefficients "a4+a1+1") '(1 0 0 1 1)))
+    (check-equal? (poly->coefficients "a6+a5+a4+a1") "1110010")
+    (check-equal? (poly->coefficients "a4+a1+1") "10011")
+    )
 
   ))
 

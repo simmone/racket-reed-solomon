@@ -9,7 +9,7 @@
           [poly->equal_pair (-> string? (cons/c string? string?))]
           [poly-remove_dup (-> string? string?)]
           [poly-multiply-poly (-> string? string? string?)]
-          [poly->coefficients (-> string? (listof (or/c 0 1)))]
+          [poly->coefficients (-> string? string?)]
           ))
 
 (define (get-field-table bit_width field_generator_poly)
@@ -96,13 +96,12 @@
           (sort (flatten poly1_result) <))))))
 
 (define (poly->coefficients poly)
-  (let ([indexes (poly->indexes poly)])
-    (let loop ([index (car indexes)]
-               [coefficient_list '()])
-      (if (>= index 0)
-          (loop
-           (sub1 index)
-           (cons
-            (if (member index indexes) 1 0)
-            coefficient_list))
-          (reverse coefficient_list)))))
+  (with-output-to-string
+    (lambda ()
+      (let ([indexes (poly->indexes poly)])
+        (let loop ([index (car indexes)])
+          (when (>= index 0)
+            (if (member index indexes)
+                (printf "1")
+                (printf "0"))
+            (loop (sub1 index))))))))
