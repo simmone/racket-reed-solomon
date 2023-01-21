@@ -29,7 +29,7 @@
      (let loop ([index (sub1 dividend_bits_length)]
                 [result_list '()])
        (if (>= index 0)
-           (loop (sub1 index) (cons (format "a~a" index) result_list))
+           (loop (sub1 index) (cons (format "x~a" index) result_list))
            (reverse result_list))))
     
     (let loop ([loop_bits dividend_poly_bits])
@@ -53,5 +53,4 @@
           (loop (string-append bitwise_result (substring loop_bits divisor_bits_length))))))
   ))
 
-(galios-divide "a6+a5+a4+a1" "a4+a1+1")
-
+(galios-divide "x6+x5+x4+x1" "x4+x1+1")

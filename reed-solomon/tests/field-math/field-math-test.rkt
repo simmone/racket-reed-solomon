@@ -9,69 +9,69 @@
    "test-field-math"
    
    (test-case
-    "poly->indexes"
+    "poly->num_index_pairs && num_index_pairs->poly"
     
-    (check-equal? (poly->indexes "1") '(0))
-    (check-equal? (poly->indexes "a") '(1))
-    (check-equal? (poly->indexes "a4+a3+a2+a1+1") '(4 3 2 1 0))
-    (check-equal? (poly->indexes " a4 + a3+a2+a1+1 ") '(4 3 2 1 0))
-    (check-equal? (poly->indexes "a4+a3+a1+a2+1") '(4 3 2 1 0))
+    (check-equal? (poly->num_index_pairs "1") '((1 . 0)))
+    (check-equal? (num_index_pairs->poly '((1 . 0))) "1")
+
+    (check-equal? (poly->num_index_pairs "x") '((1 . 1)))
+    (check-equal? (poly->num_index_pairs "x1") '((1 . 1)))
+    (check-equal? (num_index_pairs->poly '((1 . 1))) "x")
+
+    (check-equal? (poly->num_index_pairs "x4+x3+x2+x+1") '((1 . 4) (1 . 3) (1 . 2) (1 . 1) (1 . 0)))
+    (check-equal? (poly->num_index_pairs " x4 + x3+x2+x1+1 ") '((1 . 4) (1 . 3) (1 . 2) (1 . 1) (1 . 0)))
+    (check-equal? (poly->num_index_pairs "x4+x3+x1+x2+1") '((1 . 4) (1 . 3) (1 . 2) (1 . 1) (1 . 0)))
+    (check-equal? (num_index_pairs->poly '((1 . 4) (1 . 3) (1 . 2) (1 . 1) (1 . 0))) "x4+x3+x2+x+1")
+
+    (check-equal? (num_index_pairs->poly '((1 . 4) (1 . 3) (1 . 1) (1 . 2) (1 . 0))) "x4+x3+x2+x+1")
     )
 
    (test-case
-    "indexes->poly"
+    "poly-multiply"
     
-    (check-equal? (indexes->poly '(0)) "1")
-    (check-equal? (indexes->poly '(4 3 2 1 0)) "a4+a3+a2+a1+1")
-    (check-equal? (indexes->poly '(4 2 3 1 0)) "a4+a3+a2+a1+1")
-    )
-
-   (test-case
-    "poly-multiply-n"
-    
-    (check-equal? (poly-multiply-n "a2+a1+1" 1) "a3+a2+a1")
-    (check-equal? (poly-multiply-n "a2+a1+1" 2) "a4+a3+a2")
+    (check-equal? (poly-multiply "x2+x1+1" "x") "x3+x2+x")
+    (check-equal? (poly-multiply "x2+x1+1" "x2") "x4+x3+x2")
     )
 
    (test-case
     "poly-multiply-poly"
     
-    (check-equal? (poly-multiply-poly "a3+a" "a3+a2+1") "a6+a5+a4+a1")
-    (check-equal? (poly-multiply-poly "a4+a2+a+1" "a3+a4") "a8+a7+a6+a3")
+    (check-equal? (poly-multiply-poly "x3+x" "x3+x2+1") "x6+x5+x4+x1")
+    (check-equal? (poly-multiply-poly "x4+x2+x+1" "x3+x4") "x8+x7+x6+x3")
     )
    
    (test-case
     "poly->sum"
     
     (check-equal? (poly->sum "1") 1)
-    (check-equal? (poly->sum "a1") 2)
-    (check-equal? (poly->sum "a1+1") 3)
-    (check-equal? (poly->sum "a2") 4)
-    (check-equal? (poly->sum "a2+1") 5)
-    (check-equal? (poly->sum "a2+a1") 6)
-    (check-equal? (poly->sum "a2+a1+1") 7)
+    (check-equal? (poly->sum "x1") 2)
+    (check-equal? (poly->sum "x1+1") 3)
+    (check-equal? (poly->sum "x2") 4)
+    (check-equal? (poly->sum "x2+1") 5)
+    (check-equal? (poly->sum "x2+x1") 6)
+    (check-equal? (poly->sum "x2+x1+1") 7)
     )
    
    (test-case
     "poly->equal_pair"
     
-    (check-equal? (poly->equal_pair "a4+a+1") '("a4" . "a1+1"))
-    (check-equal? (poly->equal_pair "a8+a4+a3+a2+1") '("a8" . "a4+a3+a2+1"))
+    (check-equal? (poly->equal_pair "x4+x+1") '("x4" . "x1+1"))
+    (check-equal? (poly->equal_pair "x8+x4+x3+x2+1") '("x8" . "x4+x3+x2+1"))
     )
    
    (test-case
     "poly-remove_dup"
     
-    (check-equal? (poly-remove_dup "a4+a+1+a") "a4+1")
-    (check-equal? (poly-remove_dup "a4+a+1+a+1") "a4")
-    (check-equal? (poly-remove_dup "a4+a2+1+a+1") "a4+a2+a1")
+    (check-equal? (poly-remove_dup "x4+x+1+x") "x4+1")
+    (check-equal? (poly-remove_dup "x4+x+1+x+1") "x4")
+    (check-equal? (poly-remove_dup "x4+x2+1+x+1") "x4+x2+x1")
     )
    
    (test-case
     "poly->coefficients"
     
-    (check-equal? (poly->coefficients "a6+a5+a4+a1") "1110010")
-    (check-equal? (poly->coefficients "a4+a1+1") "10011")
+    (check-equal? (poly->coefficients "x6+x5+x4+x1") "1110010")
+    (check-equal? (poly->coefficients "x4+x1+1") "10011")
     )
 
   ))
