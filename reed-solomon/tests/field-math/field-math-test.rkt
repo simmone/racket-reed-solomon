@@ -31,25 +31,21 @@
     
     (check-equal? (poly-multiply "x2+x1+1" "x") "x3+x2+x")
     (check-equal? (poly-multiply "x2+x1+1" "x2") "x4+x3+x2")
-    )
-
-   (test-case
-    "poly-multiply-poly"
     
-    (check-equal? (poly-multiply-poly "x3+x" "x3+x2+1") "x6+x5+x4+x1")
-    (check-equal? (poly-multiply-poly "x4+x2+x+1" "x3+x4") "x8+x7+x6+x3")
+    (check-equal? (poly-multiply "x3+x" "x3+x2+1") "x6+x5+x4+x1")
+    (check-equal? (poly-multiply "x4+x2+x+1" "x3+x4") "x8+x7+x6+x3")
     )
    
    (test-case
-    "poly->sum"
+    "poly-sum"
     
-    (check-equal? (poly->sum "1") 1)
-    (check-equal? (poly->sum "x1") 2)
-    (check-equal? (poly->sum "x1+1") 3)
-    (check-equal? (poly->sum "x2") 4)
-    (check-equal? (poly->sum "x2+1") 5)
-    (check-equal? (poly->sum "x2+x1") 6)
-    (check-equal? (poly->sum "x2+x1+1") 7)
+    (check-equal? (poly-sum "1") 1)
+    (check-equal? (poly-sum "x1") 2)
+    (check-equal? (poly-sum "x1+1") 3)
+    (check-equal? (poly-sum "x2") 4)
+    (check-equal? (poly-sum "x2+1") 5)
+    (check-equal? (poly-sum "x2+x1") 6)
+    (check-equal? (poly-sum "x2+x1+1") 7)
     )
    
    (test-case

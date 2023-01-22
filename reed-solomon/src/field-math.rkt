@@ -5,10 +5,9 @@
           [poly->num_index_pairs (-> string? (listof (cons/c natural? natural?)))]
           [num_index_pairs->poly (-> (listof (cons/c natural? natural?)) string?)]
           [poly-multiply (-> string? string? string?)]
-          [poly->sum (-> string? natural?)]
+          [poly-sum (-> string? natural?)]
           [poly->equal_pair (-> string? (cons/c string? string?))]
           [poly-remove_dup (-> string? string?)]
-          [poly-multiply-poly (-> string? string? string?)]
           [poly->coefficients (-> string? string?)]
           ))
 
@@ -58,12 +57,46 @@
 
 (define (poly-multiply poly_multiplicand poly_multiplier)
   (let ([poly_multiplicand_pairs (poly->num_index_pairs poly_multiplicand)]
-        [poly_mulitiplier_pairs (poly->num_index_pairs poly_multiplier)])
+        [poly_multiplier_pairs (poly->num_index_pairs poly_multiplier)])
     
-    (let loop-multiplier ([loop_poly_multiplicand_pairs poly_multiplicand_pairs]
-                          [result_list '()])
+    (let loop-multiplicand ([loop_poly_multiplicand_pairs poly_multiplicand_pairs]
+                            [multiplicand_list '()])
       (if (not (null? loop_poly_multiplicand_pairs))
+          (loop-multiplicand
+           (cdr loop_poly_multiplicand_pairs)
+           (cons
+            (num_index_pairs->poly
+             (let loop-multiplier ([loop_poly_multiplier_pairs poly_multiplier_pairs]
+                                   [multiplier_list '()])
+               (if (not (null? loop_poly_multiplier_pairs))
+                   (loop-multiplier
+                    (cdr loop_poly_multiplier_pairs)
+                    (cons
+                     (cons
+                      (* (caar loop_poly_multiplicand_pairs) (caar loop_poly_multiplier_pairs))
+                      (+ (cdar loop_poly_multiplicand_pairs) (cdar loop_poly_multiplier_pairs)))
+                     multiplier_list))
+                   (reverse multiplier_list))))
+            multiplicand_list))
+          (num_index_pairs->poly
+           (let ([combine_hash (make-hash)])
+             (let loop ([loop_polys multiplicand_list])
+               (when (not (null? loop_polys))
+                 (map
+                  (lambda (p)
+                    (if (hash-has-key? combine_hash (cdr p))
+                        (hash-set! combine_hash (cdr p) (+ (hash-ref combine_hash (cdr p)) (car p)))
+                        (hash-set! combine_hash (cdr p) (car p))))
+                  (poly->num_index_pairs (car loop_polys)))
+                 (loop (cdr loop_polys))))
+             (hash-map combine_hash (lambda (a n) (cons n a)))))))))
 
+(define (poly-sum poly)
+  (let loop ([pairs (poly->num_index_pairs poly)]
+             [sum 0])
+    (if (not (null? pairs))
+        (loop (cdr pairs) (+ sum (* 2 (cdar pairs))))
+        sum)))
 
 (define (poly->equal_pair poly)
   (let ([indexes (poly->num_index_pairs poly)])
@@ -84,20 +117,6 @@
               (cdr indexes)
               (cons (car indexes) result_list)))
          (reverse result_list)))))
-
-(define (poly-multiply-poly poly1_a poly2_a)
-  (poly-remove_dup
-   (num_index_pairs->poly
-    (let loop-poly1 ([poly1_indexes (poly->num_index_pairs poly1_a)]
-                     [poly1_result '()])
-      (if (not (null? poly1_indexes))
-          (loop-poly1
-           (cdr poly1_indexes)
-           (cons
-            (poly->num_index_pairs
-             (poly-multiply-n poly2_a (car poly1_indexes)))
-            poly1_result))
-          (sort (flatten poly1_result) <))))))
 
 (define (poly->coefficients poly)
   (with-output-to-string
