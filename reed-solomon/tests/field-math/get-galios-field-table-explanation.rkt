@@ -15,7 +15,11 @@
         [poly_index->poly_hash (make-hash)]
         [poly_index_list '()]
         [2^m_1 (sub1 (expt 2 bit_width))]
-        [replace_pair (poly->equal_pair field_generator_poly)])
+        [replace_pair 
+         (let ([indexes (poly->index_coe_pairs field_generator_poly)])
+           (cons
+            (index_coe_pairs->poly (list (car indexes)))
+            (index_coe_pairs->poly (cdr indexes))))])
 
     (hash-set! poly_index->poly_hash "0" "0")
     (hash-set! poly_index->decimal_hash "0" "0")
@@ -39,7 +43,7 @@
           (set! poly_index_list `(,@poly_index_list ,a_index))
 
           (printf "  step1: (poly-multiply-n last_val 1):\n")
-          (set! step1_last_val*2^1_poly (poly-multiply-n last_val 1))
+          (set! step1_last_val*2^1_poly (poly-multiply last_val "x"))
           (printf "    (poly-multiply-n ~a 1) = ~a\n" last_val step1_last_val*2^1_poly)
 
           (printf "  step2: replace poly item by field_generator_poly:~a\n" replace_pair)
@@ -51,7 +55,7 @@
           (printf "    (poly-remove_dup ~a) = ~a\n" step2_replaced_poly step3_remove_duplicates)
 
           (hash-set! poly_index->poly_hash a_index step3_remove_duplicates)
-          (hash-set! poly_index->decimal_hash a_index (poly->sum step3_remove_duplicates))
+          (hash-set! poly_index->decimal_hash a_index (poly-sum step3_remove_duplicates))
 
           (loop (add1 index) step3_remove_duplicates))))
 
@@ -74,4 +78,4 @@
     )
   )
 
-(get-galios-field-table 4 "a4+a+1")
+(get-galios-field-table 4 "x4+x+1")
