@@ -4,7 +4,7 @@
           [get-galios-a->n_map (-> natural? string? hash?)]
           [poly->index_coe_pairs (-> string? (listof (cons/c natural? natural?)))]
           [index_coe_pairs->poly (-> (listof (cons/c natural? natural?)) string?)]
-          [poly-multiply (->* (string? string?) (boolean?) string?)]
+          [poly-multiply (->* (string? string?) (boolean?) #:rest (listof string?) string?)]
           [galios-poly-multiply (-> string? string? string?)]
           [poly-sum (-> string? natural?)]
           [poly-remove_dup (-> string? string?)]
@@ -97,7 +97,7 @@
            "+")
         last_result)))
 
-(define (poly-multiply poly_multiplicand poly_multiplier [is_galios? #f])
+(define (poly-multiply poly_multiplicand poly_multiplier [is_galios? #f] )
   (let ([poly_multiplicand_pairs (poly->index_coe_pairs poly_multiplicand)]
         [poly_multiplier_pairs (poly->index_coe_pairs poly_multiplier)])
     
