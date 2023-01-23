@@ -6,18 +6,24 @@
 ;; common mode: same index's item's coefficients use add.
 ;; galios mode: same index's item's coefficients use xor.
 
-(define (poly-multiply poly_multiplicand poly_multiplier [is_galios? #f])
-  (printf "Galios Divide Explanation\n\n")
+(define (poly-multiply-explanation poly_multiplicand poly_multiplier [is_galios? #f])
+  (printf "Poly Multiply Explanation\n\n")
   
   (printf "multiplicand poly: ~a\n\n" poly_multiplicand)
 
   (printf "multiplier poly: ~a\n\n" poly_multiplier)
 
+  (printf "is_galios?: ~a\n\n" is_galios?)
+
   (let ([poly_multiplicand_pairs (poly->index_coe_pairs poly_multiplicand)]
         [poly_multiplier_pairs (poly->index_coe_pairs poly_multiplier)])
     
+    (printf "poly_multiplicand_pairs:~a\n\n" poly_multiplicand_pairs)
+    (printf "poly_multiplier_pairs:~a\n\n" poly_multiplier_pairs)
+    
     (let loop-multiplicand ([loop_poly_multiplicand_pairs poly_multiplicand_pairs]
                             [multiplicand_list '()])
+      (printf "multiplicand_list:~a\n\n" multiplicand_list)
       (if (not (null? loop_poly_multiplicand_pairs))
           (loop-multiplicand
            (cdr loop_poly_multiplicand_pairs)
@@ -53,4 +59,4 @@
                  (loop (cdr loop_polys))))
              (hash->list combine_hash)))))))
 
-(poly-multiply "x2+x1+1" "x")
+(poly-multiply-explanation "x2+3x+2" "x+3") ;; "x3+7x2+14x+8")

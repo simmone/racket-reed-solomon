@@ -4,8 +4,8 @@
           [get-galios-a->n_map (-> natural? string? hash?)]
           [poly->index_coe_pairs (-> string? (listof (cons/c natural? natural?)))]
           [index_coe_pairs->poly (-> (listof (cons/c natural? natural?)) string?)]
-          [poly-multiply (-> string? string? string?)]
-          [galios-poly-multiply (-> string? string? string?)]
+          [poly-multiply (->* (string? string?) () #:rest (listof string?) string?)]
+          [galios-poly-multiply (->* (string? string?) () #:rest (listof string?) string?)]
           [poly-sum (-> string? natural?)]
           [poly-remove_dup (-> string? string?)]
           [poly->coefficients (-> string? string?)]
@@ -97,11 +97,23 @@
            "+")
         last_result)))
 
-(define (poly-multiply poly1 poly2)
-  (poly-multiply-basic poly1 poly2 #f))
+(define (poly-multiply poly1 poly2 . rst)
+  (let loop ([polys rst]
+             [last_result (poly-multiply-basic poly1 poly2 #f)])
+    (if (not (null? polys))
+        (loop
+         (cdr polys)
+         (poly-multiply-basic last_result (car polys) #f))
+        last_result)))
 
-(define (galios-poly-multiply poly1 poly2)
-  (poly-multiply-basic poly1 poly2 #t))
+(define (galios-poly-multiply poly1 poly2 . rst)
+  (let loop ([polys rst]
+             [last_result (poly-multiply-basic poly1 poly2 #t)])
+    (if (not (null? polys))
+        (loop
+         (cdr polys)
+         (poly-multiply-basic last_result (car polys) #t))
+        last_result)))
 
 (define (poly-multiply-basic poly1 poly2 is_galios?)
   (let ([poly_multiplicand_pairs (poly->index_coe_pairs poly1)]
