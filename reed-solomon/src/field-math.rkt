@@ -150,7 +150,7 @@
                               (if (= coe_bitwised 0)
                                   (hash-remove! combine_hash (car p))
                                   (hash-set! combine_hash (car p) coe_bitwised)))
-                            (hash-set! combine_hash (car p) (+ (hash-ref combine_hash (car p)) (cdr p))))
+                            (hash-set! combine_hash (car p) (bitwise-xor (hash-ref combine_hash (car p)) (cdr p))))
                         (hash-set! combine_hash (car p) (cdr p))))
                   (poly->index_coe_pairs (car loop_polys)))
                  (loop (cdr loop_polys))))

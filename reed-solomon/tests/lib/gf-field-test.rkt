@@ -160,8 +160,17 @@
        "x10")
       "32x25+91x24+11x23+120x22+209x21+114x20+220x19+77x18+67x17+64x16+236x15+17x14+236x13+17x12+236x11+17x10")
 
-     (check-equal? (poly-n-combine (string-append (poly-gf-n-multiply "103x4+72x2+109" "163x0") "+214x3+78x2+145x1+152x0")) "56x4+214x3+144x2+145x1+138x0")
-     ))
+     (check-equal? (poly-n-combine (string-append (poly-gf-n-multiply "103x4+72x2+109" "163x0") "+214x3+78x2+145x1+152x0")) "56x4+214x3+144x2+145x1+138x0"))
+
+    (parameterize*
+     ([*bit_width* 4]
+      [*2^m_1* (sub1 (expt 2 (*bit_width*)))]
+      [*primitive_poly_value* 19]
+      [*gf_aton_map* (get-gf-aton-hash)]
+      [*gf_ntoa_map* (make-hash (hash-map (*gf_aton_map*) (lambda (a n) (cons n a))))])
+     
+     (check-equal? (poly-gf-n-multiply "x3+7x2+14x+8" "x+8") "x4+15x3+3x2+x+12"))
+    )
 
    (test-case
     "test-poly-gf-n-multiply"

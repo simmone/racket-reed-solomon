@@ -53,10 +53,10 @@
                               (if (= coe_bitwised 0)
                                   (hash-remove! combine_hash (car p))
                                   (hash-set! combine_hash (car p) coe_bitwised)))
-                            (hash-set! combine_hash (car p) (+ (hash-ref combine_hash (car p)) (cdr p))))
+                            (hash-set! combine_hash (car p) (bitwise-xor (hash-ref combine_hash (car p)) (cdr p))))
                         (hash-set! combine_hash (car p) (cdr p))))
                   (poly->index_coe_pairs (car loop_polys)))
                  (loop (cdr loop_polys))))
              (hash->list combine_hash)))))))
 
-(poly-multiply-explanation "x2+3x+2" "x+3") ;; "x3+7x2+14x+8")
+(poly-multiply-explanation "x3+7x2+14x+8" "x+8" #t) ;; "x4+15x3+3x2+x+12"
