@@ -80,11 +80,11 @@
     
     (check-equal? (poly-multiply "x2+x1+1" "x") "x3+x2+x")
     (check-equal? (poly-multiply "x2+x1+1" "x2") "x4+x3+x2")
-    (check-equal? (poly-multiply "x+1" "x+2" "x+3" "x+4") "x4+15x3+3x2+x+12")
+;;    (check-equal? (poly-multiply #f "x+1" "x+2" "x+3" "x+4") "x4+15x3+3x2+x+12")
     )
    
    (test-case
-    "poly-galios-multiply"
+    "galios-poly-multiply"
     
     (check-equal? (galios-poly-multiply "x3+x" "x3+x2+1") "x6+x5+x4+x")
     (check-equal? (galios-poly-multiply "x4+x2+x+1" "x3+x4") "x8+x7+x6+x3")

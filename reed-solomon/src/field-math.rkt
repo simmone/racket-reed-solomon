@@ -4,7 +4,7 @@
           [get-galios-a->n_map (-> natural? string? hash?)]
           [poly->index_coe_pairs (-> string? (listof (cons/c natural? natural?)))]
           [index_coe_pairs->poly (-> (listof (cons/c natural? natural?)) string?)]
-          [poly-multiply (->* (string? string?) (boolean?) #:rest (listof string?) string?)]
+          [poly-multiply (-> string? string? string?)]
           [galios-poly-multiply (-> string? string? string?)]
           [poly-sum (-> string? natural?)]
           [poly-remove_dup (-> string? string?)]
@@ -40,7 +40,7 @@
 
           (set! poly_index_list `(,@poly_index_list ,a_index))
 
-          (set! step1_last_val*2^1_poly (poly-multiply last_val "x"))
+          (set! step1_last_val*2^1_poly (galios-poly-multiply last_val "x"))
 
           (set! step2_replaced_poly (regexp-replace* (regexp (car replace_pair)) step1_last_val*2^1_poly (cdr replace_pair)))
 
@@ -97,10 +97,16 @@
            "+")
         last_result)))
 
-(define (poly-multiply poly_multiplicand poly_multiplier [is_galios? #f] )
-  (let ([poly_multiplicand_pairs (poly->index_coe_pairs poly_multiplicand)]
-        [poly_multiplier_pairs (poly->index_coe_pairs poly_multiplier)])
-    
+(define (poly-multiply poly1 poly2)
+  (poly-multiply-basic poly1 poly2 #f))
+
+(define (galios-poly-multiply poly1 poly2)
+  (poly-multiply-basic poly1 poly2 #t))
+
+(define (poly-multiply-basic poly1 poly2 is_galios?)
+  (let ([poly_multiplicand_pairs (poly->index_coe_pairs poly1)]
+        [poly_multiplier_pairs (poly->index_coe_pairs poly2)])
+                                
     (let loop-multiplicand ([loop_poly_multiplicand_pairs poly_multiplicand_pairs]
                             [multiplicand_list '()])
       (if (not (null? loop_poly_multiplicand_pairs))
@@ -137,9 +143,6 @@
                   (poly->index_coe_pairs (car loop_polys)))
                  (loop (cdr loop_polys))))
              (hash->list combine_hash)))))))
-
-(define (galios-poly-multiply poly_multiplicand poly_multiplier)
-  (poly-multiply poly_multiplicand poly_multiplier #t))
 
 (define (poly-sum poly)
   (let loop ([pairs (poly->index_coe_pairs poly)]
