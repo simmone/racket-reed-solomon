@@ -1,15 +1,90 @@
 #lang racket
 
 (provide (contract-out
+          [number->poly (-> natural? string?)]
+          [binary_poly-multiply (-> string? string? string?)]
           [get-galios-a->n_map (-> natural? string? hash?)]
           [poly->index_coe_pairs (-> string? (listof (cons/c natural? natural?)))]
           [index_coe_pairs->poly (-> (listof (cons/c natural? natural?)) string?)]
-          [poly-multiply (->* (string? string?) () #:rest (listof string?) string?)]
           [galios-poly-multiply (->* (string? string?) () #:rest (listof string?) string?)]
           [poly-sum (-> string? natural?)]
           [poly-remove_dup (-> string? string?)]
           [poly->coefficients (-> string? string?)]
           ))
+
+(define (number->poly num)
+  (let ([bit_list (string->list (number->string num 2))])
+    (let loop ([bit_chars bit_list] 
+               [index (sub1 (length bit_list))]
+               [last_op ""]
+               [result ""])
+      (if (not (null? bit_chars))
+          (if (char=? (car bit_chars) #\0)
+              (loop (cdr bit_chars) (sub1 index) last_op result)
+              (loop
+               (cdr bit_chars)
+               (sub1 index)
+               "+"
+               (format "~a~a~a" result last_op
+                       (cond
+                        [(= index 1)
+                         "x"]
+                        [(= index 0)
+                         "1"]
+                        [else
+                         (format "x~a" index)]))))
+          result))))
+
+(define (binary_poly-multiply poly1 poly2)
+  (poly-multiply-basic poly1 poly2 + *))
+
+(define (galios-poly-multiply poly1 poly2 . rst)
+  (let loop ([polys rst]
+             [last_result (poly-multiply-basic poly1 poly2 + *)])
+    (if (not (null? polys))
+        (loop
+         (cdr polys)
+         (poly-multiply-basic last_result (car polys) + *))
+        last_result)))
+
+(define (poly-multiply-basic poly1 poly2 add_op multiply_op)
+  (let ([poly_multiplicand_pairs (poly->index_coe_pairs poly1)]
+        [poly_multiplier_pairs (poly->index_coe_pairs poly2)])
+                                
+    (let loop-multiplicand ([loop_poly_multiplicand_pairs poly_multiplicand_pairs]
+                            [multiplicand_list '()])
+      (if (not (null? loop_poly_multiplicand_pairs))
+          (loop-multiplicand
+           (cdr loop_poly_multiplicand_pairs)
+           (cons
+            (index_coe_pairs->poly
+             (let loop-multiplier ([loop_poly_multiplier_pairs poly_multiplier_pairs]
+                                   [multiplier_list '()])
+               (if (not (null? loop_poly_multiplier_pairs))
+                   (loop-multiplier
+                    (cdr loop_poly_multiplier_pairs)
+                    (cons
+                     (cons
+                      (add_op (caar loop_poly_multiplicand_pairs) (caar loop_poly_multiplier_pairs))
+                      (multiply_op (cdar loop_poly_multiplicand_pairs) (cdar loop_poly_multiplier_pairs)))
+                     multiplier_list))
+                   (reverse multiplier_list))))
+            multiplicand_list))
+          (index_coe_pairs->poly
+           (let ([combine_hash (make-hash)])
+             (let loop ([loop_polys multiplicand_list])
+               (when (not (null? loop_polys))
+                 (map
+                  (lambda (p)
+                    (if (hash-has-key? combine_hash (car p))
+                        (let ([coe_bitwised (bitwise-xor (cdr p) (hash-ref combine_hash (car p)))])
+                          (if (= coe_bitwised 0)
+                              (hash-remove! combine_hash (car p))
+                              (hash-set! combine_hash (car p) coe_bitwised)))
+                        (hash-set! combine_hash (car p) (cdr p))))
+                  (poly->index_coe_pairs (car loop_polys)))
+                 (loop (cdr loop_polys))))
+             (hash->list combine_hash)))))))
 
 (define (get-galios-a->n_map bit_width field_generator_poly)
   (let ([poly_index->decimal_hash (make-hash)]
@@ -97,64 +172,6 @@
            "+")
         last_result)))
 
-(define (poly-multiply poly1 poly2 . rst)
-  (let loop ([polys rst]
-             [last_result (poly-multiply-basic poly1 poly2 #f)])
-    (if (not (null? polys))
-        (loop
-         (cdr polys)
-         (poly-multiply-basic last_result (car polys) #f))
-        last_result)))
-
-(define (galios-poly-multiply poly1 poly2 . rst)
-  (let loop ([polys rst]
-             [last_result (poly-multiply-basic poly1 poly2 #t)])
-    (if (not (null? polys))
-        (loop
-         (cdr polys)
-         (poly-multiply-basic last_result (car polys) #t))
-        last_result)))
-
-(define (poly-multiply-basic poly1 poly2 is_galios?)
-  (let ([poly_multiplicand_pairs (poly->index_coe_pairs poly1)]
-        [poly_multiplier_pairs (poly->index_coe_pairs poly2)])
-                                
-    (let loop-multiplicand ([loop_poly_multiplicand_pairs poly_multiplicand_pairs]
-                            [multiplicand_list '()])
-      (if (not (null? loop_poly_multiplicand_pairs))
-          (loop-multiplicand
-           (cdr loop_poly_multiplicand_pairs)
-           (cons
-            (index_coe_pairs->poly
-             (let loop-multiplier ([loop_poly_multiplier_pairs poly_multiplier_pairs]
-                                   [multiplier_list '()])
-               (if (not (null? loop_poly_multiplier_pairs))
-                   (loop-multiplier
-                    (cdr loop_poly_multiplier_pairs)
-                    (cons
-                     (cons
-                      (+ (caar loop_poly_multiplicand_pairs) (caar loop_poly_multiplier_pairs))
-                      (* (cdar loop_poly_multiplicand_pairs) (cdar loop_poly_multiplier_pairs)))
-                     multiplier_list))
-                   (reverse multiplier_list))))
-            multiplicand_list))
-          (index_coe_pairs->poly
-           (let ([combine_hash (make-hash)])
-             (let loop ([loop_polys multiplicand_list])
-               (when (not (null? loop_polys))
-                 (map
-                  (lambda (p)
-                    (if (hash-has-key? combine_hash (car p))
-                        (if is_galios?
-                            (let ([coe_bitwised (bitwise-xor (cdr p) (hash-ref combine_hash (car p)))])
-                              (if (= coe_bitwised 0)
-                                  (hash-remove! combine_hash (car p))
-                                  (hash-set! combine_hash (car p) coe_bitwised)))
-                            (hash-set! combine_hash (car p) (bitwise-xor (hash-ref combine_hash (car p)) (cdr p))))
-                        (hash-set! combine_hash (car p) (cdr p))))
-                  (poly->index_coe_pairs (car loop_polys)))
-                 (loop (cdr loop_polys))))
-             (hash->list combine_hash)))))))
 
 (define (poly-sum poly)
   (let loop ([pairs (poly->index_coe_pairs poly)]
