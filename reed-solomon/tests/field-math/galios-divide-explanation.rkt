@@ -15,14 +15,14 @@
   (printf "Galios Divide Explanation\n\n")
   
   (printf "dividend_poly: ~a\n" dividend_poly)
-  (printf "convert dividend_poly to coefficient list: ~a\n\n" (poly->coefficients dividend_poly))
+  (printf "convert dividend_poly to coefficient list: ~a\n\n" (binary_poly->binary_string dividend_poly))
 
   (printf "divisor_poly: ~a\n" divisor_poly)
-  (printf "convert divisor_poly to coefficient list: ~a\n\n" (poly->coefficients divisor_poly))
+  (printf "convert divisor_poly to coefficient list: ~a\n\n" (binary_poly->binary_string divisor_poly))
 
-  (let* ([dividend_poly_bits (poly->coefficients dividend_poly)]
+  (let* ([dividend_poly_bits (binary_poly->binary_string dividend_poly)]
          [dividend_bits_length (string-length dividend_poly_bits)]
-         [divisor_poly_bits (poly->coefficients divisor_poly)]
+         [divisor_poly_bits (binary_poly->binary_string divisor_poly)]
          [divisor_bits_length (string-length divisor_poly_bits)])
 
     (print-divide-elements

@@ -6,13 +6,17 @@
           [binary_string->binary_poly (-> string? string?)]
           [binary_poly-multiply (-> string? string? string?)]
           [binary_poly-divide (-> string? string? string?)]
+          [galios-multiply (-> natural? natural? natural?)]
+          [galios-poly-multiply (->* (string? string?) () #:rest (listof string?) string?)]
           [get-galios-a->n_map (-> natural? string? hash?)]
           [poly->index_coe_pairs (-> string? (listof (cons/c natural? natural?)))]
           [index_coe_pairs->poly (-> (listof (cons/c natural? natural?)) string?)]
-          [galios-poly-multiply (->* (string? string?) () #:rest (listof string?) string?)]
           [poly-sum (-> string? natural?)]
           [poly-remove_dup (-> string? string?)]
+          [*field_generator_poly* parameter?]
           ))
+
+(define *field_generator_poly* (make-parameter #f))
 
 (define (number->binary_poly num)
   (let ([bit_list (string->list (number->string num 2))])
@@ -58,8 +62,8 @@
           (loop (cdr bits) (sub1 index) last_op result)
           (loop (cdr bits) (sub1 index) "+" 
                 (cond
-                 [(= index 0) (format "~a+1" result)]
-                 [(= index 1) (format "~a+x" result)]
+                 [(= index 0) (format "~a~a1" result last_op)]
+                 [(= index 1) (format "~a~ax" result last_op)]
                  [else
                     (format "~a~ax~a" result last_op index)])))
       result)))
@@ -86,13 +90,25 @@
             (loop (string-append bitwise_result (substring loop_bits divisor_bits_length))))
           (binary_string->binary_poly loop_bits)))))
 
+(define (galios-multiply num1 num2)
+  (if (or (= num1 0) (= num2 0))
+      0
+      (string->number
+       (binary_poly->binary_string
+        (binary_poly-divide
+         (binary_poly-multiply
+          (number->binary_poly num1)
+          (number->binary_poly num2))
+         (*field_generator_poly*)))
+       2)))
+
 (define (galios-poly-multiply poly1 poly2 . rst)
   (let loop ([polys rst]
-             [last_result (poly-multiply-basic poly1 poly2 + *)])
+             [last_result (poly-multiply-basic poly1 poly2 + galios-multiply)])
     (if (not (null? polys))
         (loop
          (cdr polys)
-         (poly-multiply-basic last_result (car polys) + *))
+         (poly-multiply-basic last_result (car polys) + galios-multiply))
         last_result)))
 
 (define (poly-multiply-basic poly1 poly2 add_op multiply_op)
