@@ -9,13 +9,20 @@
    "test-field-math"
    
    (test-case
-    "number->poly"
+    "number->binary_poly"
     
     (check-equal? (number->poly 10) "x3+x")
     (check-equal? (number->poly 13) "x3+x2+1")
     (check-equal? (number->poly 12) "x3+x2")
     (check-equal? (number->poly 1) "1")
     (check-equal? (number->poly 2) "x"))
+
+   (test-case
+    "binary_poly->binary_string"
+    
+    (check-equal? (poly->binary_string "x6+x5+x4+x1") "1110010")
+    (check-equal? (poly->binary_string "x4+x1+1") "10011")
+    )
 
    (test-case
     "binary_poly-multiply"
@@ -89,13 +96,6 @@
     (check-equal? (poly-remove_dup "x4+x+1+x") "x4+1")
     (check-equal? (poly-remove_dup "x4+x+1+x+1") "x4")
     (check-equal? (poly-remove_dup "x4+x2+1+x+1") "x4+x2+x")
-    )
-   
-   (test-case
-    "poly->coefficients"
-    
-    (check-equal? (poly->coefficients "x6+x5+x4+x1") "1110010")
-    (check-equal? (poly->coefficients "x4+x1+1") "10011")
     )
 
   ))

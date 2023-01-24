@@ -38,6 +38,26 @@
 (define (binary_poly-multiply poly1 poly2)
   (poly-multiply-basic poly1 poly2 + *))
 
+(define (binary-poly-divide dividend_poly divisor_poly)
+  (let* ([dividend_poly_bits (poly->coefficients dividend_poly)]
+         [dividend_bits_length (string-length dividend_poly_bits)]
+         [divisor_poly_bits (poly->coefficients divisor_poly)]
+         [divisor_bits_length (string-length divisor_poly_bits)])
+
+    (let loop ([loop_bits dividend_poly_bits])
+      (when (>= (string-length loop_bits) divisor_bits_length)
+        (let ([head_loop_bits (substring loop_bits 0 divisor_bits_length)]
+              [bitwise_result #f])
+          (set! bitwise_result
+                (number->string
+                 (bitwise-xor
+                  (string->number head_loop_bits 2)
+                  (string->number divisor_poly_bits 2))
+                 2))
+          (loop (string-append bitwise_result (substring loop_bits divisor_bits_length))))))
+  ))
+
+
 (define (galios-poly-multiply poly1 poly2 . rst)
   (let loop ([polys rst]
              [last_result (poly-multiply-basic poly1 poly2 + *)])
