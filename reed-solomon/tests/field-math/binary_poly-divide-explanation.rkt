@@ -12,13 +12,13 @@
 ;; explain each step of Galios divide
 
 (define (galios-divide dividend_poly divisor_poly)
-  (printf "Galios Divide Explanation\n\n")
+  (printf "Binary Divide Explanation\n\n")
   
   (printf "dividend_poly: ~a\n" dividend_poly)
-  (printf "convert dividend_poly to coefficient list: ~a\n\n" (binary_poly->binary_string dividend_poly))
+  (printf "convert dividend_poly to binary list: ~a\n\n" (binary_poly->binary_string dividend_poly))
 
   (printf "divisor_poly: ~a\n" divisor_poly)
-  (printf "convert divisor_poly to coefficient list: ~a\n\n" (binary_poly->binary_string divisor_poly))
+  (printf "convert divisor_poly to binary list: ~a\n\n" (binary_poly->binary_string divisor_poly))
 
   (let* ([dividend_poly_bits (binary_poly->binary_string dividend_poly)]
          [dividend_bits_length (string-length dividend_poly_bits)]

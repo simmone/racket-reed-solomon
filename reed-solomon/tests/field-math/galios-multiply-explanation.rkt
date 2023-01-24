@@ -2,8 +2,6 @@
 
 (require "../../src/field-math.rkt")
 
-;; Galios multiply on GF(16)
-
 (define (print-line item_list)
   (let loop ([items item_list])
     (if (not (null? items))
@@ -12,15 +10,20 @@
           (loop (cdr items)))
         (printf "\n"))))
 
+;; Galios multiply on GF(16)
+
 (define gf16 '(0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15))
 
 (print-line `(,"" ,@gf16)) 
 
-(let loop ([items gf16])
-  (when (not (null? items))
-    (print-line
-     `(
-       ,(car items)
-       ,@(map (lambda (val) (galios-multiply (car items) val "x4+x+1")) gf16)))
-    (loop (cdr items))))
+(parameterize*
+ ([*field_generator_poly* "x4+x+1"])
+ (let loop ([items gf16])
+   (when (not (null? items))
+     (print-line
+      `(
+        ,(car items)
+        ,@(map (lambda (val) (galios-multiply (car items) val)) gf16)))
+     (loop (cdr items)))))
+
       

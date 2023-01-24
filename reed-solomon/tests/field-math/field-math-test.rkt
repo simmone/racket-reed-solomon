@@ -92,16 +92,29 @@
     (parameterize*
      ([*field_generator_poly* "x4+x+1"])
 
+     (check-equal? (galios-poly-multiply "1" "x") "x")
      (check-equal? (galios-poly-multiply "x3+x" "x3+x2+1") "x6+x5+x4+x")
      (check-equal? (galios-poly-multiply "x2+x1+1" "x") "x3+x2+x")
      (check-equal? (galios-poly-multiply "x2+x1+1" "x2") "x4+x3+x2")
      (check-equal? (galios-poly-multiply "x+1" "x+2") "x2+3x+2")
      (check-equal? (galios-poly-multiply "x2+3x+2" "x+4") "x3+7x2+14x+8")
      (check-equal? (galios-poly-multiply "x3+7x2+14x+8" "x+8") "x4+15x3+3x2+x+12")
-     (check-equal? (galios-poly-multiply "x+1" "x+2" "x+4" "x+8") "x4+15x3+3x2+x+12")
      (check-equal? (galios-poly-multiply "x3+x" "x3+x2+1") "x6+x5+x4+x")
      (check-equal? (galios-poly-multiply "x4+x2+x+1" "x3+x4") "x8+x7+x6+x3")
+     (check-equal? (galios-poly-multiply "x+1" "x+2" "x+4" "x+8") "x4+15x3+3x2+x+12")
      ))
+
+   (test-case
+    "get-generator-poly"
+    
+    (parameterize*
+     ([*field_generator_poly* "x4+x+1"])
+     (check-equal? (get-generator-poly 4) "x4+15x3+3x2+x+12"))
+
+    (parameterize*
+     ([*field_generator_poly* "x8+x4+x3+x2+1"])
+     (check-equal? (get-generator-poly 8) "x16+59x15+13x14+104x13+189x12+68x11+209x10+30x9+8x8+163x7+65x6+41x5+229x4+98x3+50x2+36x+59"))
+    )
    
    (test-case
     "poly-sum"
