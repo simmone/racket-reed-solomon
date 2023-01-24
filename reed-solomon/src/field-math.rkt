@@ -1,18 +1,20 @@
 #lang racket
 
 (provide (contract-out
-          [number->poly (-> natural? string?)]
+          [number->binary_poly (-> natural? string?)]
+          [binary_poly->binary_string (-> string? string?)]
+          [binary_string->binary_poly (-> string? string?)]
           [binary_poly-multiply (-> string? string? string?)]
+          [binary_poly-divide (-> string? string? string?)]
           [get-galios-a->n_map (-> natural? string? hash?)]
           [poly->index_coe_pairs (-> string? (listof (cons/c natural? natural?)))]
           [index_coe_pairs->poly (-> (listof (cons/c natural? natural?)) string?)]
           [galios-poly-multiply (->* (string? string?) () #:rest (listof string?) string?)]
           [poly-sum (-> string? natural?)]
           [poly-remove_dup (-> string? string?)]
-          [poly->coefficients (-> string? string?)]
           ))
 
-(define (number->poly num)
+(define (number->binary_poly num)
   (let ([bit_list (string->list (number->string num 2))])
     (let loop ([bit_chars bit_list] 
                [index (sub1 (length bit_list))]
@@ -35,28 +37,54 @@
                          (format "x~a" index)]))))
           result))))
 
+(define (binary_poly->binary_string poly)
+  (with-output-to-string
+    (lambda ()
+      (let ([indexes (map (lambda (p) (car p)) (poly->index_coe_pairs poly))])
+        (let loop ([loop_index (car indexes)])
+          (when (>= loop_index 0)
+            (if (member loop_index indexes)
+                (printf "1")
+                (printf "0"))
+            (loop (sub1 loop_index))))))))
+
+(define (binary_string->binary_poly bin_str)
+  (let loop ([bits (string->list bin_str)]
+             [index (sub1 (string-length bin_str))]
+             [last_op ""]
+             [result ""])
+    (if (not (null? bits))
+      (if (char=? (car bits) #\0)
+          (loop (cdr bits) (sub1 index) last_op result)
+          (loop (cdr bits) (sub1 index) "+" 
+                (cond
+                 [(= index 0) (format "~a+1" result)]
+                 [(= index 1) (format "~a+x" result)]
+                 [else
+                    (format "~a~ax~a" result last_op index)])))
+      result)))
+            
 (define (binary_poly-multiply poly1 poly2)
   (poly-multiply-basic poly1 poly2 + *))
 
-(define (binary-poly-divide dividend_poly divisor_poly)
-  (let* ([dividend_poly_bits (poly->coefficients dividend_poly)]
+(define (binary_poly-divide dividend_poly divisor_poly)
+  (let* ([dividend_poly_bits (binary_poly->binary_string dividend_poly)]
          [dividend_bits_length (string-length dividend_poly_bits)]
-         [divisor_poly_bits (poly->coefficients divisor_poly)]
+         [divisor_poly_bits (binary_poly->binary_string divisor_poly)]
          [divisor_bits_length (string-length divisor_poly_bits)])
 
     (let loop ([loop_bits dividend_poly_bits])
-      (when (>= (string-length loop_bits) divisor_bits_length)
-        (let ([head_loop_bits (substring loop_bits 0 divisor_bits_length)]
-              [bitwise_result #f])
-          (set! bitwise_result
-                (number->string
-                 (bitwise-xor
-                  (string->number head_loop_bits 2)
-                  (string->number divisor_poly_bits 2))
-                 2))
-          (loop (string-append bitwise_result (substring loop_bits divisor_bits_length))))))
-  ))
-
+      (if (>= (string-length loop_bits) divisor_bits_length)
+          (let ([head_loop_bits (substring loop_bits 0 divisor_bits_length)]
+                [bitwise_result #f])
+            (set! bitwise_result
+                  (number->string
+                   (bitwise-xor
+                    (string->number head_loop_bits 2)
+                    (string->number divisor_poly_bits 2))
+                   2))
+            (loop (string-append bitwise_result (substring loop_bits divisor_bits_length))))
+          (binary_string->binary_poly loop_bits)))))
 
 (define (galios-poly-multiply poly1 poly2 . rst)
   (let loop ([polys rst]
@@ -213,14 +241,3 @@
               (cdr indexes)
               (cons (car indexes) result_list)))
          (reverse result_list)))))
-
-(define (poly->coefficients poly)
-  (with-output-to-string
-    (lambda ()
-      (let ([indexes (map (lambda (p) (car p)) (poly->index_coe_pairs poly))])
-        (let loop ([loop_index (car indexes)])
-          (when (>= loop_index 0)
-            (if (member loop_index indexes)
-                (printf "1")
-                (printf "0"))
-            (loop (sub1 loop_index))))))))

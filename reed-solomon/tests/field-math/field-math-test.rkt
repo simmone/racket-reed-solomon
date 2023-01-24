@@ -11,23 +11,36 @@
    (test-case
     "number->binary_poly"
     
-    (check-equal? (number->poly 10) "x3+x")
-    (check-equal? (number->poly 13) "x3+x2+1")
-    (check-equal? (number->poly 12) "x3+x2")
-    (check-equal? (number->poly 1) "1")
-    (check-equal? (number->poly 2) "x"))
+    (check-equal? (number->binary_poly 10) "x3+x")
+    (check-equal? (number->binary_poly 13) "x3+x2+1")
+    (check-equal? (number->binary_poly 12) "x3+x2")
+    (check-equal? (number->binary_poly 1) "1")
+    (check-equal? (number->binary_poly 2) "x"))
 
    (test-case
     "binary_poly->binary_string"
     
-    (check-equal? (poly->binary_string "x6+x5+x4+x1") "1110010")
-    (check-equal? (poly->binary_string "x4+x1+1") "10011")
+    (check-equal? (binary_poly->binary_string "x6+x5+x4+x1") "1110010")
+    (check-equal? (binary_poly->binary_string "x4+x1+1") "10011")
+    )
+
+   (test-case
+    "binary_string->binary_poly"
+    
+    (check-equal? (binary_string->binary_poly "1110010") "x6+x5+x4+x")
+    (check-equal? (binary_string->binary_poly "10011") "x4+x+1")
     )
 
    (test-case
     "binary_poly-multiply"
     
     (check-equal? (binary_poly-multiply "x3+x" "x3+x2+1") "x6+x5+x4+x")
+    )
+
+   (test-case
+    "binary_poly-divide"
+    
+    (check-equal? (binary_poly-divide "x6+x5+x4+x" "x4+x+1") "x3+x+1")
     )
    
    (test-case
