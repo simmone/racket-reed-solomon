@@ -8,15 +8,18 @@
           [binary_poly-divide (-> string? string? string?)]
           [galios-multiply (-> natural? natural? natural?)]
           [galios-poly-multiply (->* (string? string?) () #:rest (listof string?) string?)]
-          [get-galios-a->n_map (-> natural? string? hash?)]
+          [get-code-generator-poly (-> natural? string?)]
+          [get-galios-index->number_map (-> natural? (hash/c string? number?))]
           [poly->index_coe_pairs (-> string? (listof (cons/c natural? natural?)))]
           [index_coe_pairs->poly (-> (listof (cons/c natural? natural?)) string?)]
           [poly-sum (-> string? natural?)]
           [poly-remove_dup (-> string? string?)]
           [*field_generator_poly* parameter?]
+          [*galios_index->number_map* parameter?]
           ))
 
 (define *field_generator_poly* (make-parameter #f))
+(define *galios_index->number_map* (make-parameter #f))
 
 (define (number->binary_poly num)
   (let ([bit_list (string->list (number->string num 2))])
@@ -150,13 +153,27 @@
                  (loop (cdr loop_polys))))
              (hash->list combine_hash)))))))
 
-(define (get-galios-a->n_map bit_width field_generator_poly)
+(define (get-code-generator-poly bit_width)
+  (let ([max_index (sub1 (expt 2 (/ bit_width 2)))])
+    (apply
+     galios-poly-multiply
+     (let loop ([index 0]
+                [poly_list '()])
+       (if (<= index max_index)
+           (loop
+            (add1 index)
+            (cons
+             (format "x+~a" (hash-ref (*galios_index->number_map*) (format "a~a" index)))
+             poly_list))
+           (reverse poly_list))))))
+
+(define (get-galios-index->number_map bit_width)
   (let ([poly_index->decimal_hash (make-hash)]
         [poly_index->poly_hash (make-hash)]
         [poly_index_list '()]
         [2^m_1 (sub1 (expt 2 bit_width))]
         [replace_pair 
-         (let ([indexes (poly->index_coe_pairs field_generator_poly)])
+         (let ([indexes (poly->index_coe_pairs (*field_generator_poly*))])
            (cons
             (index_coe_pairs->poly (list (car indexes)))
             (index_coe_pairs->poly (cdr indexes))))])
@@ -235,7 +252,6 @@
                              (if (= (caar loop_pairs) 1) "" (caar loop_pairs)))))
            "+")
         last_result)))
-
 
 (define (poly-sum poly)
   (let loop ([pairs (poly->index_coe_pairs poly)]

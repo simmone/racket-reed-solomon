@@ -102,18 +102,72 @@
      (check-equal? (galios-poly-multiply "x3+x" "x3+x2+1") "x6+x5+x4+x")
      (check-equal? (galios-poly-multiply "x4+x2+x+1" "x3+x4") "x8+x7+x6+x3")
      (check-equal? (galios-poly-multiply "x+1" "x+2" "x+4" "x+8") "x4+15x3+3x2+x+12")
+     (check-equal? (apply galios-poly-multiply '("x+1" "x+2" "x+4" "x+8")) "x4+15x3+3x2+x+12")
      ))
 
    (test-case
-    "get-generator-poly"
-    
+    "get-galios-index->number_map"
+
+    ;; GF16
     (parameterize*
      ([*field_generator_poly* "x4+x+1"])
-     (check-equal? (get-generator-poly 4) "x4+15x3+3x2+x+12"))
 
+     (let ([aton_map (get-galios-index->number_map 4)])
+       (check-equal? (hash-ref aton_map "0") 0)
+       (check-equal? (hash-ref aton_map "a0") 1)
+       (check-equal? (hash-ref aton_map "a1") 2)
+       (check-equal? (hash-ref aton_map "a2") 4)
+       (check-equal? (hash-ref aton_map "a3") 8)
+       (check-equal? (hash-ref aton_map "a4") 3)
+       (check-equal? (hash-ref aton_map "a5") 6)
+       (check-equal? (hash-ref aton_map "a6") 12)
+       (check-equal? (hash-ref aton_map "a7") 11)
+       (check-equal? (hash-ref aton_map "a8") 5)
+       (check-equal? (hash-ref aton_map "a9") 10)
+       (check-equal? (hash-ref aton_map "a10") 7)
+       (check-equal? (hash-ref aton_map "a11") 14)
+       (check-equal? (hash-ref aton_map "a12") 15)
+       (check-equal? (hash-ref aton_map "a13") 13)
+       (check-equal? (hash-ref aton_map "a14") 9)
+       ))
+
+    ;; GF256
     (parameterize*
      ([*field_generator_poly* "x8+x4+x3+x2+1"])
-     (check-equal? (get-generator-poly 8) "x16+59x15+13x14+104x13+189x12+68x11+209x10+30x9+8x8+163x7+65x6+41x5+229x4+98x3+50x2+36x+59"))
+
+     (let ([aton_map (get-galios-index->number_map 8)])
+       (check-equal? (hash-ref aton_map "0") 0)
+       (check-equal? (hash-ref aton_map "a0") 1)
+       (check-equal? (hash-ref aton_map "a1") 2)
+       (check-equal? (hash-ref aton_map "a2") 4)
+       (check-equal? (hash-ref aton_map "a3") 8)
+       (check-equal? (hash-ref aton_map "a4") 16)
+       (check-equal? (hash-ref aton_map "a5") 32)
+       (check-equal? (hash-ref aton_map "a6") 64)
+       (check-equal? (hash-ref aton_map "a7") 128)
+       (check-equal? (hash-ref aton_map "a8") 29)
+       (check-equal? (hash-ref aton_map "a9") 58)
+       (check-equal? (hash-ref aton_map "a69") 47)
+       (check-equal? (hash-ref aton_map "a79") 240)
+       (check-equal? (hash-ref aton_map "a204") 221)
+       (check-equal? (hash-ref aton_map "a254") 142)
+       ))
+     )
+
+   (test-case
+    "get-code-generator-poly"
+    
+    (parameterize*
+     ([*field_generator_poly* "x4+x+1"]
+      [*galios_index->number_map* (get-galios-index->number_map 4)])
+
+     (check-equal? (get-code-generator-poly 4) "x4+15x3+3x2+x+12"))
+
+    (parameterize*
+     ([*field_generator_poly* "x8+x4+x3+x2+1"]
+      [*galios_index->number_map* (get-galios-index->number_map 8)])
+
+     (check-equal? (get-code-generator-poly 8) "x16+59x15+13x14+104x13+189x12+68x11+209x10+30x9+8x8+163x7+65x6+41x5+229x4+98x3+50x2+36x+59"))
     )
    
    (test-case
