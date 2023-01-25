@@ -158,8 +158,9 @@
     "get-code-generator-poly"
     
     (parameterize*
-     ([*field_generator_poly* "x4+x+1"]
-      [*galios_index->number_map* (get-galios-index->number_map 4)])
+     ([*bit_width* 4]
+      [*field_generator_poly* "x4+x+1"]
+      [*galios_index->number_map* (get-galios-index->number_map (*bit_width*))])
 
      (check-equal? (get-code-generator-poly 4) "x4+15x3+3x2+x+12"))
 
@@ -168,6 +169,12 @@
       [*galios_index->number_map* (get-galios-index->number_map 8)])
 
      (check-equal? (get-code-generator-poly 8) "x16+59x15+13x14+104x13+189x12+68x11+209x10+30x9+8x8+163x7+65x6+41x5+229x4+98x3+50x2+36x+59"))
+    )
+   
+   (test-case
+    "value-list->poly"
+    
+    (check-equal? (coefficient-list->poly '(1 2 3 4 5 6 7 8 9 10 11) 4 4) "x14+2x13+3x12+4x11+5x10+6x9+7x8+8x7+9x6+10x5+11x4")
     )
    
    (test-case
