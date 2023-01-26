@@ -8,8 +8,7 @@
           [binary_poly-divide (-> string? string? string?)]
           [galios-multiply (-> natural? natural? natural?)]
           [galios-poly-multiply (->* (string? string?) () #:rest (listof string?) string?)]
-          [get-code-generator-poly (-> natural? string?)]
-          [coefficient-list->poly (-> (listof natural?) natural? natural? string?)]
+          [get-code-generator-poly (-> string?)]
           [get-galios-index->number_map (-> natural? (hash/c string? number?))]
           [poly->index_coe_pairs (-> string? (listof (cons/c natural? natural?)))]
           [index_coe_pairs->poly (-> (listof (cons/c natural? natural?)) string?)]
@@ -156,8 +155,8 @@
                  (loop (cdr loop_polys))))
              (hash->list combine_hash)))))))
 
-(define (get-code-generator-poly bit_width)
-  (let ([max_index (sub1 (expt 2 (/ bit_width 2)))])
+(define (get-code-generator-poly)
+  (let ([max_index (sub1 (expt 2 (/ (*bit_width*) 2)))])
     (apply
      galios-poly-multiply
      (let loop ([index 0]
@@ -169,24 +168,6 @@
              (format "x+~a" (hash-ref (*galios_index->number_map*) (format "a~a" index)))
              poly_list))
            (reverse poly_list))))))
-
-(define (coefficient-list->poly coefficient_list bit_width parity_length)
-  (index_coe_pairs->poly
-   (poly->index_coe_pairs
-    (let ([max_index (- (expt 2 bit_width) 2)])
-      (if (> (length coefficient_list) (- (expt 2 bit_width) parity_length))
-          (error (format "coefficient_list'length is too large:[~a][~a][~a]" (length coefficient_list) bit_width parity_length))
-          (let loop ([coefficients coefficient_list]
-                     [loop_index max_index]
-                     [last_op ""]
-                     [result ""])
-            (if (not (null? coefficients))
-                (loop
-                 (cdr coefficients)
-                 (sub1 loop_index)
-                 "+"
-                 (format "~a~a~ax~a" result last_op (car coefficients) loop_index))
-                result)))))))
 
 (define (get-galios-index->number_map bit_width)
   (let ([poly_index->decimal_hash (make-hash)]
