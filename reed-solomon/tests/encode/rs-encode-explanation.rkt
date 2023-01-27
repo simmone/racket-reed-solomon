@@ -49,11 +49,11 @@
    
    (let ([code_generator_poly #f]
          [code_generator_list #f]
-         [dividend_num_list `(,@data_list ,@(make-list (- (expt 2 (*bit_width*)) 1 (length data_list)) 0))]
+         [dividend_num_list #f]
          [code_generator_length (add1 parity_length)]
          [result_list #f])
 
-     (set! code_generator_poly (get-code-generator-poly))
+     (set! code_generator_poly (get-code-generator-poly parity_length))
      
      (set! code_generator_list
            (map
@@ -61,18 +61,20 @@
               (cdr p))
             (poly->index_coe_pairs code_generator_poly)))
 
-     (printf "code_generator_poly:[~a], coefficient_list: [~a]\n\n" code_generator_poly code_generator_list)
+     (printf "code_generator_poly:[~a], coefficient_list: [~a][~a]\n\n" code_generator_poly (length code_generator_list) code_generator_list)
 
-     (printf "append 0 to data list to a full length list:~a\n\n" dividend_num_list) 
+     (set! dividend_num_list `(,@data_list ,@(make-list parity_length 0)))
+     (printf "append parity_length's 0 to data list:~a\n\n" dividend_num_list) 
      
      (printf "poly divide start:\n\n")
 
      (print-divide-elements dividend_num_list)
 
      (set! result_list
-           (let loop ([loop_dividend_list (drop dividend_num_list (* 2 (*t*)))]
-                      [loop_remainder_list (take dividend_num_list (* 2 (*t*)))])
-             (printf "\nLoop Start:\n")
+           (let loop ([count 1]
+                      [loop_dividend_list (drop dividend_num_list parity_length)]
+                      [loop_remainder_list (take dividend_num_list parity_length)])
+             (printf "\nLoop Start[~a]:\n" count)
 
              (printf "loop_remainder_list: ~a\n" loop_remainder_list)
 
@@ -101,11 +103,12 @@
                    (printf "step3: appended_dividend_list bitwise-xor aligned_code_generator:\n")
                    (print-divide-elements remainder_list)
 
-                   (loop (cdr loop_dividend_list) (drop remainder_list 1)))
+                   (loop (add1 count) (cdr loop_dividend_list) (drop remainder_list 1)))
                  loop_remainder_list)))
      
      (printf "result list:~a\n\n" result_list)
      )))
 
- (rs-encode '(1 2 3 4 5 6 7 8 9 10 11) 4 #:bit_width 4 #:primitive_poly_value 19)
-;;(rs-encode '(32 91 11 120 209 114 220 77 67 64 236 17 236 17 236 17) 10)
+;; (rs-encode '(1 2 3 4 5 6 7 8 9 10 11) 4 #:bit_width 4 #:primitive_poly_value 19)
+;; (rs-encode '(32 91 11 120 209 114 220 77 67 64 236 17 236 17 236 17) 10)
+   (rs-encode '(32 91 11 120 209 114 220 77 67 64 236 17 236) 13)

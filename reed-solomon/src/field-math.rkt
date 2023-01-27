@@ -8,20 +8,18 @@
           [binary_poly-divide (-> string? string? string?)]
           [galios-multiply (-> natural? natural? natural?)]
           [galios-poly-multiply (->* (string? string?) () #:rest (listof string?) string?)]
-          [get-code-generator-poly (-> string?)]
+          [get-code-generator-poly (-> natural? string?)]
           [get-galios-index->number_map (-> natural? (hash/c string? number?))]
           [poly->index_coe_pairs (-> string? (listof (cons/c natural? natural?)))]
           [index_coe_pairs->poly (-> (listof (cons/c natural? natural?)) string?)]
           [poly-sum (-> string? natural?)]
           [poly-remove_dup (-> string? string?)]
           [*bit_width* parameter?]
-          [*t* parameter?]
           [*field_generator_poly* parameter?]
           [*galios_index->number_map* parameter?]
           ))
 
 (define *bit_width* (make-parameter #f))
-(define *t* (make-parameter #f))
 (define *field_generator_poly* (make-parameter #f))
 (define *galios_index->number_map* (make-parameter #f))
 
@@ -157,8 +155,8 @@
                  (loop (cdr loop_polys))))
              (hash->list combine_hash)))))))
 
-(define (get-code-generator-poly)
-  (let ([max_index (sub1 (* 2 (*t*)))])
+(define (get-code-generator-poly parity_length)
+  (let ([max_index (sub1 parity_length)])
     (apply
      galios-poly-multiply
      (let loop ([index 0]
