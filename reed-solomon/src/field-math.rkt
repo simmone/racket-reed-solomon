@@ -15,11 +15,13 @@
           [poly-sum (-> string? natural?)]
           [poly-remove_dup (-> string? string?)]
           [*bit_width* parameter?]
+          [*t* parameter?]
           [*field_generator_poly* parameter?]
           [*galios_index->number_map* parameter?]
           ))
 
 (define *bit_width* (make-parameter #f))
+(define *t* (make-parameter #f))
 (define *field_generator_poly* (make-parameter #f))
 (define *galios_index->number_map* (make-parameter #f))
 
@@ -156,7 +158,7 @@
              (hash->list combine_hash)))))))
 
 (define (get-code-generator-poly)
-  (let ([max_index (sub1 (expt 2 (/ (*bit_width*) 2)))])
+  (let ([max_index (sub1 (* 2 (*t*)))])
     (apply
      galios-poly-multiply
      (let loop ([index 0]
