@@ -1,11 +1,17 @@
 #lang racket
 
 (provide (contract-out
-          [display-list (->*
-                         (list?)
-                         (natural? natural?)
-                         void?)]
+          [display-list (->* (list?) (natural? natural?) void?)]
+          [print-line (-> list? void?)]
           ))
+
+(define (print-line item_list)
+  (let loop ([items item_list])
+    (if (not (null? items))
+        (begin
+          (printf "~a|" (~a #:min-width 2 #:align 'left #:right-pad-string " " (car items)))
+          (loop (cdr items)))
+        (printf "\n"))))
 
 (define (display-list input_list [col_width 12] [line_count 10])
   (let loop ([loop_list input_list]

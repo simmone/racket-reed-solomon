@@ -1,14 +1,7 @@
 #lang racket
 
 (require "../../src/field-math.rkt")
-
-(define (print-line item_list)
-  (let loop ([items item_list])
-    (if (not (null? items))
-        (begin
-          (printf "~a|" (~a #:min-width 2 #:align 'left #:right-pad-string " " (car items)))
-          (loop (cdr items)))
-        (printf "\n"))))
+(require "../../src/lib/lib.rkt")
 
 ;; Galios multiply on GF(16)
 
