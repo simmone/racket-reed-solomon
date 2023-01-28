@@ -5,9 +5,9 @@
 
 (provide (contract-out
           [rs-encode (->* 
-                      ((listof exact-integer?) natural?) 
+                      ((listof natural?) natural?) 
                       (#:bit_width natural? #:primitive_poly_value natural?) 
-                      (listof exact-integer?))]
+                      (listof natural?))]
           ))
 
 (define (rs-encode 
@@ -47,14 +47,18 @@
 
              (set! appended_dividend_list `(,@loop_remainder_list ,(car loop_dividend_list)))
 
-             (set! aligned_code_generator_list (map (lambda (v) (galios-multiply v (car appended_dividend_list))) code_generator_list))
+             (set! aligned_code_generator_list
+                   (map (lambda (v) (galios-multiply v (car appended_dividend_list))) code_generator_list))
 
              (set! remainder_list
                    (let loop-bitwise ([dividends appended_dividend_list]
                                       [divisors aligned_code_generator_list]
                                       [result_list '()])
                      (if (not (null? dividends))
-                         (loop-bitwise (cdr dividends) (cdr divisors) (cons (bitwise-xor (car dividends) (car divisors)) result_list))
+                         (loop-bitwise
+                          (cdr dividends)
+                          (cdr divisors)
+                          (cons (bitwise-xor (car dividends) (car divisors)) result_list))
                          (reverse result_list))))
 
              (loop (cdr loop_dividend_list) (drop remainder_list 1)))

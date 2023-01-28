@@ -32,8 +32,6 @@
    
    (hash-set! (*gf_ntoa_map*) 0 0)
 
-   (printf "s0\n")
-
    (let (
          [appended_data_list 
           (if (> (*2^m_1*) (length raw_list))
@@ -55,19 +53,11 @@
      
      (set! t (floor (/ parity_length 2)))
 
-     (printf "s1\n")
-
      (set! syndromes (get-syndromes appended_data_list (* 2 t)))
-
-     (printf "s2\n")
 
      (set! syndrome_poly (coeffients->poly-n syndromes))
 
-     (printf "s3, syndromes_poly: ~a\n" syndrome_poly)
-     
      (set! syndromes_sum (foldr + 0 syndromes))
-     
-     (printf "syndromes sum:~a\n" syndromes_sum)
      
      (if (= syndromes_sum 0)
          (set! result raw_list)
@@ -75,29 +65,19 @@
            (if (not lam_poly)
                (set! result raw_list)
                (begin
-                 (printf "chinen-search: ~a\n" lam_poly)
-
                  (set! err_places (chien-search lam_poly))
-
-                 (printf "s4\n")
 
                  (if (null? err_places)
                      (set! result raw_list)
                      (begin
                        (set! err_correct_pairs (forney lam_poly ome_poly err_places))
 
-                       (printf "s5\n")
-
                        (set! corrected_values 
                              (correct-error 
                               appended_data_list
                               err_correct_pairs))
 
-                       (printf "s6\n")
-
                        (set! result (take corrected_values (length raw_list)))))))))
 
-     (printf "s7\n")
-     
      result
      )))

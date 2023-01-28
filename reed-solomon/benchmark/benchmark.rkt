@@ -1,6 +1,7 @@
 #lang racket
 
-(require "../main.rkt")
+(require "../src/encode.rkt")
+(require "../src/decode/decode.rkt")
 (require "../src/lib/lib.rkt")
 
 (require rackunit)
@@ -67,17 +68,16 @@
                      (reverse polluted_result_list)))])
 
           (let ([decoded_result (rs-decode polluted_data *PARITY_LENGTH*)])
-            (printf "data:[~a]\n" data)
-            (display-list data)
-            
-            (printf "random error places:\n")
-            (display-list random_polluted_places)
+            (when (not (check-equal? decoded_result data))
+              (printf "data:[~a]\n" data)
+              (display-list data)
+              
+              (printf "random error places:\n")
+              (display-list random_polluted_places)
 
-            (printf "polluted_data:[~a]\n" polluted_data)
-            (display-list polluted_data)
+              (printf "polluted_data:[~a]\n" polluted_data)
+              (display-list polluted_data)
 
-            (printf "decoded_data:\n")
-            (display-list decoded_result)
-
-            (check-equal? decoded_result data))))
+              (printf "decoded_data:\n")
+              (display-list decoded_result)))))
       (loop (cdr encoded_data)))))

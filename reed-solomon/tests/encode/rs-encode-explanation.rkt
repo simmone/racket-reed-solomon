@@ -29,7 +29,6 @@
 
   (parameterize*
    ([*bit_width* bit_width]
-    [*t* (floor (/ parity_length 2))]
     [*field_generator_poly* (hash-ref *primitive_poly_table* primitive_poly_value)]
     [*galios_index->number_map* (get-galios-index->number_map (*bit_width*))])
    
@@ -42,8 +41,6 @@
    (printf "parity_length: ~a\n\n" parity_length)
    
    (printf "bit_width: ~a\n\n" (*bit_width*))
-
-   (printf "t: ~a\n\n" (*t*))
 
    (printf "field_generator_poly:[~a][~a]\n\n" primitive_poly_value (*field_generator_poly*))
    
