@@ -76,6 +76,7 @@
     (parameterize*
      ([*field_generator_poly* "x4+x+1"])
 
+     (check-equal? (galios-multiply 10 12) 1)
      (check-equal? (galios-multiply 10 13) 11)
      (check-equal? (galios-multiply 14 14) 11)
      (check-equal? (galios-multiply 14 15) 5)

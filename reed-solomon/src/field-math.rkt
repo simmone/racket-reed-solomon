@@ -7,6 +7,7 @@
           [binary_poly-multiply (-> string? string? string?)]
           [binary_poly-divide (-> string? string? string?)]
           [galios-multiply (-> natural? natural? natural?)]
+          [galios-divide (-> natural? natural? natural?)]
           [galios-poly-multiply (->* (string? string?) () #:rest (listof string?) string?)]
           [get-code-generator-poly (-> natural? string?)]
           [get-galios-index->number_map (-> natural? (hash/c string? number?))]
@@ -105,6 +106,16 @@
           (number->binary_poly num1)
           (number->binary_poly num2))
          (*field_generator_poly*)))
+       2)))
+
+(define (galios-divide num1 num2)
+  (if (or (= num1 0) (= num2 0))
+      0
+      (string->number
+       (binary_poly->binary_string
+        (binary_poly-divide
+         (number->binary_poly num1)
+         (number->binary_poly num2)))
        2)))
 
 (define (galios-poly-multiply poly1 poly2 . rst)
