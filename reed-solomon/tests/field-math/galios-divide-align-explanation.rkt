@@ -37,8 +37,17 @@
 
     (printf "(- (+ 2^m_1 dst_coe_a_n) src_coe_a_n) = ~a\n\n" (- (+ 2^m_1 dst_coe_a_n) src_coe_a_n))
 
-    (printf "modulo last_result ~a=~a\n\n" 2^m_1 (modulo (- (+ 2^m_1 dst_coe_a_n) src_coe_a_n) 2^m_1))
-    ))
+    (printf "modulo last_result ~a = ~a\n\n" 2^m_1 (modulo (- (+ 2^m_1 dst_coe_a_n) src_coe_a_n) 2^m_1))
+    
+    (printf "(hash-ref (*galios_index->number_map*) ~a = ~a\n\n"
+            (format "a~a" (modulo (- (+ 2^m_1 dst_coe_a_n) src_coe_a_n) 2^m_1))
+            (hash-ref (*galios_index->number_map*) (format "a~a" (modulo (- (+ 2^m_1 dst_coe_a_n) src_coe_a_n) 2^m_1))))
+
+    (index_coe_pairs->poly
+     (list
+      (cons
+       (- dst_index_n src_index_n)
+       (hash-ref (*galios_index->number_map*) (format "a~a" (modulo (- (+ 2^m_1 dst_coe_a_n) src_coe_a_n) 2^m_1))))))))
 
 (parameterize*
  ([*bit_width* 4]

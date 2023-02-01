@@ -197,7 +197,38 @@
     (check-equal? (poly-remove_dup "x4+x+1+x+1") "x4")
     (check-equal? (poly-remove_dup "x4+x2+1+x+1") "x4+x2+x")
     )
+   
+   (test-case
+    "galios-divide-align"
+    
+    (parameterize*
+     ([*bit_width* 4]
+      [*field_generator_poly* "x4+x+1"]
+      [*galios_index->number_map* (get-galios-index->number_map (*bit_width*))]
+      [*galios_number->index_map* (make-hash (hash-map (*galios_index->number_map*) (lambda (a n) (cons n a))))])
 
+     (check-equal? (galios-divide-align "12x3" "x4") "10x")
+
+     (check-equal? (galios-divide-align "12x3" "14x3") "6")
+
+     (check-equal? (galios-divide-align "6x2" "12x3") "2x")
+    
+     (check-equal? (galios-divide-align "6x2" "8x2") "13")
+
+     (check-equal? (galios-divide-align "7x2" "14x2") "2"))
+
+    (parameterize*
+     ([*bit_width* 8]
+      [*field_generator_poly* "x8+x4+x3+x2+1"]
+      [*galios_index->number_map* (get-galios-index->number_map (*bit_width*))]
+      [*galios_number->index_map* (make-hash (hash-map (*galios_index->number_map*) (lambda (a n) (cons n a))))])
+
+     (check-equal?
+      (galios-divide-align
+       "49x14+195x13+228x12+166x11+225x10+133x9+24x8+105x7+4x6+9x5+222x4+119x3+138x2+193x1+87x0"
+       "x16")
+      "137x2"))
+    )
   ))
 
 (run-tests test-field-math)

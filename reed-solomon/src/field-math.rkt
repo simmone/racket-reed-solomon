@@ -8,6 +8,7 @@
           [binary_poly-divide (-> string? string? string?)]
           [galios-multiply (-> natural? natural? natural?)]
           [galios-divide (-> natural? natural? natural?)]
+          [galios-divide-align (-> string? string? string?)]
           [galios-poly-multiply (->* (string? string?) () #:rest (listof string?) string?)]
           [get-code-generator-poly (-> natural? string?)]
           [get-galios-index->number_map (-> natural? (hash/c string? number?))]
@@ -288,3 +289,35 @@
               (cdr indexes)
               (cons (car indexes) result_list)))
          (reverse result_list)))))
+
+(define (galios-divide-align src dst)
+  (let* (
+         [src_coe_pairs (poly->index_coe_pairs src)]
+         [dst_coe_pairs (poly->index_coe_pairs dst)]
+         [src_index_n (caar src_coe_pairs)]
+         [src_coe_n (cdar src_coe_pairs)]
+         [src_coe_a #f]
+         [src_coe_a_n #f]
+         [dst_index_n (caar dst_coe_pairs)]
+         [dst_coe_n (cdar dst_coe_pairs)]
+         [dst_coe_a #f]
+         [dst_coe_a_n #f]
+         [2^m_1 (sub1 (expt 2 (*bit_width*)))]
+         )
+    (set! src_coe_a (hash-ref (*galios_number->index_map*) src_coe_n))
+    
+    (set! src_coe_a_n (string->number (substring src_coe_a 1)))
+
+    (set! dst_coe_a (hash-ref (*galios_number->index_map*) dst_coe_n))
+
+    (set! dst_coe_a_n (string->number (substring dst_coe_a 1)))
+
+    (index_coe_pairs->poly
+     (list
+      (cons
+       (- dst_index_n src_index_n)
+       (hash-ref (*galios_index->number_map*)
+                 (format "a~a"
+                         (modulo
+                          (- (+ 2^m_1 dst_coe_a_n) src_coe_a_n)
+                          2^m_1))))))))
