@@ -18,11 +18,13 @@
           [*bit_width* parameter?]
           [*field_generator_poly* parameter?]
           [*galios_index->number_map* parameter?]
+          [*galios_number->index_map* parameter?]
           ))
 
 (define *bit_width* (make-parameter #f))
 (define *field_generator_poly* (make-parameter #f))
 (define *galios_index->number_map* (make-parameter #f))
+(define *galios_number->index_map* (make-parameter #f))
 
 (define (number->binary_poly num)
   (let ([bit_list (string->list (number->string num 2))])
