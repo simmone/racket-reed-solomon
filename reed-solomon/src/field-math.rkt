@@ -10,6 +10,7 @@
           [galios-divide (-> natural? natural? natural?)]
           [galios-divide-align (-> string? string? string?)]
           [galios-poly-multiply (->* (string? string?) () #:rest (listof string?) string?)]
+          [galios-poly-add (->* (string?) () #:rest (listof string?) string?)]
           [get-code-generator-poly (-> natural? string?)]
           [get-galios-index->number_map (-> natural? (hash/c string? number?))]
           [poly->index_coe_pairs (-> string? (listof (cons/c natural? natural?)))]
@@ -130,6 +131,23 @@
          (poly-multiply-basic last_result (car polys) + galios-multiply))
         last_result)))
 
+(define (galios-poly-add poly1 . rst)
+  (index_coe_pairs->poly
+   (let ([combine_hash (make-hash)])
+     (let loop ([loop_polys `(,poly1 ,@rst)])
+       (when (not (null? loop_polys))
+         (map
+          (lambda (p)
+            (if (hash-has-key? combine_hash (car p))
+                (let ([coe_bitwised (bitwise-xor (cdr p) (hash-ref combine_hash (car p)))])
+                  (if (= coe_bitwised 0)
+                      (hash-remove! combine_hash (car p))
+                      (hash-set! combine_hash (car p) coe_bitwised)))
+                (hash-set! combine_hash (car p) (cdr p))))
+          (poly->index_coe_pairs (car loop_polys)))
+         (loop (cdr loop_polys))))
+     (hash->list combine_hash))))
+
 (define (poly-multiply-basic poly1 poly2 add_op multiply_op)
   (let ([poly_multiplicand_pairs (poly->index_coe_pairs poly1)]
         [poly_multiplier_pairs (poly->index_coe_pairs poly2)])
@@ -153,21 +171,7 @@
                      multiplier_list))
                    (reverse multiplier_list))))
             multiplicand_list))
-          (index_coe_pairs->poly
-           (let ([combine_hash (make-hash)])
-             (let loop ([loop_polys multiplicand_list])
-               (when (not (null? loop_polys))
-                 (map
-                  (lambda (p)
-                    (if (hash-has-key? combine_hash (car p))
-                        (let ([coe_bitwised (bitwise-xor (cdr p) (hash-ref combine_hash (car p)))])
-                          (if (= coe_bitwised 0)
-                              (hash-remove! combine_hash (car p))
-                              (hash-set! combine_hash (car p) coe_bitwised)))
-                        (hash-set! combine_hash (car p) (cdr p))))
-                  (poly->index_coe_pairs (car loop_polys)))
-                 (loop (cdr loop_polys))))
-             (hash->list combine_hash)))))))
+          (apply galios-poly-add multiplicand_list)))))
 
 (define (get-code-generator-poly parity_length)
   (let ([max_index (sub1 parity_length)])

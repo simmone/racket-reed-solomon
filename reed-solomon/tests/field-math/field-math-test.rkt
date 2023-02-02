@@ -33,6 +33,25 @@
     )
 
    (test-case
+    "galios-poly-add"
+
+    (check-equal? (galios-poly-add "x+8") "x+8")
+    (check-equal? (galios-poly-add "3x1" "2x1+8") "x+8")
+    (check-equal? (galios-poly-add "3x2+2x+8" "5") "3x2+2x+13")
+    (check-equal? (galios-poly-add "x2+2x" "1x+2") "x2+3x+2")
+    (check-equal? (galios-poly-add "x3" "4x2" "3x2+12x" "2x+8") "x3+7x2+14x+8")
+    (check-equal? (galios-poly-add "x4" "x4+14x3" "13x2+12x") "14x3+13x2+12x")
+    (check-equal? (galios-poly-add "x4" "x4" "x3" "x3" "13x2+12x") "13x2+12x")
+    (check-equal? (apply galios-poly-add '("x4" "x4" "x3" "x3" "13x2+12x")) "13x2+12x")
+    (check-equal? (galios-poly-add "1x4" "x4+14x3+13x2+12x1") "14x3+13x2+12x")
+    (check-equal? (galios-poly-add "x4" "x4+14x3+13x2+12x1") "14x3+13x2+12x")
+    (check-equal? (galios-poly-add
+                   "90x16+66x15+95x14+186x13+120x12+50x11+156x10+158x9+140x8+174x7+108x6+152x5+41x4+88x3+169x2+200x"
+                   "90x16+66x15+197x14+102x13+133x12+118x11+150x10+226x9+234x8+103x7+89x6+63x5+165x4+56x3+242x2+250x+66")
+                  "154x14+220x13+253x12+68x11+10x10+124x9+102x8+201x7+53x6+167x5+140x4+96x3+91x2+50x+66")
+    )
+
+   (test-case
     "binary_poly-multiply"
     
     (check-equal? (binary_poly-multiply "x3+x" "x3+x2+1") "x6+x5+x4+x")

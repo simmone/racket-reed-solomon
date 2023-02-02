@@ -16,13 +16,12 @@
                   [loop_divisor_multiply_factor #f]
                   [loop_substract #f]
                   )
-              (set! loop_align_factor (poly-gf-n-divide-align divisor remainder))
+              (set! loop_align_factor (galios-divide-align divisor remainder))
               
-              (set! loop_divisor_multiply_factor (poly-gf-n-multiply divisor loop_align_factor))
-
-              (set! loop_substract (poly-n-add remainder loop_divisor_multiply_factor))
+              (printf "loop_align_factor = (galios-divide-align ~a ~a) = ~a\n\n"
+                      divisor remainder loop_align_factor)
               
-              (loop loop_substract (cons loop_align_factor quotient_list)))
+              (loop "3x+14" (cons loop_align_factor quotient_list)))
             (let ([quotient
                    (foldr (lambda (a b) (if b (string-append a "+" b) a)) #f (reverse quotient_list))])
               (values
