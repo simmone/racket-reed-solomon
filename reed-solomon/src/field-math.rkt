@@ -7,8 +7,8 @@
           [binary_poly-multiply (-> string? string? string?)]
           [binary_poly-divide (-> string? string? string?)]
           [galios-multiply (-> natural? natural? natural?)]
-          [galios-divide (-> natural? natural? natural?)]
-          [galios-divide-align (-> string? string? string?)]
+          [galios-poly-divide-align (-> string? string? string?)]
+          [galios-poly-divide (-> string? string? (values string? string?))]
           [galios-poly-multiply (->* (string? string?) () #:rest (listof string?) string?)]
           [galios-poly-add (->* (string?) () #:rest (listof string?) string?)]
           [get-code-generator-poly (-> natural? string?)]
@@ -110,16 +110,6 @@
           (number->binary_poly num1)
           (number->binary_poly num2))
          (*field_generator_poly*)))
-       2)))
-
-(define (galios-divide num1 num2)
-  (if (or (= num1 0) (= num2 0))
-      0
-      (string->number
-       (binary_poly->binary_string
-        (binary_poly-divide
-         (number->binary_poly num1)
-         (number->binary_poly num2)))
        2)))
 
 (define (galios-poly-multiply poly1 poly2 . rst)
@@ -294,10 +284,10 @@
               (cons (car indexes) result_list)))
          (reverse result_list)))))
 
-(define (galios-divide-align src dst)
+(define (galios-poly-divide-align dividend divisor)
   (let* (
-         [src_coe_pairs (poly->index_coe_pairs src)]
-         [dst_coe_pairs (poly->index_coe_pairs dst)]
+         [src_coe_pairs (poly->index_coe_pairs divisor)]
+         [dst_coe_pairs (poly->index_coe_pairs dividend)]
          [src_index_n (caar src_coe_pairs)]
          [src_coe_n (cdar src_coe_pairs)]
          [src_coe_a #f]
@@ -325,3 +315,28 @@
                          (modulo
                           (- (+ 2^m_1 dst_coe_a_n) src_coe_a_n)
                           2^m_1))))))))
+
+(define (galios-poly-divide dividend divisor)
+  (let ([divisor_index (caar (poly->index_coe_pairs divisor))])
+    (let loop ([remainder dividend]
+               [quotient ""]
+               [last_op ""])
+      
+      (let ([remainder_index (caar (poly->index_coe_pairs remainder))])
+        (if (>= remainder_index divisor_index)
+            (let (
+                  [loop_align_factor #f]
+                  [loop_divisor_multiply_factor #f]
+                  [loop_substract #f]
+                  )
+
+              (set! loop_align_factor (galios-poly-divide-align remainder divisor))
+
+              (set! loop_divisor_multiply_factor (galios-poly-multiply divisor loop_align_factor))
+
+              (set! loop_substract (galios-poly-add remainder loop_divisor_multiply_factor))
+              
+              (loop loop_substract (string-append quotient last_op loop_align_factor) "+"))
+            (values
+             quotient
+             remainder))))))

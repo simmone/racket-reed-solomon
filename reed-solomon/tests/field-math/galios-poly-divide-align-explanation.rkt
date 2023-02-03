@@ -4,10 +4,10 @@
 
 (require rackunit)
 
-(define (galios-divide-align src dst)
+(define (galios-divide-align dividend divisor)
   (let* (
-         [src_coe_pairs (poly->index_coe_pairs src)]
-         [dst_coe_pairs (poly->index_coe_pairs dst)]
+         [src_coe_pairs (poly->index_coe_pairs divisor)]
+         [dst_coe_pairs (poly->index_coe_pairs dividend)]
          [src_index_n (caar src_coe_pairs)]
          [src_coe_n (cdar src_coe_pairs)]
          [src_coe_a #f]
@@ -55,4 +55,6 @@
   [*galios_index->number_map* (get-galios-index->number_map (*bit_width*))]
   [*galios_number->index_map* (make-hash (hash-map (*galios_index->number_map*) (lambda (a n) (cons n a))))])
 
- (check-equal? (galios-divide-align "12x3" "x4") "10x"))
+;; (check-equal? (galios-divide-align "x4" "12x3") "10x"))
+
+   (check-equal? (galios-divide-align "x4" "12x3+4x2+3x+15") "10x"))

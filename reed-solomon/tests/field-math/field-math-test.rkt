@@ -218,7 +218,7 @@
     )
    
    (test-case
-    "galios-divide-align"
+    "galios-poly-divide-align"
     
     (parameterize*
      ([*bit_width* 4]
@@ -226,15 +226,15 @@
       [*galios_index->number_map* (get-galios-index->number_map (*bit_width*))]
       [*galios_number->index_map* (make-hash (hash-map (*galios_index->number_map*) (lambda (a n) (cons n a))))])
 
-     (check-equal? (galios-divide-align "12x3" "x4") "10x")
+     (check-equal? (galios-poly-divide-align "x4" "12x3") "10x")
 
-     (check-equal? (galios-divide-align "12x3" "14x3") "6")
+     (check-equal? (galios-poly-divide-align "14x3" "12x3") "6")
 
-     (check-equal? (galios-divide-align "6x2" "12x3") "2x")
+     (check-equal? (galios-poly-divide-align "12x3" "6x2") "2x")
     
-     (check-equal? (galios-divide-align "6x2" "8x2") "13")
+     (check-equal? (galios-poly-divide-align "8x2" "6x2") "13")
 
-     (check-equal? (galios-divide-align "7x2" "14x2") "2"))
+     (check-equal? (galios-poly-divide-align "14x2" "7x2") "2"))
 
     (parameterize*
      ([*bit_width* 8]
@@ -243,11 +243,56 @@
       [*galios_number->index_map* (make-hash (hash-map (*galios_index->number_map*) (lambda (a n) (cons n a))))])
 
      (check-equal?
-      (galios-divide-align
-       "49x14+195x13+228x12+166x11+225x10+133x9+24x8+105x7+4x6+9x5+222x4+119x3+138x2+193x1+87x0"
-       "x16")
+      (galios-poly-divide-align
+       "x16"
+       "49x14+195x13+228x12+166x11+225x10+133x9+24x8+105x7+4x6+9x5+222x4+119x3+138x2+193x1+87x0")
       "137x2"))
     )
+   
+   (test-case
+    "galios-poly-divide"
+    
+    (parameterize*
+     ([*bit_width* 4]
+      [*field_generator_poly* "x4+x+1"]
+      [*galios_index->number_map* (get-galios-index->number_map (*bit_width*))]
+      [*galios_number->index_map* (make-hash (hash-map (*galios_index->number_map*) (lambda (a n) (cons n a))))])
+
+     (let-values ([(quotient remainder)
+                   (galios-poly-divide "x4" "12x3+4x2+3x+15")])
+       (check-equal? quotient "10x+6")
+       (check-equal? remainder "6x2+6x+4"))
+
+     (let-values ([(quotient remainder)
+                   (galios-poly-divide "12x3+4x2+3x+15" "6x2+6x1+4")])
+       (check-equal? quotient "2x+13")
+       (check-equal? remainder "3x+14"))
+
+     (printf "t0\n")
+     (let-values ([(quotient remainder) (galios-poly-divide "7x2+7x+9" "9")])
+       (check-equal? quotient "14x2+14x+1")
+       (check-equal? remainder ""))
+
+     (printf "t1\n")
+     (let-values ([(quotient remainder) (galios-poly-divide "3x1+14" "9")])
+       (check-equal? quotient "6x1+15")
+       (check-equal? remainder ""))
+
+     (let-values ([(quotient remainder) (galios-poly-divide "15x9+6" "14")])
+       (check-equal? quotient "2x9+10")
+       (check-equal? remainder ""))
+
+     (let-values ([(quotient remainder) (galios-poly-divide "15x2+6" "14")])
+       (check-equal? quotient "2x2+10")
+       (check-equal? remainder ""))
+
+     (let-values ([(quotient remainder) (galios-poly-divide "6x+15" "14")])
+       (check-equal? quotient "10x1+2")
+       (check-equal? remainder ""))
+     )
+
+    )
+    
   ))
 
 (run-tests test-field-math)
