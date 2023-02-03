@@ -9,33 +9,33 @@
     (let loop ([remainder dividend]
                [quotient ""]
                [last_op ""])
+
+      (printf "remainder: [~a]\n\n" remainder)
       
-      (let ([remainder_index (caar (poly->index_coe_pairs remainder))])
-        (printf "remainder:~a\ndivisor=~a\n\n" remainder divisor)
-        
-        (if (>= remainder_index divisor_index)
-            (let (
-                  [loop_align_factor #f]
-                  [loop_divisor_multiply_factor #f]
-                  [loop_substract #f]
-                  )
+      (if (not (string=? remainder ""))
+          (let ([remainder_index (caar (poly->index_coe_pairs remainder))])
+            (printf "remainder:~a\ndivisor=~a\n\n" remainder divisor)
+            
+            (if (>= remainder_index divisor_index)
+                (let ([loop_align_factor #f]
+                      [loop_divisor_multiply_factor #f]
+                      [loop_substract #f])
 
-              (set! loop_align_factor (galios-poly-divide-align remainder divisor))
-              (printf "loop_align_factor = (galios-divide-align ~a ~a) = ~a\n\n"
-                      divisor remainder loop_align_factor)
+                  (set! loop_align_factor (galios-poly-divide-align remainder divisor))
+                  (printf "loop_align_factor = (galios-divide-align ~a ~a) = ~a\n\n"
+                          divisor remainder loop_align_factor)
 
-              (set! loop_divisor_multiply_factor (galios-poly-multiply divisor loop_align_factor))
-              (printf "loop_divisor_multiply_factor = (galios-poly-multiply ~a ~a) = ~a\n\n"
-                      divisor loop_align_factor loop_divisor_multiply_factor)
+                  (set! loop_divisor_multiply_factor (galios-poly-multiply divisor loop_align_factor))
+                  (printf "loop_divisor_multiply_factor = (galios-poly-multiply ~a ~a) = ~a\n\n"
+                          divisor loop_align_factor loop_divisor_multiply_factor)
 
-              (set! loop_substract (galios-poly-add remainder loop_divisor_multiply_factor))
-              (printf "loop_substract = (galios-poly-add ~a ~a) = ~a\n\n"
-                      remainder loop_divisor_multiply_factor loop_substract)
-              
-              (loop loop_substract (string-append quotient last_op loop_align_factor) "+"))
-            (values
-             quotient
-             remainder))))))
+                  (set! loop_substract (galios-poly-add remainder loop_divisor_multiply_factor))
+                  (printf "loop_substract = (galios-poly-add ~a ~a) = ~a\n\n"
+                          remainder loop_divisor_multiply_factor loop_substract)
+                  
+                  (loop loop_substract (string-append quotient last_op loop_align_factor) "+"))
+                (values quotient remainder)))
+          (values quotient remainder)))))
 
 (parameterize*
  ([*bit_width* 4]

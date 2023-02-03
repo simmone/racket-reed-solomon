@@ -35,6 +35,7 @@
    (test-case
     "galios-poly-add"
 
+    (check-equal? (galios-poly-add "9" "9") "")
     (check-equal? (galios-poly-add "x+8") "x+8")
     (check-equal? (galios-poly-add "3x1" "2x1+8") "x+8")
     (check-equal? (galios-poly-add "3x2+2x+8" "5") "3x2+2x+13")
@@ -124,6 +125,16 @@
      (check-equal? (galios-poly-multiply "x+1" "x+2" "x+4" "x+8") "x4+15x3+3x2+x+12")
      (check-equal? (apply galios-poly-multiply '("x+1" "x+2" "x+4" "x+8")) "x4+15x3+3x2+x+12")
      ))
+   
+   (test-case
+    "galios-poly-multiply-add-combine"
+
+    (parameterize*
+     ([*field_generator_poly* "x4+x+1"])
+
+     (check-equal? (galios-poly-add "1" (galios-poly-multiply "10x+6" "2x+13")) "7x2+7x+9")
+     ))
+    
 
    (test-case
     "get-galios-index->number_map"
@@ -268,14 +279,12 @@
        (check-equal? quotient "2x+13")
        (check-equal? remainder "3x+14"))
 
-     (printf "t0\n")
      (let-values ([(quotient remainder) (galios-poly-divide "7x2+7x+9" "9")])
        (check-equal? quotient "14x2+14x+1")
        (check-equal? remainder ""))
 
-     (printf "t1\n")
      (let-values ([(quotient remainder) (galios-poly-divide "3x1+14" "9")])
-       (check-equal? quotient "6x1+15")
+       (check-equal? quotient "6x+15")
        (check-equal? remainder ""))
 
      (let-values ([(quotient remainder) (galios-poly-divide "15x9+6" "14")])
@@ -287,7 +296,7 @@
        (check-equal? remainder ""))
 
      (let-values ([(quotient remainder) (galios-poly-divide "6x+15" "14")])
-       (check-equal? quotient "10x1+2")
+       (check-equal? quotient "10x+2")
        (check-equal? remainder ""))
      )
 
