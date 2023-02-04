@@ -1,24 +1,8 @@
 #lang racket
 
+(require "../../src/lib.rkt")
 (require "../../src/field-math.rkt")
 (require "../../src/primitive_poly_table.rkt")
-
-(define (print-divide-elements elements)
-  (let loop ([loop_elements elements])
-    (when (not (null? loop_elements))
-      (printf "[~a]" (~a #:min-width 3 #:align 'left #:right-pad-string " " (car loop_elements)))
-      (loop (cdr loop_elements))))
-  (printf "\n"))
-
-(define (print-line item_list)
-  (let loop ([items item_list])
-    (if (not (null? items))
-        (begin
-          (printf "~a|" (~a #:min-width 2 #:align 'left #:right-pad-string " " (car items)))
-          (loop (cdr items)))
-        (printf "\n\n"))))
-
-;; Reed Solomon Encode Explanation
 
 (define (rs-encode 
          data_list

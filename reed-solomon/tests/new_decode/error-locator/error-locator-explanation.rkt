@@ -4,7 +4,7 @@
 
 (require rackunit)
 
-(define (_error-locator-poly syndromes error_length)
+(define (_error-locator syndromes error_length)
 
   (printf "syndromes: ~a, error_length: [~a]\n\n" syndromes error_length)
 
@@ -58,7 +58,7 @@
 ;  [*galios_index->number_map* (get-galios-index->number_map (*bit_width*))]
 ;  [*galios_number->index_map* (make-hash (hash-map (*galios_index->number_map*) (lambda (a n) (cons n a))))])
 ;
-; (let-values ([(ome lam) (_error-locator-poly '(12 4  3 15) 2)])
+; (let-values ([(ome lam) (_error-locator '(12 4  3 15) 2)])
 ;   (check-equal? ome "6x+15")
 ;   (check-equal? lam "14x2+14x+1")))
 
@@ -68,7 +68,7 @@
   [*galios_index->number_map* (get-galios-index->number_map (*bit_width*))]
   [*galios_number->index_map* (make-hash (hash-map (*galios_index->number_map*) (lambda (a n) (cons n a))))])
 
- (let-values ([(ome lam) (_error-locator-poly '(49 195 228 166 225 133 24 105 4 9 222 119 138 193 87) 8)])
+ (let-values ([(ome lam) (_error-locator '(49 195 228 166 225 133 24 105 4 9 222 119 138 193 87) 8)])
    (check-equal? ome "227x7+62x6+162x5+165x4+247x3+136x2+215x+87")
    (check-equal? lam "70x8+122x7+139x6+59x5+55x4+66x3+19x2+5x+1")))
 

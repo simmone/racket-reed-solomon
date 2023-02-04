@@ -3,7 +3,15 @@
 (provide (contract-out
           [display-list (->* (list?) (natural? natural?) void?)]
           [print-line (-> list? void?)]
+          [print-divide-elements (-> list? void?)]
           ))
+
+(define (print-divide-elements elements)
+  (let loop ([loop_elements elements])
+    (when (not (null? loop_elements))
+      (printf "[~a]" (~a #:min-width 3 #:align 'left #:right-pad-string " " (car loop_elements)))
+      (loop (cdr loop_elements))))
+  (printf "\n"))
 
 (define (print-line item_list)
   (let loop ([items item_list])
