@@ -2,6 +2,8 @@
 
 (require "../../src/field-math.rkt")
 
+(require rackunit)
+
 (define (_galios-poly-divide dividend divisor)
   (let ([divisor_index (caar (poly->index_coe_pairs divisor))])
     (printf "divisor_index:~a\n\n" divisor_index)
@@ -48,3 +50,19 @@
 ;;               (_galios-poly-divide "12x3+4x2+3x+15" "6x2+6x1+4")])
                (_galios-poly-divide "7x2+7x+9" "9")])
    (printf "quotient: ~a\nremainder: ~a\n" quotient remainder)))
+
+;(parameterize*
+; ([*bit_width* 8]
+;  [*field_generator_poly* "x8+x4+x3+x2+1"]
+;  [*galios_index->number_map* (get-galios-index->number_map (*bit_width*))]
+;  [*galios_number->index_map* (make-hash (hash-map (*galios_index->number_map*) (lambda (a n) (cons n a))))])
+;
+; (let-values ([(quotient remainder)
+;               (_galios-poly-divide
+;                "x16"
+;                "49x14+195x13+228x12+166x11+225x10+133x9+24x8+105x7+4x6+9x5+222x4+119x3+138x2+193x+87")])
+;   (check-equal? quotient "135x+225")
+;   (check-equal? remainder "90x31+37x30")))
+;
+       
+
