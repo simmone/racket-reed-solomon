@@ -3,7 +3,9 @@
 (require "../../../src/field-math.rkt")
 (require "../../../src/lib/lib.rkt")
 
-(define (get-syndromes data_list parity_length)
+(require rackunit)
+
+(define (_get-syndromes data_list parity_length)
   (printf "Get Syndromes Explanation:\n\n")
 
   (let loop ([loop_parity_index 0]
@@ -45,6 +47,15 @@
   [*field_generator_poly* "x4+x+1"]
   [*galios_index->number_map* (get-galios-index->number_map (*bit_width*))])
 
- (get-syndromes '(1 2 3 4 5 11 7 8 9 10 11 3 1 12 12) 4))
+    (parameterize*
+     ([*bit_width* 4]
+      [*field_generator_poly* "x4+x+1"]
+      [*galios_index->number_map* (get-galios-index->number_map (*bit_width*))])
+
+     (check-equal? (_get-syndromes 
+                    '(1 2 3 4 5 11 7 8 9 10 11 3 1 12 12)
+                    4)
+                   '(12 4 3 15))))
+
 
 

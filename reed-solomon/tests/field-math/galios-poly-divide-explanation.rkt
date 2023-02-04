@@ -47,9 +47,10 @@
 
  (let-values ([(quotient remainder)
 ;;             (_galios-poly-divide "x6+x5+x4+x1" "x4+x1+1")])
-;;               (_galios-poly-divide "12x3+4x2+3x+15" "6x2+6x1+4")])
-               (_galios-poly-divide "7x2+7x+9" "9")])
-   (printf "quotient: ~a\nremainder: ~a\n" quotient remainder)))
+               (_galios-poly-divide "12x3+4x2+3x+15" "6x2+6x1+4")])
+   (check-equal? quotient "2x+13")
+   (check-equal? remainder "3x+14")))
+
 
 ;(parameterize*
 ; ([*bit_width* 8]
