@@ -5,6 +5,7 @@
 (require "../../src/new_decode/syndrome.rkt")
 (require "../../src/new_decode/error-locator.rkt")
 (require "../../src/new_decode/chien-search.rkt")
+(require "../../src/new_decode/forney.rkt")
 (require "../../src/primitive_poly_table.rkt")
 
 (require rackunit)

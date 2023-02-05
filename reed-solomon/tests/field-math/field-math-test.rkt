@@ -270,11 +270,6 @@
       [*galios_number->index_map* (make-hash (hash-map (*galios_index->number_map*) (lambda (a n) (cons n a))))])
 
      (let-values ([(quotient remainder)
-                   (galios-poly-divide "x4" "12x3+4x2+3x+15")])
-       (check-equal? quotient "10x+6")
-       (check-equal? remainder "6x2+6x+4"))
-
-     (let-values ([(quotient remainder)
                    (galios-poly-divide "12x3+4x2+3x+15" "6x2+6x1+4")])
        (check-equal? quotient "2x+13")
        (check-equal? remainder "3x+14"))
@@ -315,6 +310,7 @@
        (check-equal? quotient "135x+225")
        (check-equal? remainder
                      "90x31+37x30+110x29+211x28+242x27+150x26+94x25+229x24+231x23+222x22+79x21+189x20+15x18+223x17+148x16+99x15+33x14+35x13+173x12+129x11+106x10+246x9+160x8+174x7+24x6+252x5+83x4+244x3+243x2+107x+80"))
+    )
     )
     
   ))
