@@ -4,6 +4,7 @@
 (require "../../src/field-math.rkt")
 (require "../../src/new_decode/syndrome.rkt")
 (require "../../src/new_decode/error-locator.rkt")
+(require "../../src/new_decode/chien-search.rkt")
 (require "../../src/primitive_poly_table.rkt")
 
 (require rackunit)
@@ -46,6 +47,7 @@
          (if (not lam_poly)
              data_list
              (let ([err_places (chien-search lam_poly)])
+               (printf "err_places = ~a\n\n" err_places)
                (if (null? err_places)
                    data_list
                    (let ([err_correct_pairs (forney lam_poly ome_poly err_places)])
