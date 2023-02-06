@@ -38,22 +38,42 @@
    
    (printf "syndromes: ~a\n\n" syndromes)
 
+   (define *t* (floor (/ parity_length 2)))
+
    (if (= (foldr + 0 syndromes) 0)
        data_list
-       (let-values ([(ome_poly lam_poly) (error-locator syndromes parity_length)])
+       (let-values ([(ome_poly lam_poly) (error-locator syndromes *t*)])
+         (printf "(error-locator ~a ~a)\n" syndromes *t*)
 
          (printf "error-locater's ome_poly = ~a\n\n" ome_poly)
          (printf "error-locater's lam_poly = ~a\n\n" lam_poly)
 
          (if (not lam_poly)
              data_list
-             (let ([err_places (chien-search lam_poly)])
-               (printf "err_places = ~a\n\n" err_places)
-               (if (null? err_places)
-                   data_list
-                   (let ([err_correct_pairs (forney lam_poly ome_poly err_places)])
-                     (correct-error data_list err_correct_pairs)))))))
-   ))
+             (let ([err_places (chien-search lam_poly)]
+                   [restored_list #f])
+               (printf "err_places = (chien-search ~a) = ~a\n\n" lam_poly err_places)
+               (set! restored_list
+                     (if (null? err_places)
+                         data_list
+                         (let ([err_correct_pairs (forney lam_poly ome_poly err_places)])
+                           (printf "err_correct_pairs: (fornet lam_poly ome_poly err_places) = ~a\n" err_correct_pairs)
+                           (let loop ([patches err_correct_pairs]
+                                      [loop_data_list (reverse data_list)])
+                             (if (not (null? patches))
+                                 (let ([restored_data (bitwise-xor (cdar patches) (list-ref loop_data_list (caar patches)))])
+                                   (printf "bitwise-xor ~a's ~a with ~a = ~a\n"
+                                           (caar patches)
+                                           (list-ref loop_data_list (caar patches))
+                                           (cdar patches)
+                                           restored_data)
+                                           
+                                   (loop
+                                    (cdr patches)
+                                    (list-set loop_data_list (caar patches) restored_data)))
+                                 (reverse loop_data_list))))))
+               (printf "restored_list: ~a\n" restored_list)
+               restored_list))))))
 
 (check-equal? (_rs-decode 
                '(1 2 3 4 5 11 7 8 9 10 11 3 1 12 12) 4
