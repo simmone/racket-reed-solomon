@@ -55,6 +55,8 @@
 
      (set! syndromes (get-syndromes appended_data_list (* 2 t)))
 
+     (printf "syndromes: ~a\n" syndromes)
+
      (set! syndrome_poly (coeffients->poly-n syndromes))
 
      (set! syndromes_sum (foldr + 0 syndromes))
@@ -62,6 +64,8 @@
      (if (= syndromes_sum 0)
          (set! result raw_list)
          (let-values ([(ome_poly lam_poly) (error-locator-poly (poly-n-strip syndrome_poly) t)])
+           (printf "ome_poly: ~a\n" ome_poly)
+           (printf "lam_poly: ~a\n" lam_poly)
            (if (not lam_poly)
                (set! result raw_list)
                (begin

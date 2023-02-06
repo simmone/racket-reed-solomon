@@ -2,8 +2,8 @@
 
 (require rackunit/text-ui rackunit)
 
-(require "../../src/lib/gf.rkt")
-(require "../../src/decode/decode.rkt")
+(require "../../src/field-math.rkt")
+(require "../../src/decode.rkt")
 
 (define test-decode
   (test-suite
@@ -12,14 +12,10 @@
    (test-case
     "test-decode-no-errors"
 
-    (printf "t0\n")
-    
     (check-equal? (rs-decode 
                    '(32 91 11 120 209 114 220 77 67 64 236 17 236 17 236 17 196 35 39 119 235 215 231 226 93 23)
                    10)
                    '(32 91 11 120 209 114 220 77 67 64 236 17 236 17 236 17 196 35 39 119 235 215 231 226 93 23)))
-
-   (printf "t1\n")
 
    (test-case
     "test-fix-1-error"
@@ -62,8 +58,6 @@
 ;                   10)
 ;                   '(32 91 11 120 209 114 220 77 67 64 236 17 236 17 236 17 196 35 39 119 235 215 231 226 93 23)))
 ;
-;    (printf "t1\n")
-;
 ;   (test-case
 ;    "test can't fix 6 errors"
 ;
@@ -72,15 +66,11 @@
 ;                       10)
 ;                       '(32 91 11 120 209 114 220 77 67 64 236 17 236 17 236 17 196 35 39 119 235 215 231 226 93 23))
 ;
-;    (printf "t2\n")
-;
 ;    )
 ;
 ;
 ;   (test-case
 ;    "test-decode-4"
-;
-;    (printf "t3\n")
 ;
 ;    ;; fix two errors
 ;    (check-equal? (rs-decode 
@@ -106,7 +96,6 @@
 ;                   #:bit_width 4 #:primitive_poly_value 19)
 ;                   '(5 2 3 4 5 11 7 8 9 10 11 3 1 12 12))
 ; 
-;    (printf "t4\n")
 ;    ;; all is errors
 ;    (check-equal? (rs-decode 
 ;                   '(12 12 1 3 11 10 9 8 7 6 5 4 3 2 1) 4
@@ -120,8 +109,6 @@
 ;                   '(1 2 3 4 5 11 7 8 9 0 11 15 11 11 0 15) 5
 ;                   #:bit_width 4 #:primitive_poly_value 19)
 ;                   '(1 2 3 4 5 6 7 8 9 10 11 15 11 11 0 15))
-;
-;    (printf "t6\n")
 ;
 ;    )
 ;   
