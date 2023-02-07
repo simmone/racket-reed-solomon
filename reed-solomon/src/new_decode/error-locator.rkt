@@ -3,7 +3,7 @@
 (require "../field-math.rkt")
 
 (provide (contract-out
-          [error-locator (-> (listof natural?) natural? (values string? string?))]
+          [error-locator (-> (listof natural?) natural? (values (or/c #f string?) (or/c #f string?)))]
           ))
 
 (define (error-locator syndromes error_length)
@@ -31,7 +31,10 @@
                remainder
                loop_multiply_factor
                loop_result)
-              (let ([last_coe_index (cdr (last (poly->index_coe_pairs loop_result)))])
-                (let-values ([(ome_quotient ome_remainder) (galios-poly-divide remainder (number->string last_coe_index))]
-                             [(lam_quotient lam_remainder) (galios-poly-divide loop_result (number->string last_coe_index))])
-                  (values ome_quotient lam_quotient)))))))))
+              (let ([last_coe (cdr (last (poly->index_coe_pairs loop_result)))]
+                    [last_index (car (last (poly->index_coe_pairs loop_result)))])
+                (if (not (= last_index 0))
+                    (values #f #f)
+                    (let-values ([(ome_quotient ome_remainder) (galios-poly-divide remainder (number->string last_coe))]
+                                 [(lam_quotient lam_remainder) (galios-poly-divide loop_result (number->string last_coe))])
+                      (values ome_quotient lam_quotient))))))))))

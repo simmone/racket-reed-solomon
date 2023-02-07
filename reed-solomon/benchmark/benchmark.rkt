@@ -1,16 +1,15 @@
 #lang racket
 
-(require "../src/encode.rkt")
-(require "../src/decode/decode.rkt")
-(require "../src/lib/lib.rkt")
+(require "../main.rkt")
+(require "../src/lib.rkt")
 
 (require rackunit)
 
-;; random generate 1000's random size's data list
+;; random generate 100's random size's data list
 ;; encode 16's parity data
 ;; random set max 8's error
 ;; decode to the correct data list
-;; encode 1000 times, decode 1000 times.
+;; encode 100 times, decode 100 times.
 
 (define *BENCHMARK_DATA_COUNT* 100)
 (define *RANDOM_ERROR_COUNT* 8)

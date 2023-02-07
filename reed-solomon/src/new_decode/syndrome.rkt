@@ -30,5 +30,10 @@
                     (step-loop (cdr loop_data_list) ax_multiply last_xor))
                   last_xor_result))
             result_list))
-          result_list))))
+          (let trim-loop ([items result_list])
+            (if (not (null? items))
+                (if (= (car items) 0)
+                    (trim-loop (cdr items))
+                    items)
+                items))))))
 

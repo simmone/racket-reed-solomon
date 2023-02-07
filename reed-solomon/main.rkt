@@ -1,7 +1,7 @@
 #lang racket
 
-(require "src/encode/encode.rkt")
-(require "src/decode/decode.rkt")
+(require "src/encode.rkt")
+(require "src/decode.rkt")
 
 (provide (contract-out
           [rs-encode (->* 

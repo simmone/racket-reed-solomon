@@ -1,7 +1,6 @@
 #lang racket
 
 (require "../../../src/field-math.rkt")
-(require "../../../src/lib/lib.rkt")
 
 (require rackunit)
 
@@ -10,6 +9,9 @@
 
   (let loop ([loop_parity_index 0]
              [result_list '()])
+
+    (printf "result_list: ~a\n" result_list)
+
     (let* ([ax (format "a~a" loop_parity_index)]
            [ax_val (hash-ref (*galios_index->number_map*) ax)])
 
@@ -40,7 +42,12 @@
                     (step-loop (cdr loop_data_list) ax_multiply last_xor))
                   last_xor_result))
             result_list))
-          result_list))))
+          (let trim-loop ([items result_list])
+            (if (not (null? items))
+                (if (= (car items) 0)
+                    (trim-loop (cdr items))
+                    items)
+                items))))))
 
 (parameterize*
  ([*bit_width* 4]
@@ -52,10 +59,15 @@
       [*field_generator_poly* "x4+x+1"]
       [*galios_index->number_map* (get-galios-index->number_map (*bit_width*))])
 
-     (check-equal? (_get-syndromes 
-                    '(1 2 3 4 5 11 7 8 9 10 11 3 1 12 12)
-                    4)
-                   '(12 4 3 15))))
+;     (check-equal? (_get-syndromes 
+;                    '(1 2 3 4 5 11 7 8 9 10 11 3 1 12 12) 4)
+;                   '(12 4 3 15))
+
+     (check-equal? (_get-syndromes
+                    '(12 12 1 3 11 10 9 8 7 6 5 4 3 2 1) 4)
+                   '(7 14 2))
+
+     ))
 
 
 
