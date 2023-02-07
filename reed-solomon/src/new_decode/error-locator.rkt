@@ -25,7 +25,7 @@
         (let-values ([(quotient remainder) (galios-poly-divide loop_dividend loop_divisor)])
           (set! loop_result (galios-poly-add loop_add_factor (galios-poly-multiply quotient loop_multiply_factor)))
 
-          (if (> (caar (poly->index_coe_pairs loop_divisor)) error_length)
+          (if (>= (caar (poly->index_coe_pairs remainder)) error_length)
               (loop
                loop_divisor
                remainder

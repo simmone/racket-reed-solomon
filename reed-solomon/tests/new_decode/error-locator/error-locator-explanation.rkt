@@ -35,8 +35,8 @@
 
           (set! loop_result (galios-poly-add loop_add_factor (galios-poly-multiply quotient loop_multiply_factor)))
           (printf "loop_result = (galios-poly-add ~a (galios-poly-multiply ~a ~a)) = ~a\n\n" loop_add_factor quotient loop_multiply_factor loop_result)
-
-          (if (> (caar (poly->index_coe_pairs loop_divisor)) error_length)
+          
+          (if (>= (caar (poly->index_coe_pairs remainder)) error_length)
               (loop
                loop_divisor
                remainder
@@ -68,8 +68,9 @@
   [*galios_index->number_map* (get-galios-index->number_map (*bit_width*))]
   [*galios_number->index_map* (make-hash (hash-map (*galios_index->number_map*) (lambda (a n) (cons n a))))])
 
- (let-values ([(ome lam) (_error-locator '(49 195 228 166 225 133 24 105 4 9 222 119 138 193 87) 8)])
-   (check-equal? ome "227x7+62x6+162x5+165x4+247x3+136x2+215x+87")
-   (check-equal? lam "70x8+122x7+139x6+59x5+55x4+66x3+19x2+5x+1")))
-
+ (let-values ([(ome lam) (_error-locator '(208 221 122 7 253 253 76 219 69 7) 5)])
+   (check-equal? ome "29x4+161x3+50x2+49x+7")
+   (check-equal? lam "141x5+214x4+47x3+252x2+194x+1")
+   )
+)
 

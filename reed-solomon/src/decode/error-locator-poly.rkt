@@ -14,6 +14,11 @@
              [r-1 syndrome_poly_n]
              [t-2 "0"]
              [t-1 "1"])
+    (printf "i = ~a\n" i)
+    (printf "r-2 = ~a\n" r-2)
+    (printf "r-1 = ~a\n" r-1)
+    (printf "t-2 = ~a\n" t-2)
+    (printf "t-1 = ~a\n" t-1)
 
     (let ([q #f]
           [r #f]
@@ -23,6 +28,9 @@
       (let-values ([(quotient remainder) (euc-divide r-2 r-1)])
         (set! q quotient)
         (set! r remainder))
+      
+      (printf "q = ~a\n" q)
+      (printf "r = ~a\n" r)
 
       (set! t (poly-n-add t-2 (poly-gf-n-multiply q t-1)))
 
