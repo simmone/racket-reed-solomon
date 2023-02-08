@@ -3,16 +3,14 @@
 (require "../main.rkt")
 (require "../src/lib.rkt")
 
-(require rackunit)
-
 ;; random generate 100's random size's data list
 ;; encode 16's parity data
-;; random set max 8's error
+;; set random's error
 ;; decode to the correct data list
+;; if error <= 8, can recover or not recover
 ;; encode 100 times, decode 100 times.
 
 (define *BENCHMARK_DATA_COUNT* 100)
-(define *RANDOM_ERROR_COUNT* 8)
 (define *PARITY_LENGTH* 16)
 
 (let* ([random_data_list
@@ -22,7 +20,7 @@
               (loop-all
                (add1 count)
                (cons
-                (let loop-data ([data_length (random 8 240)]
+                (let loop-data ([data_length (random 8 241)]
                                 [data_count 1]
                                 [data_list '()])
                   (if (<= data_count data_length)
@@ -34,24 +32,24 @@
         (map
          (lambda (data)
            `(,@data ,@(rs-encode data *PARITY_LENGTH*)))
-         random_data_list)])
+         random_data_list)]) 
   
   (let loop ([encoded_data encoded_data_list])
     (when (not (null? encoded_data))
       (let* ([data (car encoded_data)]
+             [random_error_count (random 0 *PARITY_LENGTH*)]
              [random_polluted_places
               (let loop-error-place ([count 1]
                                      [error_places '()])
-                (if (<= count *RANDOM_ERROR_COUNT*)
+                (if (<= count random_error_count)
                     (loop-error-place
                      (add1 count)
                      (let loop-random-place ([random_place (random 0 (length data))])
                        (if (member random_place error_places)
                            (loop-random-place (random 0 (length data)))
                            (cons random_place error_places))))
-                    (reverse error_places)))])
-        
-        (let ([polluted_data
+                    (reverse error_places)))]
+             [polluted_data
                (let loop-pollute ([data_list data]
                                   [index 0]
                                   [polluted_result_list '()])
@@ -64,19 +62,36 @@
                            (random 0 256)
                            (car data_list))
                        polluted_result_list))
-                     (reverse polluted_result_list)))])
+                     (reverse polluted_result_list)))]
+             [decoded_result #f])
 
-          (let ([decoded_result (rs-decode polluted_data *PARITY_LENGTH*)])
-            (when (not (check-equal? decoded_result data))
-              (printf "data:[~a]\n" data)
-              (display-list data)
-              
-              (printf "random error places:\n")
-              (display-list random_polluted_places)
+        (printf "encoded_data[~a]" (length data))
+        (printf "error_count[~a]" random_error_count)
+        (printf "~a\n" (if (<= random_error_count 8) "recovered" "can't recover"))
 
-              (printf "polluted_data:[~a]\n" polluted_data)
-              (display-list polluted_data)
+        (with-handlers
+         ([exn:fail?
+           (lambda (exn)
+             (printf "~a\n" (exn-message exn))
+             (printf "polluted data:~a\n" polluted_data)
+             (error "error happens."))])
+         (set! decoded_result (rs-decode polluted_data *PARITY_LENGTH*)))
 
-              (printf "decoded_data:\n")
-              (display-list decoded_result)))))
-      (loop (cdr encoded_data)))))
+        (when
+         (or
+          (and (<= random_error_count 8)
+               (not (equal? decoded_result data)))
+          (and (> random_error_count 8)
+               (equal? decoded_result data)))
+         (printf "data:")
+         (printf "~a\n" data)
+         
+         (printf "random error places:\n")
+         (printf "~a\n" random_polluted_places)
+
+         (printf "polluted_data:\n")
+         (printf "~a\n" polluted_data)
+
+         (printf "decoded_data:\n")
+         (printf "~a\n" decoded_result))
+        (loop (cdr encoded_data))))))

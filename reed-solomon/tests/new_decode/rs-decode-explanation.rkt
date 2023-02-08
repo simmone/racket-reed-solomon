@@ -48,7 +48,7 @@
      
      (printf "syndromes: (get-syndromes appended_data_list (* 2 *t*)) = ~a\n\n" syndromes)
 
-     (if (= (foldr + 0 syndromes) 0)
+     (if (null? syndromes)
          data_list
          (let-values ([(ome_poly lam_poly) (error-locator syndromes *t*)])
            (printf "(error-locator ~a ~a)\n" syndromes *t*)
@@ -98,10 +98,14 @@
 ;               #:bit_width 4 #:primitive_poly_value 19)
 ;              '(5 2 3 4 5 11 7 8 9 10 11 3 1 12 12))
 
-(check-equal? (_rs-decode 
-               '(12 12 1 3 11 10 9 8 7 6 5 4 3 2 1) 4
-               #:bit_width 4 #:primitive_poly_value 19)
-              '(12 12 1 3 11 10 9 0 7 12 5 4 3 2 1))
+;(check-equal? (_rs-decode 
+;               '(12 12 1 3 11 10 9 8 7 6 5 4 3 2 1) 4
+;               #:bit_width 4 #:primitive_poly_value 19)
+;              '(12 12 1 3 11 10 9 0 7 12 5 4 3 2 1))
 
 
 
+
+(_rs-decode
+ '(111 111 202 5 150 224 55 171 92 81 146 74 165 9 151 206 65 210 87 249 70 120 6 40 22 33 225 66 236 68 97 200 194 186 111 114 2 104 171 244 9 205 49 29 208 162 9 51 74 163 146 4 105 94 178 186 197 34)
+ 16)

@@ -38,7 +38,7 @@
 
      (define syndromes (get-syndromes appended_data_list (* 2 *t*)))
      
-     (if (= (foldr + 0 syndromes) 0)
+     (if (null? syndromes)
          data_list
          (let-values ([(ome_poly lam_poly) (error-locator syndromes *t*)])
            (if (not lam_poly)
