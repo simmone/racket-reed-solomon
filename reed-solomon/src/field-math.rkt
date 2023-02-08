@@ -323,20 +323,25 @@
                [last_op ""])
       
       (if (not (string=? remainder ""))
-          (let ([remainder_index (caar (poly->index_coe_pairs remainder))])
-            (if (>= remainder_index divisor_index)
-                (let (
-                      [loop_align_factor #f]
-                      [loop_divisor_multiply_factor #f]
-                      [loop_substract #f]
-                      )
+          (let* ([index_coe_pairs (poly->index_coe_pairs remainder)]
+                 [remainder_index (caar index_coe_pairs)]
+                 [remainder_coe (cdar index_coe_pairs)])
 
-                  (set! loop_align_factor (galios-poly-divide-align remainder divisor))
+            (if (= remainder_coe 0)
+                (loop (index_coe_pairs->poly (cdr index_coe_pairs)) quotient last_op)
+                (if (>= remainder_index divisor_index)
+                    (let (
+                          [loop_align_factor #f]
+                          [loop_divisor_multiply_factor #f]
+                          [loop_substract #f]
+                          )
 
-                  (set! loop_divisor_multiply_factor (galios-poly-multiply divisor loop_align_factor))
+                      (set! loop_align_factor (galios-poly-divide-align remainder divisor))
 
-                  (set! loop_substract (galios-poly-add remainder loop_divisor_multiply_factor))
-                  
-                  (loop loop_substract (string-append quotient last_op loop_align_factor) "+"))
-                (values quotient remainder)))
+                      (set! loop_divisor_multiply_factor (galios-poly-multiply divisor loop_align_factor))
+
+                      (set! loop_substract (galios-poly-add remainder loop_divisor_multiply_factor))
+                      
+                      (loop loop_substract (string-append quotient last_op loop_align_factor) "+"))
+                    (values quotient remainder))))
           (values quotient remainder)))))

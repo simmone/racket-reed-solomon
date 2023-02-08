@@ -29,7 +29,7 @@
            (if (> *2^m_1* (length data_list))
                (append
                 data_list
-                (make-list (- *2^m_1* (length data_list)) 0))
+                (make-list (add1 (- *2^m_1* (length data_list))) 0))
                data_list)])
 
      (printf "Reed Solomon Decoding Explanation:\n\n")
@@ -64,8 +64,12 @@
                  (set! restored_list
                        (if (null? err_places)
                            data_list
-                           (let ([err_correct_pairs (forney lam_poly ome_poly err_places)])
-                             (printf "err_correct_pairs: (fornet lam_poly ome_poly err_places) = ~a\n" err_correct_pairs)
+                           (let ([err_correct_pairs #f])
+
+                             (printf "err_correct_pairs: (forney ~a ~a ~a) = " lam_poly ome_poly err_places)
+                             (set! err_correct_pairs (forney lam_poly ome_poly err_places))
+                             (printf "~a\n" err_correct_pairs)
+
                              (let loop ([patches err_correct_pairs]
                                         [loop_data_list (reverse appended_data_list)])
                                (if (not (null? patches))
@@ -103,9 +107,6 @@
 ;               #:bit_width 4 #:primitive_poly_value 19)
 ;              '(12 12 1 3 11 10 9 0 7 12 5 4 3 2 1))
 
-
-
-
 (_rs-decode
- '(111 111 202 5 150 224 55 171 92 81 146 74 165 9 151 206 65 210 87 249 70 120 6 40 22 33 225 66 236 68 97 200 194 186 111 114 2 104 171 244 9 205 49 29 208 162 9 51 74 163 146 4 105 94 178 186 197 34)
+ '(120 149 167 14 154 108 108 139 188 178 104 149 134 121 251 95 104 251 75 217 245 43 242 164 66 185 240 113 157 195 1 133 67 107 6 144 21 208 65 108 196 99 253 145 62 229 214 234 108 13 152 234 244 203 9 85 50 199 238 37 197 88 22 106 220 175 250 134 45 19 135 144 171 241 208 40 231 42 253 242 94 173 236 222 193 131 248 255 166 136 28 125 151 31 161 121 26 28 85 119 11 52 176 140 253 70 189 252 228 99)
  16)

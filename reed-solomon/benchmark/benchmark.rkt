@@ -59,7 +59,10 @@
                       (add1 index)
                       (cons
                        (if (member index random_polluted_places)
-                           (random 0 256)
+                           (let random-loop ([random_data (random 0 256)])
+                             (if (= random_data (car data_list))
+                                 (random-loop (random 0 256))
+                                 random_data))
                            (car data_list))
                        polluted_result_list))
                      (reverse polluted_result_list)))]

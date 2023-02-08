@@ -53,30 +53,30 @@
                       (printf "result: (values ~a ~a)\n\n" ome_quotient lam_quotient)
                       (values ome_quotient lam_quotient))))))))))
 
-(parameterize*
- ([*bit_width* 4]
-  [*field_generator_poly* "x4+x+1"]
-  [*galios_index->number_map* (get-galios-index->number_map (*bit_width*))]
-  [*galios_number->index_map* (make-hash (hash-map (*galios_index->number_map*) (lambda (a n) (cons n a))))])
+;(parameterize*
+; ([*bit_width* 4]
+;  [*field_generator_poly* "x4+x+1"]
+;  [*galios_index->number_map* (get-galios-index->number_map (*bit_width*))]
+;  [*galios_number->index_map* (make-hash (hash-map (*galios_index->number_map*) (lambda (a n) (cons n a))))])
 
 ; (let-values ([(ome lam) (_error-locator '(12 4  3 15) 2)])
 ;   (check-equal? ome "6x+15")
 ;   (check-equal? lam "14x2+14x+1"))
 
- (let-values ([(ome lam) (_error-locator '(5 5 1 11) 2)])
-   (check-false ome)
-   (check-false lam))
- )
+; (let-values ([(ome lam) (_error-locator '(5 5 1 11) 2)])
+;   (check-false ome)
+;   (check-false lam))
+; )
 
-;(parameterize*
-; ([*bit_width* 8]
-;  [*field_generator_poly* "x8+x4+x3+x2+1"]
-;  [*galios_index->number_map* (get-galios-index->number_map (*bit_width*))]
-;  [*galios_number->index_map* (make-hash (hash-map (*galios_index->number_map*) (lambda (a n) (cons n a))))])
-;
-; (let-values ([(ome lam) (_error-locator '(208 221 122 7 253 253 76 219 69 7) 5)])
-;   (check-equal? ome "29x4+161x3+50x2+49x+7")
-;   (check-equal? lam "141x5+214x4+47x3+252x2+194x+1")
-;   )
-;)
+(parameterize*
+ ([*bit_width* 8]
+  [*field_generator_poly* "x8+x4+x3+x2+1"]
+  [*galios_index->number_map* (get-galios-index->number_map (*bit_width*))]
+  [*galios_number->index_map* (make-hash (hash-map (*galios_index->number_map*) (lambda (a n) (cons n a))))])
+
+ (let-values ([(ome lam) (_error-locator '(17 0 135 209 16 239 171 210 53 216 13 247 89 197 161 90) 16)])
+   (check-equal? ome "175x14+194x13+164x12+53x11+102x10+105x9+36x8+54x7+69x6+28x5+230x4+251x3+137x2+83x+90")
+   (check-equal? lam "59x17+39x15+49x14+183x13+235x12+137x11+112x10+114x9+101x8+221x7+11x6+218x5+122x4+x3+166x2+50x+1")
+   )
+)
 

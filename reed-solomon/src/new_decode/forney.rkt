@@ -36,7 +36,10 @@
     
     (set! bitwise_xor_result (apply bitwise-xor index_list))
     
-    (set! result (string->number (substring (hash-ref (*galios_number->index_map*) bitwise_xor_result) 1)))
+    (set! result
+          (if (= bitwise_xor_result 0)
+              0
+              (string->number (substring (hash-ref (*galios_number->index_map*) bitwise_xor_result) 1))))
     
     result))
 

@@ -28,12 +28,12 @@
 
 
    (let* ([*t* (floor (/ parity_length 2))]
-          [*2^m_1* (sub1 (expt 2 (*bit_width*)))]
+          [*2^m* (expt 2 (*bit_width*))]
           [appended_data_list 
-           (if (> *2^m_1* (length data_list))
+           (if (> *2^m* (length data_list))
                (append
                 data_list
-                (make-list (- *2^m_1* (length data_list)) 0))
+                (make-list (- *2^m* (length data_list)) 0))
                data_list)])
 
      (define syndromes (get-syndromes appended_data_list (* 2 *t*)))
