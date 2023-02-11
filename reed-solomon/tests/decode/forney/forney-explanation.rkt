@@ -118,17 +118,16 @@
 ; (check-equal? (_forney "14x2+14x+1" "6x+15" '(9 2)) '( (9 . 13)  (2 . 2)))
 ;)
 
-(parameterize*
- ([*bit_width* 8]
-  [*field_generator_poly* "x8+x4+x3+x2+1"]
-  [*galios_index->number_map* (get-galios-index->number_map (*bit_width*))]
-  [*galios_number->index_map* (make-hash (hash-map (*galios_index->number_map*) (lambda (a n) (cons n a))))])
-
- (check-equal?
-  (_forney
-   "62x8+237x7+88x6+121x5+63x4+218x3+249x2+179x+1"
-   "152x7+230x6+254x5+208x4+156x3+118x2+152x+134"
-   '(116 102)
-   )
-  '()))
-
+;(parameterize*
+; ([*bit_width* 8]
+;  [*field_generator_poly* "x8+x4+x3+x2+1"]
+;  [*galios_index->number_map* (get-galios-index->number_map (*bit_width*))]
+;  [*galios_number->index_map* (make-hash (hash-map (*galios_index->number_map*) (lambda (a n) (cons n a))))])
+; 
+; (check-equal?
+;  (_forney
+;   "62x8+237x7+88x6+121x5+63x4+218x3+249x2+179x+1"
+;   "152x7+230x6+254x5+208x4+156x3+118x2+152x+134"
+;   '(116 102)
+;   )
+;  '()))

@@ -3,7 +3,7 @@
 (require rackunit/text-ui rackunit)
 
 (require "../../../src/field-math.rkt")
-(require "../../../src/new_decode/syndrome.rkt")
+(require "../../../src/decode/syndrome.rkt")
 
 (define test-syndrome
   (test-suite 

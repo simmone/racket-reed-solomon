@@ -2,7 +2,7 @@
 
 (require rackunit/text-ui rackunit)
 
-(require "../../../src/new_decode/chien-search.rkt")
+(require "../../../src/decode/chien-search.rkt")
 (require "../../../src/field-math.rkt")
 
 (define test-chien-search

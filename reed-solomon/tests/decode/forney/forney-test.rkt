@@ -3,7 +3,7 @@
 (require rackunit/text-ui rackunit)
 
 (require "../../../src/field-math.rkt")
-(require "../../../src/new_decode/forney.rkt")
+(require "../../../src/decode/forney.rkt")
 
 (define test-forney
   (test-suite 

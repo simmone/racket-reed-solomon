@@ -3,7 +3,7 @@
 (require rackunit/text-ui rackunit)
 
 (require "../../../src/field-math.rkt")
-(require "../../../src/new_decode/error-locator.rkt")
+(require "../../../src/decode/error-locator.rkt")
 
 (define test-error-locator
   (test-suite 

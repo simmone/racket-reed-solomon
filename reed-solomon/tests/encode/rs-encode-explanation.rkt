@@ -1,8 +1,9 @@
 #lang racket
 
-(require "../../src/lib.rkt")
 (require "../../src/field-math.rkt")
 (require "../../src/primitive_poly_table.rkt")
+
+(require "../lib.rkt")
 
 (define (rs-encode 
          data_list
@@ -90,6 +91,6 @@
      (printf "result list:~a\n\n" result_list)
      )))
 
- (rs-encode '(1 2 3 4 5 6 7 8 9 10 11) 4 #:bit_width 4 #:primitive_poly_value 19)
-;; (rs-encode '(32 91 11 120 209 114 220 77 67 64 236 17 236 17 236 17) 10)
-;;   (rs-encode '(32 91 11 120 209 114 220 77 67 64 236 17 236) 13)
+; (rs-encode '(1 2 3 4 5 6 7 8 9 10 11) 4 #:bit_width 4 #:primitive_poly_value 19)
+; (rs-encode '(32 91 11 120 209 114 220 77 67 64 236 17 236 17 236 17) 10)
+;   (rs-encode '(32 91 11 120 209 114 220 77 67 64 236 17 236) 13)

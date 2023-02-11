@@ -1,10 +1,10 @@
 #lang racket
 
 (require "../src/field-math.rkt")
-(require "../src/new_decode/syndrome.rkt")
-(require "../src/new_decode/error-locator.rkt")
-(require "../src/new_decode/chien-search.rkt")
-(require "../src/new_decode/forney.rkt")
+(require "../src/decode/syndrome.rkt")
+(require "../src/decode/error-locator.rkt")
+(require "../src/decode/chien-search.rkt")
+(require "../src/decode/forney.rkt")
 (require "../src/primitive_poly_table.rkt")
 
 (provide (contract-out

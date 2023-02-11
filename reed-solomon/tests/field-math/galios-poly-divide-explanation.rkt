@@ -59,16 +59,16 @@
 ;   (check-equal? remainder "3x+14")))
 ;
 
-(parameterize*
- ([*bit_width* 8]
-  [*field_generator_poly* "x8+x4+x3+x2+1"]
-  [*galios_index->number_map* (get-galios-index->number_map (*bit_width*))]
-  [*galios_number->index_map* (make-hash (hash-map (*galios_index->number_map*) (lambda (a n) (cons n a))))])
-
- (let-values ([(quotient remainder)
-               (_galios-poly-divide
-                "x32"
-                "17x15+0x14+135x13+209x12+16x11+239x10+171x9+210x8+53x7+216x6+13x5+247x4+89x3+197x2+161x+90")])
-   (check-equal? quotient "135x+225")
-   (check-equal? remainder "90x31+37x30")))       
-
+;(parameterize*
+; ([*bit_width* 8]
+;  [*field_generator_poly* "x8+x4+x3+x2+1"]
+;  [*galios_index->number_map* (get-galios-index->number_map (*bit_width*))]
+;  [*galios_number->index_map* (make-hash (hash-map (*galios_index->number_map*) (lambda (a n) (cons n a))))])
+;
+; (let-values ([(quotient remainder)
+;               (_galios-poly-divide
+;                "x32"
+;                "17x15+0x14+135x13+209x12+16x11+239x10+171x9+210x8+53x7+216x6+13x5+247x4+89x3+197x2+161x+90")])
+;   (check-equal? quotient "135x+225")
+;   (check-equal? remainder "90x31+37x30")))       
+;

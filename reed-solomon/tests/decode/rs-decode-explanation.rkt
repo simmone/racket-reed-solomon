@@ -1,12 +1,13 @@
 #lang racket
 
-(require "../../src/lib.rkt")
 (require "../../src/field-math.rkt")
-(require "../../src/new_decode/syndrome.rkt")
-(require "../../src/new_decode/error-locator.rkt")
-(require "../../src/new_decode/chien-search.rkt")
-(require "../../src/new_decode/forney.rkt")
+(require "../../src/decode/syndrome.rkt")
+(require "../../src/decode/error-locator.rkt")
+(require "../../src/decode/chien-search.rkt")
+(require "../../src/decode/forney.rkt")
 (require "../../src/primitive_poly_table.rkt")
+
+(require "../lib.rkt")
 
 (require rackunit)
 
@@ -107,6 +108,6 @@
 ;               #:bit_width 4 #:primitive_poly_value 19)
 ;              '(12 12 1 3 11 10 9 0 7 12 5 4 3 2 1))
 
-(_rs-decode
- '(120 149 167 14 154 108 108 139 188 178 104 149 134 121 251 95 104 251 75 217 245 43 242 164 66 185 240 113 157 195 1 133 67 107 6 144 21 208 65 108 196 99 253 145 62 229 214 234 108 13 152 234 244 203 9 85 50 199 238 37 197 88 22 106 220 175 250 134 45 19 135 144 171 241 208 40 231 42 253 242 94 173 236 222 193 131 248 255 166 136 28 125 151 31 161 121 26 28 85 119 11 52 176 140 253 70 189 252 228 99)
- 16)
+;(_rs-decode
+; '(120 149 167 14 154 108 108 139 188 178 104 149 134 121 251 95 104 251 75 217 245 43 242 164 66 185 240 113 157 195 1 133 67 107 6 144 21 208 65 108 196 99 253 145 62 229 214 234 108 13 152 234 244 203 9 85 50 199 238 37 197 88 22 106 220 175 250 134 45 19 135 144 171 241 208 40 231 42 253 242 94 173 236 222 193 131 248 255 166 136 28 125 151 31 161 121 26 28 85 119 11 52 176 140 253 70 189 252 228 99)
+; 16)

@@ -22,4 +22,4 @@
          (loop (cdr loop_polys))))
      (hash->list combine_hash))))
 
-(check-equal? (_galios-poly-add "9" "9") "")
+;(check-equal? (_galios-poly-add "9" "9") "")

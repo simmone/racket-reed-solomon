@@ -1,8 +1,5 @@
 #lang scribble/manual
 
-@(require (for-label racket))
-@(require (for-label reed-solomon))
-
 @title{Reed-Solomon}
 
 @author+email["Chen Xiao" "chenxiao770117@gmail.com"]
@@ -26,8 +23,6 @@ raco pkg install reed-solomon
            [parity_length natural?]
            [#:bit_width bit_width natural? 8]
            [#:primitive_poly_value primitive_poly_value natural? 285]
-           [#:express? express? boolean? #f]
-           [#:express_path express_path path-string? ".encode.express"]
            )
            (listof exact-integer?)]{
 
@@ -43,13 +38,7 @@ raco pkg install reed-solomon
 
   encode and decode should use the same primitive poly value.
 
-  @link["https://github.com/simmone/racket-reed-solomon/blob/master/reed-solomon/ref/primitive_poly.txt" "2-32 bits available primitive value table"]
-  
-  set #:express? to true will generate a detail report in express_path.
-
-  into the express folder, @verbatim{scribble --htmls report.scrbl} to generate a detail report.
-
-  Warning: express will generate a set of scribble files, it's very slow, debug usage only.
+  @link["https://github.com/simmone/racket-reed-solomon/blob/master/reed-solomon/src/primitive_poly_table.rkt" "2-32 bits available primitive value table"]
 }
 
 @defproc[(rs-decode
@@ -57,20 +46,12 @@ raco pkg install reed-solomon
            [parity_length natural?]
            [#:bit_width bit_width natural? 8]
            [#:primitive_poly_value primitive_poly_value natural? 285]
-           [#:express? express? boolean? #f]
-           [#:express_path express_path path-string? ".encode.express"]
            )
            (listof exact-integer?)]{
 
   data_list is a list of data, appended rs code.
 
   parity_length, bit_width, primitive_poly_value should be consistent as encode.
-  
-  set #:express? to true will generate a detail report in express_path.
-
-  into the express folder, @verbatim{scribble --htmls report.scrbl} to generate a detail report.
-
-  Warning: express will generate a set of scribble files, it's very slow, debug usage only.
 }
 
 @section{Example}

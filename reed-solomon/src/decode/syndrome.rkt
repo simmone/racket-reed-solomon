@@ -1,46 +1,39 @@
 #lang racket
 
-(require "../lib/gf.rkt")
+(require "../field-math.rkt")
 
 (provide (contract-out
-          [get-syndromes (-> (listof exact-integer?) natural? (listof exact-integer?))]
+          [get-syndromes (-> (listof natural?) natural? (listof natural?))]
           ))
 
-(define (get-syndromes raw_list error_code_length)
-  (let loop ([loop_a_count 0]
+(define (get-syndromes data_list parity_length)
+  (let loop ([loop_parity_index 0]
              [result_list '()])
-    (if (< loop_a_count error_code_length)
-        (begin
+    (let* ([ax (format "a~a" loop_parity_index)]
+           [ax_val (hash-ref (*galios_index->number_map*) ax)])
+
+      (if (< loop_parity_index parity_length)
           (loop
-           (add1 loop_a_count)
+           (add1 loop_parity_index)
            (cons
-            (let xor-loop ([loop_n_list raw_list]
-                           [last_result_n 0])
-              (if (> (length loop_n_list) 1)
-                  (let ([ri (car loop_n_list)]
-                        [gf+ #f]
-                        [ntoa #f]
-                        [a+ #f]
-                        [aton #f])
+            (let step-loop ([loop_data_list data_list]
+                            [last_result 0]
+                            [last_xor_result #f])
+              (if (not (null? loop_data_list))
+                  (let ([last_xor #f]
+                        [ax_multiply #f])
 
-                    (set! gf+ (bitwise-xor last_result_n (car loop_n_list)))
+                    (set! last_xor (bitwise-xor last_result (car loop_data_list)))
 
-                    (set! ntoa (hash-ref (*gf_ntoa_map*) gf+))
-                    
-;;                    (printf "gf+:~a, ntoa:~a\n" gf+ ntoa)
+                    (set! ax_multiply (galios-multiply last_xor ax_val))
 
-                    (if (= gf+ 0)
-                        (begin
-                          (set! a+ 0)
-                          (set! aton 0))
-                        (begin
-                          (set! a+ (+ loop_a_count ntoa))
-
-                          (set! aton (hash-ref (*gf_aton_map*) (modulo a+ (*2^m_1*))))))
-                    
-                    (xor-loop (cdr loop_n_list) aton))
-                  (let ([result (bitwise-xor last_result_n (car loop_n_list))])
-                    result)))
-            result_list)))
-        result_list)))
+                    (step-loop (cdr loop_data_list) ax_multiply last_xor))
+                  last_xor_result))
+            result_list))
+          (let trim-loop ([items result_list])
+            (if (not (null? items))
+                (if (= (car items) 0)
+                    (trim-loop (cdr items))
+                    items)
+                items))))))
 

@@ -1,5 +1,7 @@
 #lang racket
 
+;; http://www.partow.net/programming/polynomials/primitive_polynomials_GF2.txt
+
 (provide (contract-out
           [*primitive_poly_table* (hash/c natural? string?)]
           ))
