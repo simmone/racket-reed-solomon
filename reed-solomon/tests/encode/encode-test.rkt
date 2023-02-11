@@ -1,8 +1,8 @@
 #lang racket
 
-(require rackunit/text-ui)
+(require rackunit/text-ui rackunit)
 
-(require rackunit "../../lib/encode/encode.rkt")
+(require "../../src/encode.rkt")
 
 (define test-encode
   (test-suite 
@@ -50,9 +50,8 @@
        34))
      #"\311\350\375\363Z\371\212\346o!IA\350\362\210\265\256\270\277\237\347\36 \233L\26\201\35\314.\310.e."
      )
-
     )
-   
+
    ))
 
 (run-tests test-encode)

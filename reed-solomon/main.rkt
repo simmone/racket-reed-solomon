@@ -1,15 +1,15 @@
 #lang racket
 
-(require "lib/encode/encode.rkt")
-(require "lib/decode/decode.rkt")
+(require "src/encode.rkt")
+(require "src/decode.rkt")
 
 (provide (contract-out
           [rs-encode (->* 
                       ((listof exact-integer?) natural?) 
-                      (#:bit_width natural? #:primitive_poly_value natural? #:express? boolean? #:express_path path-string?) 
+                      (#:bit_width natural? #:primitive_poly_value natural?) 
                       (listof exact-integer?))]
           [rs-decode (->* 
                       ((listof exact-integer?) natural?) 
-                      (#:bit_width natural? #:primitive_poly_value natural? #:express? boolean? #:express_path path-string?) 
+                      (#:bit_width natural? #:primitive_poly_value natural?)
                       (listof exact-integer?))]
           ))
