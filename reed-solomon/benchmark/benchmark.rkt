@@ -1,7 +1,6 @@
 #lang racket
 
 (require "../main.rkt")
-(require "../src/lib.rkt")
 
 ;; random generate 100's random size's data list
 ;; encode 16's parity data
