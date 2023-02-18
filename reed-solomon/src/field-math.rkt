@@ -2,6 +2,7 @@
 
 (provide (contract-out
           [number->binary_poly (-> natural? string?)]
+          [poly->index_coe_pairs (-> string? (listof (cons/c natural? natural?)))]
           [binary_poly->binary_string (-> string? string?)]
           [binary_string->binary_poly (-> string? string?)]
           [binary_poly-multiply (-> string? string? string?)]
@@ -13,7 +14,6 @@
           [galios-poly-add (->* (string?) () #:rest (listof string?) string?)]
           [get-code-generator-poly (-> natural? string?)]
           [get-galios-index->number_map (-> natural? (hash/c string? number?))]
-          [poly->index_coe_pairs (-> string? (listof (cons/c natural? natural?)))]
           [index_coe_pairs->poly (-> (listof (cons/c natural? natural?)) string?)]
           [poly-sum (-> string? natural?)]
           [poly-remove_dup (-> string? string?)]
@@ -50,6 +50,32 @@
                         [else
                          (format "x~a" index)]))))
           result))))
+
+(define (poly->index_coe_pairs poly)
+  (let loop ([loop_list (regexp-split #rx"\\+" poly)]
+             [result_list '()])
+    (if (not (null? loop_list))
+        (loop
+         (cdr loop_list)
+         (cons
+          (let ([items (regexp-split #rx"\\x" (string-trim (car loop_list)))])
+            (cond
+             [(= (length items) 1)
+              (cons 0 (string->number (first items)))]
+             [(= (length items) 2)
+              (cons
+               (if (string=? (second items) "")
+                   1
+                   (string->number (second items)))
+               (if (string=? (first items) "")
+                   1
+                   (string->number (first items))))]
+             [(= (length items) 3)
+              (cons (string->number (second items)) (string->number (first items)))]
+             [else
+              (error (format "invalid poly: [~a]" (string-trim (car loop_list))))]))
+          result_list))
+        (sort (reverse result_list) > #:key car))))
 
 (define (binary_poly->binary_string poly)
   (with-output-to-string
@@ -218,32 +244,6 @@
           (loop (add1 index) step3_remove_duplicates))))
     
     poly_index->decimal_hash))
-
-(define (poly->index_coe_pairs poly)
-  (let loop ([loop_list (regexp-split #rx"\\+" poly)]
-             [result_list '()])
-    (if (not (null? loop_list))
-        (loop
-         (cdr loop_list)
-         (cons
-          (let ([items (regexp-split #rx"\\x" (string-trim (car loop_list)))])
-            (cond
-             [(= (length items) 1)
-              (cons 0 (string->number (first items)))]
-             [(= (length items) 2)
-              (cons
-               (if (string=? (second items) "")
-                   1
-                   (string->number (second items)))
-               (if (string=? (first items) "")
-                   1
-                   (string->number (first items))))]
-             [(= (length items) 3)
-              (cons (string->number (second items)) (string->number (first items)))]
-             [else
-              (error (format "invalid poly: [~a]" (string-trim (car loop_list))))]))
-          result_list))
-        (sort (reverse result_list) > #:key car))))
 
 (define (index_coe_pairs->poly pairs)
   (let loop ([loop_pairs (sort pairs > #:key car)]
