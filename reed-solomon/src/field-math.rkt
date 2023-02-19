@@ -6,6 +6,8 @@
                    (x_index natural?)
                    (coe natural?)
                    )]
+          [check-pitem? (-> PITEM? PITEM? boolean?)]
+          [check-pitem-list? (-> (listof PITEM?) (listof PITEM?) boolean?)]
           [number->binary_poly (-> natural? string?)]
           [poly->items (-> string? (listof PITEM?))]
           [items->poly (-> (listof PITEM?) string?)]
@@ -33,6 +35,22 @@
          (x_index #:mutable)
          (coe #:mutable)
          ))
+
+(define (check-pitem? pitem1 pitem2)
+  (and
+   (= (PITEM-x_index pitem1) (PITEM-x_index pitem2))
+   (= (PITEM-coe pitem1) (PITEM-coe pitem2))))
+
+(define (check-pitem-list? p1 p2)
+  (if (= (length p1) (length p2))
+      (let loop ([p_items1 p1]
+                 [p_items2 p2])
+        (if (not (null? p_items1))
+            (if (check-pitem? (car p1) (car p2))
+                (loop (cdr p_items1) (cdr p_items2))
+                #f)
+            #t))
+      #f))
 
 (define *bit_width* (make-parameter #f))
 (define *field_generator_poly* (make-parameter #f))
@@ -86,7 +104,7 @@
              [else
               (error (format "invalid poly: [~a]" (string-trim (car loop_list))))]))
           result_list))
-        (sort (reverse result_list) > #:key car))))
+        (sort (reverse result_list) > #:key PITEM-x_index))))
 
 (define (items->poly items)
   (let loop ([loop_items (sort items > #:key PITEM-x_index)]
@@ -214,8 +232,8 @@
                     (cdr loop_poly_multiplier_pairs)
                     (cons
                      (cons
-                      (add_op (caar loop_poly_multiplicand_pairs) (caar loop_poly_multiplier_pairs))
-                      (multiply_op (cdar loop_poly_multiplicand_pairs) (cdar loop_poly_multiplier_pairs)))
+                      (add_op (PITEM-x_index (car loop_poly_multiplicand_pairs)) (PITEM-x_index (car loop_poly_multiplier_pairs)))
+                      (multiply_op (PITEM-coe (car loop_poly_multiplicand_pairs)) (PITEM-coe (car loop_poly_multiplier_pairs))))
                      multiplier_list))
                    (reverse multiplier_list))))
             multiplicand_list))
