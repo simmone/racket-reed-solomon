@@ -67,27 +67,27 @@
     )
    
    (test-case
-    "poly->index_coe_pairs && index_coe_pairs->poly"
+    "poly->items && items->poly"
     
-    (check-equal? (poly->index_coe_pairs "1") '((0 . 1)))
-    (check-equal? (index_coe_pairs->poly '((0 . 1))) "1")
+    (check-equal? (poly->items "1") '((0 . 1)))
+    (check-equal? (items->poly '((0 . 1))) "1")
 
-    (check-equal? (poly->index_coe_pairs "4") '((0 . 4)))
-    (check-equal? (index_coe_pairs->poly '((0 . 4))) "4")
+    (check-equal? (poly->items "4") '((0 . 4)))
+    (check-equal? (items->poly '((0 . 4))) "4")
 
-    (check-equal? (poly->index_coe_pairs "x") '((1 . 1)))
-    (check-equal? (poly->index_coe_pairs "x1") '((1 . 1)))
-    (check-equal? (index_coe_pairs->poly '((1 . 1))) "x")
+    (check-equal? (poly->items "x") '((1 . 1)))
+    (check-equal? (poly->items "x1") '((1 . 1)))
+    (check-equal? (items->poly '((1 . 1))) "x")
 
-    (check-equal? (poly->index_coe_pairs "2x") '((1 . 2)))
-    (check-equal? (index_coe_pairs->poly '((1 . 2))) "2x")
+    (check-equal? (poly->items "2x") '((1 . 2)))
+    (check-equal? (items->poly '((1 . 2))) "2x")
 
-    (check-equal? (poly->index_coe_pairs "x4+x3+x2+x+1") '((4 . 1) (3 . 1) (2 . 1) (1 . 1) (0 . 1)))
-    (check-equal? (poly->index_coe_pairs " x4 + x3+x2+x1+1 ") '((4 . 1) (3 . 1) (2 . 1) (1 . 1) (0 . 1)))
-    (check-equal? (poly->index_coe_pairs "x4+x3+x1+x2+1") '((4 . 1) (3 . 1) (2 . 1) (1 . 1) (0 . 1)))
-    (check-equal? (index_coe_pairs->poly '((4 . 1) (3 . 1) (2 . 1) (1 . 1) (0 . 1))) "x4+x3+x2+x+1")
+    (check-equal? (poly->items "x4+x3+x2+x+1") '((4 . 1) (3 . 1) (2 . 1) (1 . 1) (0 . 1)))
+    (check-equal? (poly->items " x4 + x3+x2+x1+1 ") '((4 . 1) (3 . 1) (2 . 1) (1 . 1) (0 . 1)))
+    (check-equal? (poly->items "x4+x3+x1+x2+1") '((4 . 1) (3 . 1) (2 . 1) (1 . 1) (0 . 1)))
+    (check-equal? (items->poly '((4 . 1) (3 . 1) (2 . 1) (1 . 1) (0 . 1))) "x4+x3+x2+x+1")
 
-    (check-equal? (index_coe_pairs->poly '((4 . 1) (3 . 1) (1 . 1) (2 . 1) (0 . 1))) "x4+x3+x2+x+1")
+    (check-equal? (items->poly '((4 . 1) (3 . 1) (1 . 1) (2 . 1) (0 . 1))) "x4+x3+x2+x+1")
     )
    
    (test-case
