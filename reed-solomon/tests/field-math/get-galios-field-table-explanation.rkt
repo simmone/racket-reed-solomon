@@ -19,10 +19,10 @@
          [poly_index_list '()]
          [2^m_1 (sub1 (expt 2 bit_width))]
          [replace_pair 
-          (let ([indexes (poly->index_coe_pairs field_generator_poly)])
+          (let ([indexes (poly->items field_generator_poly)])
             (cons
-             (index_coe_pairs->poly (list (car indexes)))
-             (index_coe_pairs->poly (cdr indexes))))])
+             (items->poly (list (car indexes)))
+             (items->poly (cdr indexes))))])
 
      (hash-set! poly_index->poly_hash "0" "0")
      (hash-set! poly_index->decimal_hash "0" "0")

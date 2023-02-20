@@ -5,7 +5,7 @@
 (require rackunit)
 
 (define (_calculate-factor poly factor) 
-  (let ([polys (poly->index_coe_pairs poly)]
+  (let ([polys (poly->items poly)]
         [*2^m_1 (sub1 (expt 2 (*bit_width*)))]
         [index_list #f]
         [bitwise_xor_result #f]
@@ -15,23 +15,23 @@
 
     (set! index_list
           (map
-           (lambda (index_coe_pair)
+           (lambda (pitem)
              (let* ([coe->a
                      (string->number
                       (substring
                        (hash-ref
                         (*galios_number->index_map*)
-                        (cdr index_coe_pair))
+                        (PITEM-coe pitem))
                        1))]
-                    [index_multiply_factor (* factor (car index_coe_pair))]
+                    [index_multiply_factor (* factor (PITEM-x_index pitem))]
                     [coe_add_last_result (+ coe->a index_multiply_factor)]
                     [modulo_last_result (modulo coe_add_last_result *2^m_1)]
                     [index_number
                      (hash-ref
                       (*galios_index->number_map*)
                       (format "a~a" modulo_last_result))])
-               (printf "coe(~a) to index = ~a\n" (cdr index_coe_pair) coe->a)
-               (printf "index(~a) * factor(~a) = ~a\n" (car index_coe_pair) factor index_multiply_factor)
+               (printf "coe(~a) to index = ~a\n" (PITEM-coe pitem) coe->a)
+               (printf "index(~a) * factor(~a) = ~a\n" (PITEM-x_index pitem) factor index_multiply_factor)
                (printf "coe->a(~a) + last_result = ~a\n" coe->a coe_add_last_result)
                (printf "modulo last_result = ~a\n" modulo_last_result)
                (printf "convert index to number = ~a\n" index_number)
@@ -57,8 +57,8 @@
   (printf "Fornet Explanation\n\n")
 
   (let ([only_odd_poly
-         (index_coe_pairs->poly
-          (filter (lambda (poly) (odd? (car poly))) (poly->index_coe_pairs lam_poly)))]
+         (items->poly
+          (filter (lambda (poly) (odd? (PITEM-x_index poly))) (poly->items lam_poly)))]
         [result_list #f])
 
     (printf "remove even index's ploly: ~a\n\n" only_odd_poly)
@@ -113,11 +113,9 @@
 ;  [*galios_index->number_map* (get-galios-index->number_map (*bit_width*))]
 ;  [*galios_number->index_map* (make-hash (hash-map (*galios_index->number_map*) (lambda (a n) (cons n a))))])
 ;
-;; (check-equal? (_calculate "10x+2" 6) 4)
-;
 ; (check-equal? (_forney "14x2+14x+1" "6x+15" '(9 2)) '( (9 . 13)  (2 . 2)))
 ;)
-
+;
 ;(parameterize*
 ; ([*bit_width* 8]
 ;  [*field_generator_poly* "x8+x4+x3+x2+1"]

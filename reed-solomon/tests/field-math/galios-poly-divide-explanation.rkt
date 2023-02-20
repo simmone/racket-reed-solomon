@@ -5,7 +5,7 @@
 (require rackunit)
 
 (define (_galios-poly-divide dividend divisor)
-  (let ([divisor_index (caar (poly->index_coe_pairs divisor))])
+  (let ([divisor_index (PITEM-x_index (car (poly->items divisor)))])
     (printf "divisor_index:~a\n\n" divisor_index)
 
     (let loop ([remainder dividend]
@@ -15,14 +15,14 @@
       (printf "remainder: [~a]\n\n" remainder)
       
       (if (not (string=? remainder ""))
-          (let* ([index_coe_pairs (poly->index_coe_pairs remainder)]
-                 [remainder_index (caar index_coe_pairs)]
-                 [remainder_coe (cdar index_coe_pairs)])
+          (let* ([remainder_pitems (poly->items remainder)]
+                 [remainder_index (PITEM-x_index (car remainder_pitems))]
+                 [remainder_coe (PITEM-coe (car remainder_pitems))])
             
             (printf "remainder_index: ~a, remainder_coe: ~a\n" remainder_index remainder_coe)
 
             (if (= remainder_coe 0)
-                (loop (index_coe_pairs->poly (cdr index_coe_pairs)) quotient last_op)
+                (loop (items->poly (cdr remainder_pitems)) quotient last_op)
                 (if (>= remainder_index divisor_index)
                     (let ([loop_align_factor #f]
                           [loop_divisor_multiply_factor #f]
@@ -53,11 +53,10 @@
 ;  [*galios_number->index_map* (make-hash (hash-map (*galios_index->number_map*) (lambda (a n) (cons n a))))])
 ;
 ; (let-values ([(quotient remainder)
-;;;             (_galios-poly-divide "x6+x5+x4+x1" "x4+x1+1")])
 ;               (_galios-poly-divide "12x3+4x2+3x+15" "6x2+6x1+4")])
 ;   (check-equal? quotient "2x+13")
 ;   (check-equal? remainder "3x+14")))
-;
+
 
 ;(parameterize*
 ; ([*bit_width* 8]

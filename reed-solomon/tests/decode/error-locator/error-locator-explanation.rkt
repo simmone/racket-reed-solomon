@@ -9,13 +9,13 @@
   (printf "syndromes: ~a, error_length: [~a]\n\n" syndromes error_length)
 
   (let ([syndrome_poly
-         (index_coe_pairs->poly
+         (items->poly
           (let loop ([loop_syndromes syndromes]
                      [loop_index (sub1 (length syndromes))]
-                     [coe_pairs '()])
+                     [pitems '()])
             (if (not (null? loop_syndromes))
-                (loop (cdr loop_syndromes) (sub1 loop_index) (cons (cons loop_index (car loop_syndromes)) coe_pairs))
-                (reverse coe_pairs))))])
+                (loop (cdr loop_syndromes) (sub1 loop_index) (cons (PITEM loop_index (car loop_syndromes)) pitems))
+                (reverse pitems))))])
 
     (printf "syndrome_poly: ~a\n" syndrome_poly)
 
@@ -36,14 +36,14 @@
           (set! loop_result (galios-poly-add loop_add_factor (galios-poly-multiply quotient loop_multiply_factor)))
           (printf "loop_result = (galios-poly-add ~a (galios-poly-multiply ~a ~a)) = ~a\n\n" loop_add_factor quotient loop_multiply_factor loop_result)
           
-          (if (>= (caar (poly->index_coe_pairs remainder)) error_length)
+          (if (>= (PITEM-x_index (car (poly->items remainder))) error_length)
               (loop
                loop_divisor
                remainder
                loop_multiply_factor
                loop_result)
-              (let ([last_coe (cdr (last (poly->index_coe_pairs loop_result)))]
-                    [last_index (car (last (poly->index_coe_pairs loop_result)))])
+              (let ([last_coe (PITEM-coe (last (poly->items loop_result)))]
+                    [last_index (PITEM-x_index (last (poly->items loop_result)))])
                 (if (not (= last_index 0))
                     (values #f #f)
                     (let-values ([(ome_quotient ome_remainder) (galios-poly-divide remainder (number->string last_coe))]
@@ -58,11 +58,11 @@
 ;  [*field_generator_poly* "x4+x+1"]
 ;  [*galios_index->number_map* (get-galios-index->number_map (*bit_width*))]
 ;  [*galios_number->index_map* (make-hash (hash-map (*galios_index->number_map*) (lambda (a n) (cons n a))))])
-
+;
 ; (let-values ([(ome lam) (_error-locator '(12 4  3 15) 2)])
 ;   (check-equal? ome "6x+15")
 ;   (check-equal? lam "14x2+14x+1"))
-
+;
 ; (let-values ([(ome lam) (_error-locator '(5 5 1 11) 2)])
 ;   (check-false ome)
 ;   (check-false lam))

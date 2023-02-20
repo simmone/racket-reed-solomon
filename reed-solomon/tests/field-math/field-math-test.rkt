@@ -7,6 +7,30 @@
 (define test-field-math
   (test-suite 
    "test-field-math"
+
+   (test-case
+    "poly->items && items->poly"
+    
+    (check-true (check-pitem-list? (poly->items "1") (list (PITEM 0 1))))
+    (check-equal? (items->poly (list (PITEM 0 1))) "1")
+
+    (check-true (check-pitem-list? (poly->items "4") (list (PITEM 0 4))))
+    (check-equal? (items->poly (list (PITEM 0 4))) "4")
+
+    (check-true (check-pitem-list? (poly->items "x") (list (PITEM 1 1))))
+    (check-true (check-pitem-list? (poly->items "x1") (list (PITEM 1 1))))
+    (check-equal? (items->poly (list (PITEM 1 1))) "x")
+
+    (check-true (check-pitem-list? (poly->items "2x") (list (PITEM 1 2))))
+    (check-equal? (items->poly (list (PITEM 1 2))) "2x")
+
+    (check-true (check-pitem-list? (poly->items "x4+x3+x2+x+1") (list (PITEM 4 1) (PITEM 3 1) (PITEM 2 1) (PITEM 1 1) (PITEM 0 1))))
+    (check-true (check-pitem-list? (poly->items " x4 + x3+x2+x1+1 ") (list (PITEM 4 1) (PITEM 3 1) (PITEM 2 1) (PITEM 1 1) (PITEM 0 1))))
+    (check-true (check-pitem-list? (poly->items "x4+x3+x1+x2+1") (list (PITEM 4 1) (PITEM 3 1) (PITEM 2 1) (PITEM 1 1) (PITEM 0 1))))
+    (check-equal? (items->poly (list (PITEM 4 1) (PITEM 3 1) (PITEM 2 1) (PITEM 1 1) (PITEM 0 1))) "x4+x3+x2+x+1")
+
+    (check-equal? (items->poly (list (PITEM 4 1) (PITEM 3 1) (PITEM 1 1) (PITEM 2 1) (PITEM 0 1))) "x4+x3+x2+x+1")
+    )
    
    (test-case
     "number->binary_poly"
@@ -64,30 +88,6 @@
     
     (check-equal? (binary_poly-divide "x6+x5+x4+x" "x4+x+1") "x3+x+1")
     (check-equal? (binary_poly-divide "x" "x4+x+1") "x")
-    )
-   
-   (test-case
-    "poly->index_coe_pairs && index_coe_pairs->poly"
-    
-    (check-equal? (poly->index_coe_pairs "1") '((0 . 1)))
-    (check-equal? (index_coe_pairs->poly '((0 . 1))) "1")
-
-    (check-equal? (poly->index_coe_pairs "4") '((0 . 4)))
-    (check-equal? (index_coe_pairs->poly '((0 . 4))) "4")
-
-    (check-equal? (poly->index_coe_pairs "x") '((1 . 1)))
-    (check-equal? (poly->index_coe_pairs "x1") '((1 . 1)))
-    (check-equal? (index_coe_pairs->poly '((1 . 1))) "x")
-
-    (check-equal? (poly->index_coe_pairs "2x") '((1 . 2)))
-    (check-equal? (index_coe_pairs->poly '((1 . 2))) "2x")
-
-    (check-equal? (poly->index_coe_pairs "x4+x3+x2+x+1") '((4 . 1) (3 . 1) (2 . 1) (1 . 1) (0 . 1)))
-    (check-equal? (poly->index_coe_pairs " x4 + x3+x2+x1+1 ") '((4 . 1) (3 . 1) (2 . 1) (1 . 1) (0 . 1)))
-    (check-equal? (poly->index_coe_pairs "x4+x3+x1+x2+1") '((4 . 1) (3 . 1) (2 . 1) (1 . 1) (0 . 1)))
-    (check-equal? (index_coe_pairs->poly '((4 . 1) (3 . 1) (2 . 1) (1 . 1) (0 . 1))) "x4+x3+x2+x+1")
-
-    (check-equal? (index_coe_pairs->poly '((4 . 1) (3 . 1) (1 . 1) (2 . 1) (0 . 1))) "x4+x3+x2+x+1")
     )
    
    (test-case
