@@ -40,8 +40,8 @@
      (set! code_generator_list
            (map
             (lambda (p)
-              (cdr p))
-            (poly->index_coe_pairs code_generator_poly)))
+              (PITEM-coe p))
+            (poly->items code_generator_poly)))
 
      (printf "code_generator_poly:[~a], coefficient_list: [~a][~a]\n\n" code_generator_poly (length code_generator_list) code_generator_list)
 

@@ -7,8 +7,8 @@
           [calculate-factor (-> string? natural? natural?)]
           ))
 
-(define (calculate-factor poly factor) 
-  (let ([polys (poly->index_coe_pairs poly)]
+(define (calculate-factor poly factor)
+  (let ([polys (poly->items poly)]
         [*2^m_1 (sub1 (expt 2 (*bit_width*)))]
         [index_list #f]
         [bitwise_xor_result #f]
@@ -16,15 +16,15 @@
     
     (set! index_list
           (map
-           (lambda (index_coe_pair)
+           (lambda (pitem)
              (let* ([coe->a
                      (string->number
                       (substring
                        (hash-ref
                         (*galios_number->index_map*)
-                        (cdr index_coe_pair))
+                        (PITEM-coe pitem))
                        1))]
-                    [index_multiply_factor (* factor (car index_coe_pair))]
+                    [index_multiply_factor (* factor (PITEM-x_index pitem))]
                     [coe_add_last_result (+ coe->a index_multiply_factor)]
                     [modulo_last_result (modulo coe_add_last_result *2^m_1)]
                     [index_number
@@ -45,8 +45,8 @@
 
 (define (forney lam_poly ome_poly err_places)
   (let ([only_odd_poly
-         (index_coe_pairs->poly
-          (filter (lambda (poly) (odd? (car poly))) (poly->index_coe_pairs lam_poly)))]
+         (items->poly
+          (filter (lambda (poly) (odd? (PITEM-x_index poly))) (poly->items lam_poly)))]
         [result_list #f])
 
     (let-values ([(derivative_lam _none)

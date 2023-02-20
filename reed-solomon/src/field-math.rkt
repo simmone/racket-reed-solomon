@@ -231,7 +231,7 @@
                    (loop-multiplier
                     (cdr loop_poly_multiplier_pairs)
                     (cons
-                     (cons
+                     (PITEM
                       (add_op (PITEM-x_index (car loop_poly_multiplicand_pairs)) (PITEM-x_index (car loop_poly_multiplier_pairs)))
                       (multiply_op (PITEM-coe (car loop_poly_multiplicand_pairs)) (PITEM-coe (car loop_poly_multiplier_pairs))))
                      multiplier_list))
@@ -296,36 +296,36 @@
     poly_index->decimal_hash))
 
 (define (poly-sum poly)
-  (let loop ([pairs (poly->items poly)]
+  (let loop ([pitems (poly->items poly)]
              [sum 0])
-    (if (not (null? pairs))
-        (loop (cdr pairs) (+ sum (* (cdar pairs) (expt 2 (caar pairs)))))
+    (if (not (null? pitems))
+        (loop (cdr pitems) (+ sum (* (PITEM-coe (car pitems)) (expt 2 (PITEM-x_index (car pitems))))))
         sum)))
 
 (define (poly-remove_dup poly)
   (items->poly
-   (let loop ([indexes (poly->items poly)]
+   (let loop ([pitems (poly->items poly)]
               [result_list '()])
-     (if (not (null? indexes))
-         (if (member (car indexes) result_list)
+     (if (not (null? pitems))
+         (if (ormap (lambda (pitem) (check-pitem? (car pitems) pitem)) result_list)
              (loop
-              (cdr indexes)
-              (remove (car indexes) result_list))
+              (cdr pitems)
+              (remove (car pitems) result_list check-pitem?))
              (loop
-              (cdr indexes)
-              (cons (car indexes) result_list)))
+              (cdr pitems)
+              (cons (car pitems) result_list)))
          (reverse result_list)))))
 
 (define (galios-poly-divide-align dividend divisor)
   (let* (
-         [src_coe_pairs (poly->items divisor)]
-         [dst_coe_pairs (poly->items dividend)]
-         [src_index_n (caar src_coe_pairs)]
-         [src_coe_n (cdar src_coe_pairs)]
+         [divisor_pitems (poly->items divisor)]
+         [dividend_pitems (poly->items dividend)]
+         [src_index_n (PITEM-x_index (car divisor_pitems))]
+         [src_coe_n (PITEM-coe (car divisor_pitems))]
          [src_coe_a #f]
          [src_coe_a_n #f]
-         [dst_index_n (caar dst_coe_pairs)]
-         [dst_coe_n (cdar dst_coe_pairs)]
+         [dst_index_n (PITEM-x_index (car dividend_pitems))]
+         [dst_coe_n (PITEM-coe (car dividend_pitems))]
          [dst_coe_a #f]
          [dst_coe_a_n #f]
          [2^m_1 (sub1 (expt 2 (*bit_width*)))]
@@ -340,7 +340,7 @@
 
     (items->poly
      (list
-      (cons
+      (PITEM
        (- dst_index_n src_index_n)
        (hash-ref (*galios_index->number_map*)
                  (format "a~a"
@@ -349,18 +349,18 @@
                           2^m_1))))))))
 
 (define (galios-poly-divide dividend divisor)
-  (let ([divisor_index (caar (poly->items divisor))])
+  (let ([divisor_index (PITEM-x_index (car (poly->items divisor)))])
     (let loop ([remainder dividend]
                [quotient ""]
                [last_op ""])
       
       (if (not (string=? remainder ""))
-          (let* ([index_coe_pairs (poly->items remainder)]
-                 [remainder_index (caar index_coe_pairs)]
-                 [remainder_coe (cdar index_coe_pairs)])
+          (let* ([remainder_pitems (poly->items remainder)]
+                 [remainder_index (PITEM-x_index (car remainder_pitems))]
+                 [remainder_coe (PITEM-coe (car remainder_pitems))])
 
             (if (= remainder_coe 0)
-                (loop (items->poly (cdr index_coe_pairs)) quotient last_op)
+                (loop (items->poly (cdr remainder_pitems)) quotient last_op)
                 (if (>= remainder_index divisor_index)
                     (let (
                           [loop_align_factor #f]

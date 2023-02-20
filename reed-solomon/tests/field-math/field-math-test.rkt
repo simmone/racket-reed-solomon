@@ -14,22 +14,22 @@
     (check-true (check-pitem-list? (poly->items "1") (list (PITEM 0 1))))
     (check-equal? (items->poly (list (PITEM 0 1))) "1")
 
-    (check-equal? (poly->items "4") '((PITEM 0 4)))
-    (check-equal? (items->poly '((PITEM 0 4))) "4")
+    (check-true (check-pitem-list? (poly->items "4") (list (PITEM 0 4))))
+    (check-equal? (items->poly (list (PITEM 0 4))) "4")
 
-    (check-equal? (poly->items "x") '((PITEM 1 1)))
-    (check-equal? (poly->items "x1") '((PITEM 1 1)))
-    (check-equal? (items->poly '((PITEM 1 1))) "x")
+    (check-true (check-pitem-list? (poly->items "x") (list (PITEM 1 1))))
+    (check-true (check-pitem-list? (poly->items "x1") (list (PITEM 1 1))))
+    (check-equal? (items->poly (list (PITEM 1 1))) "x")
 
-    (check-equal? (poly->items "2x") '((PITEM 1 2)))
-    (check-equal? (items->poly '((PITEM 1 2))) "2x")
+    (check-true (check-pitem-list? (poly->items "2x") (list (PITEM 1 2))))
+    (check-equal? (items->poly (list (PITEM 1 2))) "2x")
 
-    (check-equal? (poly->items "x4+x3+x2+x+1") '((PITEM 4 1) (PITEM 3 1) (PITEM 2 1) (PITEM 1 1) (PITEM 0 1)))
-    (check-equal? (poly->items " x4 + x3+x2+x1+1 ") '((PITEM 4 1) (PITEM 3 1) (PITEM 2 1) (PITEM 1 1) (PITEM 0 1)))
-    (check-equal? (poly->items "x4+x3+x1+x2+1") '((PITEM 4 1) (PITEM 3 1) (PITEM 2 1) (PITEM 1 1) (PITEM 0 1)))
-    (check-equal? (items->poly '((PITEM 4 1) (PITEM 3 1) (PITEM 2 1) (PITEM 1 1) (PITEM 0 1))) "x4+x3+x2+x+1")
+    (check-true (check-pitem-list? (poly->items "x4+x3+x2+x+1") (list (PITEM 4 1) (PITEM 3 1) (PITEM 2 1) (PITEM 1 1) (PITEM 0 1))))
+    (check-true (check-pitem-list? (poly->items " x4 + x3+x2+x1+1 ") (list (PITEM 4 1) (PITEM 3 1) (PITEM 2 1) (PITEM 1 1) (PITEM 0 1))))
+    (check-true (check-pitem-list? (poly->items "x4+x3+x1+x2+1") (list (PITEM 4 1) (PITEM 3 1) (PITEM 2 1) (PITEM 1 1) (PITEM 0 1))))
+    (check-equal? (items->poly (list (PITEM 4 1) (PITEM 3 1) (PITEM 2 1) (PITEM 1 1) (PITEM 0 1))) "x4+x3+x2+x+1")
 
-    (check-equal? (items->poly '((PITEM 4 1) (PITEM 3 1) (PITEM 1 1) (PITEM 2 1) (PITEM 0 1))) "x4+x3+x2+x+1")
+    (check-equal? (items->poly (list (PITEM 4 1) (PITEM 3 1) (PITEM 1 1) (PITEM 2 1) (PITEM 0 1))) "x4+x3+x2+x+1")
     )
    
    (test-case

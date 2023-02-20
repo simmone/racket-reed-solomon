@@ -15,20 +15,20 @@
 
     (set! item_list
           (map
-           (lambda (index_coe_pair)
-             (let* ([last_multiply_index (* 2^m_1_seq (car index_coe_pair))]
+            (lambda (pitem)
+              (let* ([last_multiply_index (* (- 2^m_1 seq) (PITEM-x_index pitem))]
                     [convert_coe->index
-                     (string->number (substring (hash-ref (*galios_number->index_map*) (cdr index_coe_pair)) 1))]
+                     (string->number (substring (hash-ref (*galios_number->index_map*) (PITEM-coe pitem)) 1))]
                     [add_and_modulo (modulo (+ convert_coe->index last_multiply_index) 2^m_1)]
                     [convert_index->coe (hash-ref (*galios_index->number_map*) (format "a~a" add_and_modulo))])
 
-               (printf "\n1. 2^m_1_seq(~a) * index(~a) = ~a\n" 2^m_1_seq (car index_coe_pair) last_multiply_index)
-               (printf "2. convert_coe->index ~a = ~a\n" (cdr index_coe_pair) convert_coe->index)
+               (printf "\n1. 2^m_1_seq(~a) * index(~a) = ~a\n" 2^m_1_seq (PITEM-x_index pitem) last_multiply_index)
+               (printf "2. convert_coe->index ~a = ~a\n" (PITEM-coe pitem) convert_coe->index)
                (printf "3. add and modulo (modulo (+ ~a ~a) ~a) = ~a\n" convert_coe->index last_multiply_index 2^m_1 add_and_modulo)
                (printf "4. convert_index->coe ~a = ~a\n" add_and_modulo convert_index->coe)
                
                convert_index->coe))
-           (poly->index_coe_pairs lam_poly)))
+            (poly->items lam_poly)))
 
     (set! result (foldr bitwise-xor 0 item_list))
     

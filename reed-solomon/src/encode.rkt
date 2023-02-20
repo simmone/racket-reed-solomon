@@ -32,8 +32,8 @@
      (set! code_generator_list
            (map
             (lambda (p)
-              (cdr p))
-            (poly->index_coe_pairs code_generator_poly)))
+              (PITEM-coe p))
+            (poly->items code_generator_poly)))
 
      (set! dividend_num_list `(,@data_list ,@(make-list parity_length 0)))
 

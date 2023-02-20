@@ -6,22 +6,22 @@
 
 (define (galios-divide-align dividend divisor)
   (let* (
-         [src_coe_pairs (poly->index_coe_pairs divisor)]
-         [dst_coe_pairs (poly->index_coe_pairs dividend)]
-         [src_index_n (caar src_coe_pairs)]
-         [src_coe_n (cdar src_coe_pairs)]
+         [divisor_pitems (poly->items divisor)]
+         [dividend_pitems (poly->items dividend)]
+         [src_index_n (PITEM-x_index (car divisor_pitems))]
+         [src_coe_n (PITEM-coe (car divisor_pitems))]
          [src_coe_a #f]
          [src_coe_a_n #f]
-         [dst_index_n (caar dst_coe_pairs)]
-         [dst_coe_n (cdar dst_coe_pairs)]
+         [dst_index_n (PITEM-x_index (car dividend_pitems))]
+         [dst_coe_n (PITEM-coe (car dividend_pitems))]
          [dst_coe_a #f]
          [dst_coe_a_n #f]
          [2^m_1 (sub1 (expt 2 (*bit_width*)))]
          )
 
-    (printf "src_coe_pairs:~a\n\n" src_coe_pairs)
+    (printf "divisor_pitems:~a\n\n" divisor_pitems)
 
-    (printf "dst_coe_pairs:~a\n\n" dst_coe_pairs)
+    (printf "dividend_pitems:~a\n\n" dividend_pitems)
     
     (set! src_coe_a (hash-ref (*galios_number->index_map*) src_coe_n))
     
@@ -43,9 +43,9 @@
             (format "a~a" (modulo (- (+ 2^m_1 dst_coe_a_n) src_coe_a_n) 2^m_1))
             (hash-ref (*galios_index->number_map*) (format "a~a" (modulo (- (+ 2^m_1 dst_coe_a_n) src_coe_a_n) 2^m_1))))
 
-    (index_coe_pairs->poly
+    (items->poly
      (list
-      (cons
+      (PITEM
        (- dst_index_n src_index_n)
        (hash-ref (*galios_index->number_map*) (format "a~a" (modulo (- (+ 2^m_1 dst_coe_a_n) src_coe_a_n) 2^m_1))))))))
 
@@ -59,4 +59,4 @@
 ;
 ; (check-equal? (galios-divide-align "x4" "12x3+4x2+3x+15") "10x")
 ;)
-;
+
