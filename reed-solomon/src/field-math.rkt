@@ -150,6 +150,26 @@
                  [else
                     (format "~a~ax~a" result last_op index)])))
       result)))
+
+(define (galios-poly-add poly1 . rst)
+  (items->poly
+   (let ([combine_hash (make-hash)])
+     (let loop ([loop_polys `(,poly1 ,@rst)])
+       (when (not (null? loop_polys))
+         (map
+          (lambda (p)
+            (if (hash-has-key? combine_hash (PITEM-x_index p))
+                (let ([coe_bitwised (bitwise-xor (PITEM-coe p) (hash-ref combine_hash (PITEM-x_index p)))])
+                  (if (= coe_bitwised 0)
+                      (hash-remove! combine_hash (PITEM-x_index p))
+                      (hash-set! combine_hash (PITEM-x_index p) coe_bitwised)))
+                (hash-set! combine_hash (PITEM-x_index p) (PITEM-coe p))))
+          (poly->items (car loop_polys)))
+         (loop (cdr loop_polys))))
+     (map
+      (lambda (p)
+        (PITEM (car p) (cdr p)))
+      (hash->list combine_hash)))))
             
 (define (binary_poly-multiply poly1 poly2)
   (poly-multiply-basic poly1 poly2 + *))
@@ -193,26 +213,6 @@
          (cdr polys)
          (poly-multiply-basic last_result (car polys) + galios-multiply))
         last_result)))
-
-(define (galios-poly-add poly1 . rst)
-  (items->poly
-   (let ([combine_hash (make-hash)])
-     (let loop ([loop_polys `(,poly1 ,@rst)])
-       (when (not (null? loop_polys))
-         (map
-          (lambda (p)
-            (if (hash-has-key? combine_hash (PITEM-x_index p))
-                (let ([coe_bitwised (bitwise-xor (PITEM-coe p) (hash-ref combine_hash (PITEM-x_index p)))])
-                  (if (= coe_bitwised 0)
-                      (hash-remove! combine_hash (PITEM-x_index p))
-                      (hash-set! combine_hash (PITEM-x_index p) coe_bitwised)))
-                (hash-set! combine_hash (PITEM-x_index p) (PITEM-coe p))))
-          (poly->items (car loop_polys)))
-         (loop (cdr loop_polys))))
-     (map
-      (lambda (p)
-        (PITEM (car p) (cdr p)))
-      (hash->list combine_hash)))))
 
 (define (poly-multiply-basic poly1 poly2 add_op multiply_op)
   (let ([poly_multiplicand_pairs (poly->items poly1)]
