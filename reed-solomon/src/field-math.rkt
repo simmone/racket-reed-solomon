@@ -154,23 +154,49 @@
 (define (galios-poly-add poly1 . rst)
   (items->poly
    (let ([combine_hash (make-hash)])
-     (let loop ([loop_polys `(,poly1 ,@rst)])
+     (let loop-poly ([loop_polys `(,poly1 ,@rst)])
        (when (not (null? loop_polys))
-         (map
-          (lambda (p)
-            (if (hash-has-key? combine_hash (PITEM-x_index p))
-                (let ([coe_bitwised (bitwise-xor (PITEM-coe p) (hash-ref combine_hash (PITEM-x_index p)))])
+         (let loop-item ([items (poly->items (car loop_polys))])
+           (when (not (null? items))
+             (let ([item (car items)])
+               (if (hash-has-key? combine_hash (PITEM-x_index item))
+                (let ([coe_bitwised (bitwise-xor (PITEM-coe item) (hash-ref combine_hash (PITEM-x_index item)))])
                   (if (= coe_bitwised 0)
-                      (hash-remove! combine_hash (PITEM-x_index p))
-                      (hash-set! combine_hash (PITEM-x_index p) coe_bitwised)))
-                (hash-set! combine_hash (PITEM-x_index p) (PITEM-coe p))))
-          (poly->items (car loop_polys)))
-         (loop (cdr loop_polys))))
+                      (hash-remove! combine_hash (PITEM-x_index item))
+                      (hash-set! combine_hash (PITEM-x_index item) coe_bitwised)))
+                (hash-set! combine_hash (PITEM-x_index item) (PITEM-coe item))))
+             (loop-item (cdr items))))
+         (loop-poly (cdr loop_polys))))
      (map
       (lambda (p)
         (PITEM (car p) (cdr p)))
       (hash->list combine_hash)))))
-            
+
+(define (poly-multiply-basic poly1 poly2 add_op multiply_op)
+  (let ([poly_multiplicand_pairs (poly->items poly1)]
+        [poly_multiplier_pairs (poly->items poly2)])
+                                
+    (let loop-multiplicand ([loop_poly_multiplicand_pairs poly_multiplicand_pairs]
+                            [multiplicand_list '()])
+      (if (not (null? loop_poly_multiplicand_pairs))
+          (loop-multiplicand
+           (cdr loop_poly_multiplicand_pairs)
+           (cons
+            (items->poly
+             (let loop-multiplier ([loop_poly_multiplier_pairs poly_multiplier_pairs]
+                                   [multiplier_list '()])
+               (if (not (null? loop_poly_multiplier_pairs))
+                   (loop-multiplier
+                    (cdr loop_poly_multiplier_pairs)
+                    (cons
+                     (PITEM
+                      (add_op (PITEM-x_index (car loop_poly_multiplicand_pairs)) (PITEM-x_index (car loop_poly_multiplier_pairs)))
+                      (multiply_op (PITEM-coe (car loop_poly_multiplicand_pairs)) (PITEM-coe (car loop_poly_multiplier_pairs))))
+                     multiplier_list))
+                   (reverse multiplier_list))))
+            multiplicand_list))
+          (apply galios-poly-add multiplicand_list)))))
+
 (define (binary_poly-multiply poly1 poly2)
   (poly-multiply-basic poly1 poly2 + *))
 
@@ -213,31 +239,6 @@
          (cdr polys)
          (poly-multiply-basic last_result (car polys) + galios-multiply))
         last_result)))
-
-(define (poly-multiply-basic poly1 poly2 add_op multiply_op)
-  (let ([poly_multiplicand_pairs (poly->items poly1)]
-        [poly_multiplier_pairs (poly->items poly2)])
-                                
-    (let loop-multiplicand ([loop_poly_multiplicand_pairs poly_multiplicand_pairs]
-                            [multiplicand_list '()])
-      (if (not (null? loop_poly_multiplicand_pairs))
-          (loop-multiplicand
-           (cdr loop_poly_multiplicand_pairs)
-           (cons
-            (items->poly
-             (let loop-multiplier ([loop_poly_multiplier_pairs poly_multiplier_pairs]
-                                   [multiplier_list '()])
-               (if (not (null? loop_poly_multiplier_pairs))
-                   (loop-multiplier
-                    (cdr loop_poly_multiplier_pairs)
-                    (cons
-                     (PITEM
-                      (add_op (PITEM-x_index (car loop_poly_multiplicand_pairs)) (PITEM-x_index (car loop_poly_multiplier_pairs)))
-                      (multiply_op (PITEM-coe (car loop_poly_multiplicand_pairs)) (PITEM-coe (car loop_poly_multiplier_pairs))))
-                     multiplier_list))
-                   (reverse multiplier_list))))
-            multiplicand_list))
-          (apply galios-poly-add multiplicand_list)))))
 
 (define (get-code-generator-poly parity_length)
   (let ([max_index (sub1 parity_length)])
