@@ -202,7 +202,6 @@
 
 (define (binary_poly-divide dividend_poly divisor_poly)
   (let* ([dividend_poly_bits (binary_poly->binary_string dividend_poly)]
-         [dividend_bits_length (string-length dividend_poly_bits)]
          [divisor_poly_bits (binary_poly->binary_string divisor_poly)]
          [divisor_bits_length (string-length divisor_poly_bits)])
 
