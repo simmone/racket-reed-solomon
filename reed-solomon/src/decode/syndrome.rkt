@@ -25,7 +25,7 @@
 
                     (set! last_xor (bitwise-xor last_result (car loop_data_list)))
 
-                    (set! ax_multiply (galios-multiply last_xor ax_val))
+                    (set! ax_multiply (galios-num-multiply last_xor ax_val))
 
                     (step-loop (cdr loop_data_list) ax_multiply last_xor))
                   last_xor_result))

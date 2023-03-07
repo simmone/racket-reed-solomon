@@ -30,9 +30,9 @@
 
                     (set! last_xor (bitwise-xor last_result (car loop_data_list)))
 
-                    (set! ax_multiply (galios-multiply last_xor ax_val))
+                    (set! ax_multiply (galios-num-multiply last_xor ax_val))
 
-                    (printf "( ~a bitwise-xor ~a ) = ~a galios-multiply ~a = ~a\n"
+                    (printf "( ~a bitwise-xor ~a ) = ~a galios-num-multiply ~a = ~a\n"
                             (~a #:min-width 3 #:align 'left #:right-pad-string " " last_result)
                             (~a #:min-width 3 #:align 'left #:right-pad-string " " (car loop_data_list))
                             (~a #:min-width 3 #:align 'left #:right-pad-string " " last_xor)

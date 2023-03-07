@@ -15,7 +15,7 @@
           [binary_string->binary_poly (-> string? string?)]
           [binary_poly-multiply (-> string? string? string?)]
           [binary_poly-divide (-> string? string? string?)]
-          [galios-multiply (-> natural? natural? natural?)]
+          [galios-num-multiply (-> natural? natural? natural?)]
           [galios-poly-divide-align (-> string? string? string?)]
           [galios-poly-divide (-> string? string? (values string? string?))]
           [galios-poly-multiply (->* (string? string?) () #:rest (listof string?) string?)]
@@ -218,7 +218,7 @@
             (loop (string-append bitwise_result (substring loop_bits divisor_bits_length))))
           (binary_string->binary_poly loop_bits)))))
 
-(define (galios-multiply num1 num2)
+(define (galios-num-multiply num1 num2)
   (if (or (= num1 0) (= num2 0))
       0
       (string->number
@@ -232,11 +232,11 @@
 
 (define (galios-poly-multiply poly1 poly2 . rst)
   (let loop ([polys rst]
-             [last_result (poly-multiply-basic poly1 poly2 + galios-multiply)])
+             [last_result (poly-multiply-basic poly1 poly2 + galios-num-multiply)])
     (if (not (null? polys))
         (loop
          (cdr polys)
-         (poly-multiply-basic last_result (car polys) + galios-multiply))
+         (poly-multiply-basic last_result (car polys) + galios-num-multiply))
         last_result)))
 
 (define (get-code-generator-poly parity_length)

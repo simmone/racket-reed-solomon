@@ -71,7 +71,7 @@
                    (printf "step1: remainder list: ~a  + first item of rest dividend list: ~a as dividend:\n" loop_remainder_list (car loop_dividend_list))
                    (print-divide-elements appended_dividend_list)
 
-                   (set! aligned_code_generator_list (map (lambda (v) (galios-multiply v (car appended_dividend_list))) code_generator_list))
+                   (set! aligned_code_generator_list (map (lambda (v) (galios-num-multiply v (car appended_dividend_list))) code_generator_list))
                    (printf "step2: code_generator_list * dividend_list's first item:~a*~a\n" code_generator_list (car appended_dividend_list))
                    (print-divide-elements aligned_code_generator_list)
 

@@ -91,20 +91,20 @@
     )
    
    (test-case
-    "galios-multiply"
+    "galios-num-multiply"
     
     (parameterize*
      ([*field_generator_poly* "x4+x+1"])
 
-     (check-equal? (galios-multiply 10 12) 1)
-     (check-equal? (galios-multiply 10 13) 11)
-     (check-equal? (galios-multiply 14 14) 11)
-     (check-equal? (galios-multiply 14 15) 5)
-     (check-equal? (galios-multiply 3 6) 10)
-     (check-equal? (galios-multiply 1 2) 2)
-     (check-equal? (galios-multiply 0 0) 0)
-     (check-equal? (galios-multiply 0 15) 0)
-     (check-equal? (galios-multiply 15 0) 0)
+     (check-equal? (galios-num-multiply 10 12) 1)
+     (check-equal? (galios-num-multiply 10 13) 11)
+     (check-equal? (galios-num-multiply 14 14) 11)
+     (check-equal? (galios-num-multiply 14 15) 5)
+     (check-equal? (galios-num-multiply 3 6) 10)
+     (check-equal? (galios-num-multiply 1 2) 2)
+     (check-equal? (galios-num-multiply 0 0) 0)
+     (check-equal? (galios-num-multiply 0 15) 0)
+     (check-equal? (galios-num-multiply 15 0) 0)
     ))
 
    (test-case

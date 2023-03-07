@@ -48,7 +48,7 @@
              (set! appended_dividend_list `(,@loop_remainder_list ,(car loop_dividend_list)))
 
              (set! aligned_code_generator_list
-                   (map (lambda (v) (galios-multiply v (car appended_dividend_list))) code_generator_list))
+                   (map (lambda (v) (galios-num-multiply v (car appended_dividend_list))) code_generator_list))
 
              (set! remainder_list
                    (let loop-bitwise ([dividends appended_dividend_list]
