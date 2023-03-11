@@ -20,7 +20,7 @@
   (parameterize*
    ([*bit_width* bit_width]
     [*field_generator_poly* (hash-ref *primitive_poly_table* primitive_poly_value)]
-    [*galios_index->number_map* (get-galios-index->number_map (*bit_width*))]
+    [*galios_index->number_map* (get-galios-index->number_map)]
     [*galios_number->index_map* (make-hash (hash-map (*galios_index->number_map*) (lambda (a n) (cons n a))))])
 
 

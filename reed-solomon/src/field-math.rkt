@@ -21,7 +21,7 @@
           [galios-poly-multiply (->* (string? string?) () #:rest (listof string?) string?)]
           [galios-poly-add (->* (string?) () #:rest (listof string?) string?)]
           [get-code-generator-poly (-> natural? string?)]
-          [get-galios-index->number_map (-> natural? (hash/c string? number?))]
+          [get-galios-index->number_map (-> (hash/c string? number?))]
           [poly-sum (-> string? natural?)]
           [poly-remove_dup (-> string? string?)]
           [*bit_width* parameter?]
@@ -253,11 +253,11 @@
              poly_list))
            (reverse poly_list))))))
 
-(define (get-galios-index->number_map bit_width)
+(define (get-galios-index->number_map)
   (let ([poly_index->decimal_hash (make-hash)]
         [poly_index->poly_hash (make-hash)]
         [poly_index_list '()]
-        [2^m_1 (sub1 (expt 2 bit_width))]
+        [2^m_1 (sub1 (expt 2 (*bit_width*)))]
         [replace_pair 
          (let ([indexes (poly->items (*field_generator_poly*))])
            (cons

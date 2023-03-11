@@ -15,7 +15,7 @@
     (parameterize*
      ([*bit_width* 4]
       [*field_generator_poly* "x4+x+1"]
-      [*galios_index->number_map* (get-galios-index->number_map (*bit_width*))])
+      [*galios_index->number_map* (get-galios-index->number_map)])
 
      (check-equal? (get-syndromes 
                     '(1 2 3 4 5 11 7 8 9 10 11 3 1 12 12) 4)
@@ -32,7 +32,7 @@
     (parameterize*
      ([*bit_width* 8]
       [*field_generator_poly* "x8+x4+x3+x2+1"]
-      [*galios_index->number_map* (get-galios-index->number_map (*bit_width*))])
+      [*galios_index->number_map* (get-galios-index->number_map)])
 
      (check-equal? (get-syndromes
                     '(32 91 10 121 209 114 220 77 67 64 236 16 235 17 236 17 196 35 39 119 235 215 231 226 93 22)

@@ -79,4 +79,4 @@
      (printf "\n\n")
      )))
 
-; (get-galios-field-table 4 "x4+x+1")
+ (get-galios-field-table 4 "x4+x+1")

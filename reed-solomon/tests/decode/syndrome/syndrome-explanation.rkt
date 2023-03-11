@@ -52,7 +52,7 @@
 ;(parameterize*
 ; ([*bit_width* 4]
 ;  [*field_generator_poly* "x4+x+1"]
-;  [*galios_index->number_map* (get-galios-index->number_map (*bit_width*))])
+;  [*galios_index->number_map* (get-galios-index->number_map)])
 ;
 ;     (check-equal? (_get-syndromes 
 ;                    '(1 2 3 4 5 11 7 8 9 10 11 3 1 12 12) 4)

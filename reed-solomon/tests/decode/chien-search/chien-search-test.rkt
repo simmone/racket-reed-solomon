@@ -15,7 +15,7 @@
     (parameterize*
      ([*bit_width* 4]
       [*field_generator_poly* "x4+x+1"]
-      [*galios_index->number_map* (get-galios-index->number_map (*bit_width*))]
+      [*galios_index->number_map* (get-galios-index->number_map)]
       [*galios_number->index_map* (make-hash (hash-map (*galios_index->number_map*) (lambda (a n) (cons n a))))])
      
      (check-equal? (chien-value "14x2+14x1+1x0" 14) 3)
@@ -43,7 +43,7 @@
     (parameterize*
      ([*bit_width* 8]
       [*field_generator_poly* "x8+x4+x3+x2+1"]
-      [*galios_index->number_map* (get-galios-index->number_map (*bit_width*))]
+      [*galios_index->number_map* (get-galios-index->number_map)]
       [*galios_number->index_map* (make-hash (hash-map (*galios_index->number_map*) (lambda (a n) (cons n a))))])
 
      (check-equal? (chien-search "148x8+38x7+153x6+74x5+43x4+7x3+226x2+102x1+1x0") '())
