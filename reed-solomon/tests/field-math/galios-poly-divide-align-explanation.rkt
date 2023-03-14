@@ -49,14 +49,14 @@
        (- dst_index_n src_index_n)
        (hash-ref (*galios_index->number_map*) (format "a~a" (modulo (- (+ 2^m_1 dst_coe_a_n) src_coe_a_n) 2^m_1))))))))
 
-;(parameterize*
-; ([*bit_width* 4]
-;  [*field_generator_poly* "x4+x+1"]
-;  [*galios_index->number_map* (get-galios-index->number_map)]
-;  [*galios_number->index_map* (make-hash (hash-map (*galios_index->number_map*) (lambda (a n) (cons n a))))])
-;
-; (check-equal? (galios-divide-align "x4" "12x3") "10x")
-;
-; (check-equal? (galios-divide-align "x4" "12x3+4x2+3x+15") "10x")
-;)
+(parameterize*
+ ([*bit_width* 4]
+  [*field_generator_poly* "x4+x+1"]
+  [*galios_index->number_map* (get-galios-index->number_map)]
+  [*galios_number->index_map* (make-hash (hash-map (*galios_index->number_map*) (lambda (a n) (cons n a))))])
+
+ (check-equal? (galios-divide-align "x4" "12x3") "10x")
+
+ (check-equal? (galios-divide-align "x4" "12x3+4x2+3x+15") "10x")
+)
 
