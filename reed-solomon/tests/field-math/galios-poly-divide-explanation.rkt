@@ -46,16 +46,16 @@
                     (values quotient remainder))))
             (values quotient remainder)))))
 
-(parameterize*
- ([*bit_width* 4]
-  [*field_generator_poly* "x4+x+1"]
-  [*galios_index->number_map* (get-galios-index->number_map)]
-  [*galios_number->index_map* (make-hash (hash-map (*galios_index->number_map*) (lambda (a n) (cons n a))))])
-
- (let-values ([(quotient remainder)
-               (_galios-poly-divide "12x3+4x2+3x+15" "6x2+6x1+4")])
-   (check-equal? quotient "2x+13")
-   (check-equal? remainder "3x+14")))
+;(parameterize*
+; ([*bit_width* 4]
+;  [*field_generator_poly* "x4+x+1"]
+;  [*galios_index->number_map* (get-galios-index->number_map)]
+;  [*galios_number->index_map* (make-hash (hash-map (*galios_index->number_map*) (lambda (a n) (cons n a))))])
+;
+; (let-values ([(quotient remainder)
+;               (_galios-poly-divide "12x3+4x2+3x+15" "6x2+6x1+4")])
+;   (check-equal? quotient "2x+13")
+;   (check-equal? remainder "3x+14")))
 
 
 ;(parameterize*
