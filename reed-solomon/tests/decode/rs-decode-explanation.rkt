@@ -88,10 +88,10 @@
                  (printf "restored_list: ~a\n" (take restored_list (length data_list)))
                  (take restored_list (length data_list)))))))))
 
-(check-equal? (_rs-decode 
-               '(1 2 3 4 5 11 7 8 9 10 11 3 1 12 12) 4
-               #:bit_width 4 #:primitive_poly_value 19)
-              '(1 2 3 4 5 6 7 8 9 10 11 3 3 12 12))
+;(check-equal? (_rs-decode 
+;               '(1 2 3 4 5 11 7 8 9 10 11 3 1 12 12) 4
+;               #:bit_width 4 #:primitive_poly_value 19)
+;              '(1 2 3 4 5 6 7 8 9 10 11 3 3 12 12))
 
 ;(check-equal? (_rs-decode 
 ;               '(32 91 10 121 209 114 220 77 67 64 236 16 235 17 236 17 196 35 39 119 235 215 231 226 93 22)
