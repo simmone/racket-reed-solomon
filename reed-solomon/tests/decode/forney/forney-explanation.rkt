@@ -54,14 +54,16 @@
     result))
 
 (define (_forney lam_poly ome_poly err_places)
-  (printf "Fornet Explanation\n\n")
+  (printf "Forney Explanation\n\n")
+  
+  (printf "lam_poly: ~a\nome_poly: ~a\nerr_places: ~a\n" lam_poly ome_poly err_places)
 
   (let ([only_odd_poly
          (items->poly
           (filter (lambda (poly) (odd? (PITEM-x_index poly))) (poly->items lam_poly)))]
         [result_list #f])
 
-    (printf "remove even index's ploly: ~a\n\n" only_odd_poly)
+    (printf "remove lam_poly's even index part: ~a\n\n" only_odd_poly)
 
     (let-values ([(derivative_lam _none)
                   (galios-poly-divide only_odd_poly "x")])
@@ -107,14 +109,14 @@
     
     result_list))
 
-;(parameterize*
-; ([*bit_width* 4]
-;  [*field_generator_poly* "x4+x+1"]
-;  [*galios_index->number_map* (get-galios-index->number_map)]
-;  [*galios_number->index_map* (make-hash (hash-map (*galios_index->number_map*) (lambda (a n) (cons n a))))])
-;
-; (check-equal? (_forney "14x2+14x+1" "6x+15" '(9 2)) '( (9 . 13)  (2 . 2)))
-;)
+(parameterize*
+ ([*bit_width* 4]
+  [*field_generator_poly* "x4+x+1"]
+  [*galios_index->number_map* (get-galios-index->number_map)]
+  [*galios_number->index_map* (make-hash (hash-map (*galios_index->number_map*) (lambda (a n) (cons n a))))])
+
+ (check-equal? (_forney "14x2+14x+1" "6x+15" '(9 2)) '( (9 . 13)  (2 . 2)))
+)
 ;
 ;(parameterize*
 ; ([*bit_width* 8]
